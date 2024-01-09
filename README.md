@@ -15,7 +15,7 @@ FriendShip 백엔드 레파지토리
   <img src="https://play-lh.googleusercontent.com/Jr29J5FiIybI7SOxCDwrI-ya4jYHQS9zkzQNLliYRcwv9rrt-UplnkmOFYY8Ggstf1QX=w2560-h1440-rw" height="350px" width="160px">
   <img src="https://play-lh.googleusercontent.com/cMPeXk_A-z1MHADxtzG6VLC1_ttWWwZVwwTYXWBYeYrsN0HgyDCmV-PiKGeh-asvicE=w2560-h1440-rw" height="350px" width="160px">
   <img src="https://play-lh.googleusercontent.com/4bIDdDNWNXX0OhzAqlpzJ-N-AmYOX3d37qCfadLsB_7iXUlWawh--tHwCIBQZgEqb_Q=w2560-h1440-rw" height="350px" width="160px">
-  <img src="https://github.com/Re-4aliens/backend/assets/86913355/13863e52-671b-4b3d-95c6-ab620a3326db" height="350px" width="170px">  
+  <img src="https://github.com/Re-4aliens/backend/assets/86913355/13863e52-671b-4b3d-95c6-ab620a3326db" height="350px" width="160px">  
 </p>
 
   FriendShip은 외국인과 한국인간의 소통을 위한 창구를 제공하기 위한 서비스입니다.

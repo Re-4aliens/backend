@@ -8,10 +8,11 @@ FriendShip 백엔드 레파지토리
 <p align="center">  
   <img width="312" alt="image" src="https://github.com/Re-4aliens/backend/assets/86913355/ebd896cc-8cbf-47c8-9952-3b82a76f0e37">
 </p>
-
 <p align="center">
   <img src="https://play-lh.googleusercontent.com/RSXtWzxvoFqsp9JHPosaZky5i6WR0q4TaW9g1ZB977_wK27mADl7qp0dADBjvstvySs=w2560-h1440-rw" height="350px" width="160px">
   <img src="https://play-lh.googleusercontent.com/anwMvdKKvEx-1yhVWHKh_j-VJ3L6z7wiW8fKZXQjf2wtvdQvjW_n1j5KOy7P_4Piog=w2560-h1440-rw" height="350px" width="160px">
+</p>
+<p align="center">
   <img src="https://play-lh.googleusercontent.com/Jr29J5FiIybI7SOxCDwrI-ya4jYHQS9zkzQNLliYRcwv9rrt-UplnkmOFYY8Ggstf1QX=w2560-h1440-rw" height="350px" width="160px">
   <img src="https://play-lh.googleusercontent.com/cMPeXk_A-z1MHADxtzG6VLC1_ttWWwZVwwTYXWBYeYrsN0HgyDCmV-PiKGeh-asvicE=w2560-h1440-rw" height="350px" width="160px">
   <img src="https://play-lh.googleusercontent.com/4bIDdDNWNXX0OhzAqlpzJ-N-AmYOX3d37qCfadLsB_7iXUlWawh--tHwCIBQZgEqb_Q=w2560-h1440-rw" height="350px" width="160px">

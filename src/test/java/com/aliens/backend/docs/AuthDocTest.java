@@ -31,8 +31,9 @@ class AuthDocTest {
 
     @MockBean
     private AuthService authService;
+
     @Test
-    void create() throws Exception {
+    void login() throws Exception {
         final LoginRequest request = new LoginRequest("email","password");
         final AuthToken response = new AuthToken("accessToken", "refreshToken");
         when(authService.login(any())).thenReturn(response);

@@ -1,4 +1,4 @@
-package com.aliens.backend;
+package com.aliens.backend.global.property;
 
 import org.springframework.stereotype.Component;
 

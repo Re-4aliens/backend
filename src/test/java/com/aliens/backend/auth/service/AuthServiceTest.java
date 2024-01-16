@@ -1,8 +1,8 @@
 package com.aliens.backend.auth.service;
 
-import com.aliens.backend.JWTProperties;
 import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
+import com.aliens.backend.global.property.JWTProperties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

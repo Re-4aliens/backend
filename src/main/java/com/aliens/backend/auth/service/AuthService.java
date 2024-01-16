@@ -17,6 +17,6 @@ public class AuthService {
     }
 
     public AuthToken reissue(final AuthToken authToken) {
-        return new AuthToken("accessToken", "refreshToken");
+        return new AuthToken("newAccessToken", "refreshToken");
     }
 }

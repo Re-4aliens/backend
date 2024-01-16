@@ -41,7 +41,7 @@ class AuthServiceTest {
         String response = authService.logout(authToken);
 
         //Then
-        Assertions.assertEquals(response, AuthService.LOGOUT_SUCCESS);
+        Assertions.assertEquals(AuthService.LOGOUT_SUCCESS, response);
     }
 
     @Test

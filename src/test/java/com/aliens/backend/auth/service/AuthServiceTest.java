@@ -2,10 +2,11 @@ package com.aliens.backend.auth.service;
 
 import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
+import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.auth.domain.repository.MemberRepository;
+import com.aliens.backend.auth.domain.MemberRole;
 import com.aliens.backend.global.property.JWTProperties;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -16,6 +17,25 @@ class AuthServiceTest {
     AuthService authService;
     @Autowired
     JWTProperties jwtProperties;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    Member member;
+
+    @BeforeEach
+    void setUp() {
+        member = new Member("tmp@example.com",
+                passwordEncoder.encrypt("tmpPassword"),
+                MemberRole.MEMBER);
+        memberRepository.save(member);
+    }
+
+    @AfterEach
+    void afterDown() {
+        memberRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("로그인 성공")

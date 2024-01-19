@@ -18,11 +18,13 @@ class TokenProviderTest {
     @Autowired
     private JWTProperties jwtProperties;
 
-    LoginMember givenLoginMember;
+    private LoginMember givenLoginMember;
+    private Long givenTokenId;
 
     @BeforeEach
     void setUp() {
         Long memberId = 1L;
+        givenTokenId = 1L;
         MemberRole role = MemberRole.MEMBER;
         givenLoginMember = new LoginMember(memberId,role);
     }
@@ -41,10 +43,10 @@ class TokenProviderTest {
     @DisplayName("리프레쉬토큰 생성")
     void generateRefreshTokenTest() {
         //When
-        String accessToken = tokenProvider.generateRefreshToken(givenLoginMember);
+        String refreshToken = tokenProvider.generateRefreshToken(givenLoginMember,givenTokenId);
 
         //Then
-        Assertions.assertNotNull(accessToken);
+        Assertions.assertNotNull(refreshToken);
     }
 
     @Test
@@ -86,5 +88,18 @@ class TokenProviderTest {
 
         //Then
         Assertions.assertTrue(result);
+    }
+
+    @Test
+    @DisplayName("리프레시토큰으로부터 토큰 아이디 추출")
+    void getTokenIdFromTokenTest() {
+        //Given
+        String refreshToken = tokenProvider.generateRefreshToken(givenLoginMember,givenTokenId);
+
+        //When
+        Long result = tokenProvider.getTokenIdFromToken(refreshToken);
+
+        //Then
+        Assertions.assertEquals(result, givenTokenId);
     }
 }

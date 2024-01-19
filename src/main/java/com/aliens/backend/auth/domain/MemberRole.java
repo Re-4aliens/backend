@@ -12,7 +12,7 @@ public enum MemberRole {
         this.description = description;
     }
 
-    public static MemberRole fromCode(final Integer code) {
+    public static MemberRole of(final Integer code) {
         for (MemberRole role : values()) {
             if (role.getCode().equals(code)) {
                 return role;

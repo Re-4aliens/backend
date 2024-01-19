@@ -47,22 +47,30 @@ public class TokenProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(final LoginMember loginMember) {
-        Claims claims = getClaimsFrom(loginMember);
+    public String generateRefreshToken(final LoginMember loginMember, final Long tokenId) {
+        Claims claims = getClaimsFrom(loginMember,tokenId);
         return getTokenFrom(claims,jwtProperties.getRefreshTokenValidTime());
+    }
+
+    private Claims getClaimsFrom(final LoginMember loginMember, final Long tokenId) {
+        Claims claims = Jwts.claims();
+        claims.put("memberId",loginMember.memberId());
+        claims.put("role", loginMember.role().getCode());
+        claims.put("tokenId", tokenId);
+        return claims;
     }
 
     public LoginMember getLoginMemberFromToken(final String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getBytesSecretKey()))
                 .build()
-                .parseClaimsJws(removeBearer(token))
+                .parseClaimsJws(removePrefix(token))
                 .getBody();
 
-        return new LoginMember(Long.parseLong(String.valueOf(claims.get("memberId"))), MemberRole.fromCode((Integer)claims.get("role")));
+        return new LoginMember(Long.parseLong(String.valueOf(claims.get("memberId"))), MemberRole.of((Integer)claims.get("role")));
     }
 
-    private String removeBearer(String token) {
+    private String removePrefix(String token) {
         if (token != null && token.startsWith("Authentication ")) {
             return token.substring(7);
         }
@@ -73,11 +81,21 @@ public class TokenProvider {
         try{ return !Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getBytesSecretKey()))
                     .build()
-                    .parseClaimsJws(removeBearer(token))
+                    .parseClaimsJws(removePrefix(token))
                     .getBody()
                     .getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             return false;
         }
+    }
+
+    public Long getTokenIdFromToken(final String refreshToken) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getBytesSecretKey()))
+                .build()
+                .parseClaimsJws(removePrefix(refreshToken))
+                .getBody();
+
+        return Long.parseLong(String.valueOf(claims.get("tokenId")));
     }
 }

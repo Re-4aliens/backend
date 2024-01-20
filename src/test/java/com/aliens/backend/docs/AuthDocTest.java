@@ -4,6 +4,7 @@ import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
 import com.aliens.backend.auth.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -32,6 +33,7 @@ class AuthDocTest {
     private AuthService authService;
 
     @Test
+    @DisplayName("로그인 API 테스트")
     void login() throws Exception {
         final LoginRequest request = new LoginRequest("email","password");
         final AuthToken response = new AuthToken("accessToken", "refreshToken");
@@ -56,6 +58,7 @@ class AuthDocTest {
     }
 
     @Test
+    @DisplayName("로그아웃 API 테스트")
     void logout() throws Exception {
         final AuthToken request = new AuthToken("accessToken", "refreshToken");
         final String response = AuthService.LOGOUT_SUCCESS;
@@ -75,6 +78,7 @@ class AuthDocTest {
     }
 
     @Test
+    @DisplayName("토큰 재발급 API 테스트")
     void reissue() throws Exception {
         final AuthToken request = new AuthToken("expiredAccessToken", "refreshToken");
         final AuthToken response = new AuthToken("newAccessToken", "refreshToken");

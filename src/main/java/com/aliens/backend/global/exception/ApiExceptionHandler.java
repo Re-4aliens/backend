@@ -1,7 +1,6 @@
-package com.aliens.backend.global.config;
+package com.aliens.backend.global.exception;
 
 import com.aliens.backend.global.error.ErrorCode;
-import com.aliens.backend.global.exception.RestApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;

@@ -1,4 +1,4 @@
-package com.aliens.backend.global.config;
+package com.aliens.backend.global.exception;
 
 import com.aliens.backend.global.error.CommonError;
 import org.slf4j.Logger;

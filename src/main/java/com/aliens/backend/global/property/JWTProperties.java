@@ -11,13 +11,10 @@ public class JWTProperties {
     private String secretKey;
 
     @Value("${jwt.access_token_valid_time}")
-    private long accessTokenValidTime;
+    private Long accessTokenValidTime;
 
     @Value("${jwt.refresh_token_valid_time}")
-    private long refreshTokenValidTime ;
-
-    @Value("${jwt.chat_token_valid_time}")
-    private long chatTokenValidTime ;
+    private Long refreshTokenValidTime ;
 
 
     public byte[] getBytesSecretKey() {
@@ -32,8 +29,12 @@ public class JWTProperties {
         return accessTokenValidTime;
     }
 
-    public void setAccessTokenValidTime(Long time) {
+    public void setAccessTokenValidTime(final Long time) {
         accessTokenValidTime = time;
+    }
+
+    public void setRefreshTokenValidTime(final Long time) {
+        refreshTokenValidTime = time;
     }
 }
 

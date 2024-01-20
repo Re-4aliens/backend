@@ -2,6 +2,8 @@ package com.aliens.backend.auth.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.MemberRole;
+import com.aliens.backend.global.error.TokenError;
+import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -61,13 +63,18 @@ public class TokenProvider {
     }
 
     public LoginMember getLoginMemberFromToken(final String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getBytesSecretKey()))
-                .build()
-                .parseClaimsJws(removePrefix(token))
-                .getBody();
-
-        return new LoginMember(Long.parseLong(String.valueOf(claims.get("memberId"))), MemberRole.of((Integer)claims.get("role")));
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getBytesSecretKey()))
+                    .build()
+                    .parseClaimsJws(removePrefix(token))
+                    .getBody();
+            return new LoginMember(Long.parseLong(String.valueOf(claims.get("memberId"))), MemberRole.of((Integer)claims.get("role")));
+        } catch (ExpiredJwtException e) {
+            throw new RestApiException(TokenError.EXPIRED_ACCESS_TOKEN);
+        } catch (Exception e) {
+            throw new RestApiException(TokenError.INVALID_TOKEN);
+        }
     }
 
     private String removePrefix(String token) {
@@ -90,12 +97,18 @@ public class TokenProvider {
     }
 
     public Long getTokenIdFromToken(final String refreshToken) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getBytesSecretKey()))
-                .build()
-                .parseClaimsJws(removePrefix(refreshToken))
-                .getBody();
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getBytesSecretKey()))
+                    .build()
+                    .parseClaimsJws(removePrefix(refreshToken))
+                    .getBody();
 
-        return Long.parseLong(String.valueOf(claims.get("tokenId")));
+            return Long.parseLong(String.valueOf(claims.get("tokenId")));
+        }  catch (ExpiredJwtException e) {
+            throw new RestApiException(TokenError.EXPIRED_ACCESS_TOKEN);
+        } catch (Exception e) {
+            throw new RestApiException(TokenError.INVALID_TOKEN);
+        }
     }
 }

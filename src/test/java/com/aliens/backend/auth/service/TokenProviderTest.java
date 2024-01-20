@@ -2,6 +2,7 @@ package com.aliens.backend.auth.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.MemberRole;
+import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,6 +64,16 @@ class TokenProviderTest {
     }
 
     @Test
+    @DisplayName("토큰으로부터 로그인멤버 정보 추출 실패 - 올바르지 않은 토큰")
+    void getLoginMemberFromInvalidTokenFailTest() {
+        //Given
+        String InValidAccessToken = "올바르지 않은 토크";
+
+        //When & Then
+        Assertions.assertThrows(RestApiException.class, () -> tokenProvider.getLoginMemberFromToken(InValidAccessToken));
+    }
+
+    @Test
     @DisplayName("만료된 토큰 검증")
     void expiredTokenTest() {
         //Given
@@ -101,5 +112,27 @@ class TokenProviderTest {
 
         //Then
         Assertions.assertEquals(result, givenTokenId);
+    }
+
+    @Test
+    @DisplayName("리프레시토큰으로부터 토큰 아이디 추출 실패 - 올바르지 않은 토큰")
+    void getTokenIdFromInvalidTokenFailTest() {
+        //Given
+        String InvalidRefreshToken = "올바르지 않은 토큰";
+
+        //When & Then
+        Assertions.assertThrows(RestApiException.class, () -> tokenProvider.getTokenIdFromToken(InvalidRefreshToken));
+    }
+
+    @Test
+    @DisplayName("리프레시토큰으로부터 토큰 아이디 추출 실패 - 만료된 토큰")
+    void getTokenIdFromExpiredTokenFailTest() {
+        //Given
+        jwtProperties.setRefreshTokenValidTime(1L); //RefreshToken 유효기한 짧게변경
+        String expiredRefreshToken = tokenProvider.generateRefreshToken(givenLoginMember, givenTokenId);
+        jwtProperties.setRefreshTokenValidTime(2592000000L); //RefreshToken 유효기한 원상복구
+
+        //When & Then
+        Assertions.assertThrows(RestApiException.class, () -> tokenProvider.getTokenIdFromToken(expiredRefreshToken));
     }
 }

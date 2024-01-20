@@ -1,7 +1,7 @@
 package com.aliens.backend.auth.service;
 
 import com.aliens.backend.global.error.MemberError;
-import com.aliens.backend.global.exception.MemberException;
+import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.EncodeProperties;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +30,7 @@ public class PasswordEncoder {
 
             return Base64.getEncoder().encodeToString(hash);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new MemberException(MemberError.INVALID_PASSWORD);
+            throw new RestApiException(MemberError.INVALID_PASSWORD);
         }
     }
 }

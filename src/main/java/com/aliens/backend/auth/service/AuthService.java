@@ -8,8 +8,7 @@ import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.auth.domain.repository.TokenRepository;
 import com.aliens.backend.global.error.MemberError;
 import com.aliens.backend.global.error.TokenError;
-import com.aliens.backend.global.exception.MemberException;
-import com.aliens.backend.global.exception.TokenException;
+import com.aliens.backend.global.exception.RestApiException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,12 +40,12 @@ public class AuthService {
     }
 
     private Member getMemberEntityFromEmail(final String email) {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new MemberException(MemberError.NULL_MEMBER));
+        return memberRepository.findByEmail(email).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
     private void passwordCheck(final String password, final Member member) {
         if(!member.isCorrectPassword(passwordEncoder.encrypt(password))) {
-            throw new MemberException(MemberError.INCORRECT_PASSWORD);
+            throw new RestApiException(MemberError.INCORRECT_PASSWORD);
         }
     }
 
@@ -77,7 +76,7 @@ public class AuthService {
     }
 
     private Token getTokenEntity(final Long tokenId) {
-        return tokenRepository.findById(tokenId).orElseThrow(() -> new TokenException(TokenError.NULL_REFRESH_TOKEN));
+        return tokenRepository.findById(tokenId).orElseThrow(() -> new RestApiException(TokenError.NULL_REFRESH_TOKEN));
     }
 
     @Transactional
@@ -90,10 +89,10 @@ public class AuthService {
 
     private void tokenExpiredCheck(final AuthToken authToken) {
         if (tokenProvider.isNotExpiredToken(authToken.accessToken())) {
-            throw new TokenException(TokenError.NOT_ACCESS_TOKEN_FOR_REISSUE);
+            throw new RestApiException(TokenError.NOT_ACCESS_TOKEN_FOR_REISSUE);
         }
         if (!tokenProvider.isNotExpiredToken(authToken.refreshToken())) {
-            throw new TokenException(TokenError.EXPIRED_REFRESH_TOKEN);
+            throw new RestApiException(TokenError.EXPIRED_REFRESH_TOKEN);
         }
 
         dbTokenExpiredCheck(authToken.refreshToken());
@@ -104,7 +103,7 @@ public class AuthService {
         Token token = getTokenEntity(tokenId);
 
         if (token.isExpired()) {
-            throw new TokenException(TokenError.EXPIRED_REFRESH_TOKEN);
+            throw new RestApiException(TokenError.EXPIRED_REFRESH_TOKEN);
         }
         token.changeRecentLogin();
     }

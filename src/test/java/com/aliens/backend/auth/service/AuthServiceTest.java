@@ -5,8 +5,11 @@ import com.aliens.backend.auth.controller.dto.LoginRequest;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.auth.domain.MemberRole;
+import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -23,12 +26,16 @@ class AuthServiceTest {
     PasswordEncoder passwordEncoder;
 
     Member member;
+    String email;
+    String password;
+    LoginRequest loginRequest;
 
     @BeforeEach
     void setUp() {
-        member = new Member("tmp@example.com",
-                passwordEncoder.encrypt("tmpPassword"),
-                MemberRole.MEMBER);
+        email = "tmp@example.com";
+        password = "tmpPassword";
+        member = new Member(email, passwordEncoder.encrypt(password), MemberRole.MEMBER);
+        loginRequest = new LoginRequest(email, password);
         memberRepository.save(member);
     }
 
@@ -40,9 +47,6 @@ class AuthServiceTest {
     @Test
     @DisplayName("로그인 성공")
     void loginTest() {
-        //Given
-        LoginRequest loginRequest = new LoginRequest("tmp@example.com", "tmpPassword");
-
         //When
         AuthToken response = authService.login(loginRequest);
 
@@ -50,11 +54,23 @@ class AuthServiceTest {
         Assertions.assertNotNull(response);
     }
 
+    @DisplayName("로그인 실패 - 없는 회원, 비밀번호 불일치")
+    @ParameterizedTest
+    @CsvSource(value = {"noMember@example.com : password",
+                        "tmp@example.com : incorrectPassword"},
+                        delimiter = ':')
+    void loginFailTest(String givenEmail, String givenPassword) {
+        // Given
+        LoginRequest inValidLoginRequest = new LoginRequest(givenEmail, givenPassword);
+
+        // When & Then
+        Assertions.assertThrows(RestApiException.class, () -> authService.login(inValidLoginRequest));
+    }
+
     @Test
     @DisplayName("로그아웃 성공")
     void logoutTest() {
         //Given
-        LoginRequest loginRequest = new LoginRequest("tmp@example.com", "tmpPassword");
         AuthToken authToken = authService.login(loginRequest);
 
         //When
@@ -68,7 +84,6 @@ class AuthServiceTest {
     @DisplayName("토큰 재발급 성공")
     void reissueTest() {
         //Given
-        LoginRequest loginRequest = new LoginRequest("tmp@example.com", "tmpPassword");
         jwtProperties.setAccessTokenValidTime(1L); //AccessToken 유효기한 짧게변경
         AuthToken requestAuthToken = authService.login(loginRequest);
         jwtProperties.setAccessTokenValidTime(86400000L); //AccessToken 유효기한 원상복구
@@ -78,5 +93,27 @@ class AuthServiceTest {
 
         //Then
         Assertions.assertNotEquals(requestAuthToken, responseAuthToken);
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 실패 - 유효기간이 남은 AccessToken")
+    void reissueFailTestByAccessToken() {
+        //Given
+        AuthToken requestAuthToken = authService.login(loginRequest);
+
+        //When & Then
+        Assertions.assertThrows(RestApiException.class, () -> authService.reissue(requestAuthToken));
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 실패 - 만료된 RefreshToken")
+    void reissueFailTestByRefreshToken() {
+        //Given
+        jwtProperties.setRefreshTokenValidTime(1L); //RefreshToken 유효기한 짧게변경
+        AuthToken requestAuthToken = authService.login(loginRequest);
+        jwtProperties.setRefreshTokenValidTime(2592000000L); //RefreshToken 유효기한 원상복구
+
+        //When & Then
+        Assertions.assertThrows(RestApiException.class, () -> authService.reissue(requestAuthToken));
     }
 }

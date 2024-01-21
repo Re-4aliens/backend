@@ -67,7 +67,7 @@ class TokenProviderTest {
     @DisplayName("토큰으로부터 로그인멤버 정보 추출 실패 - 올바르지 않은 토큰")
     void getLoginMemberFromInvalidTokenFailTest() {
         //Given
-        String InValidAccessToken = "올바르지 않은 토크";
+        String InValidAccessToken = "올바르지 않은 토큰";
 
         //When & Then
         Assertions.assertThrows(RestApiException.class, () -> tokenProvider.getLoginMemberFromToken(InValidAccessToken));

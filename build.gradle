@@ -22,6 +22,11 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    // 파일 업로드
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    testImplementation 'io.findify:s3mock_2.13:0.2.6'
+
 }
 
 ext {

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class EncodeProperties {
+public class PasswordEncodeProperties {
 
     @Value("${encode.key}")
     private String secretKey;

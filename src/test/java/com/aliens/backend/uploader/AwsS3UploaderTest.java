@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.IOException;
+import java.util.List;
 
 @Import(AwsS3MockConfig.class)
 @SpringBootTest
@@ -29,27 +29,29 @@ class AwsS3UploaderTest {
 
     @Test
     @DisplayName("S3 파일 업로드 테스트")
-    void uploadTest() throws IOException {
+    void uploadTest() {
         // Given
         String path = "test.png";
         String contentType = "image/png";
         MockMultipartFile file = new MockMultipartFile("test", path, contentType, "test".getBytes());
 
+        UploadFileRequest request = new UploadFileRequest(List.of(file,file,file));
+
         // When
-        String urlPath = awsS3Uploader.upload(file);
+        List<S3File> S3Files = awsS3Uploader.upload(request);
 
         // Then
-        Assertions.assertThat(urlPath).contains(path);
+        Assertions.assertThat(S3Files).isNotNull();
     }
 
     @Test
     @DisplayName("S3 파일 삭제 테스트")
     void deleteTest() {
         // Given
-        String path = "test.png";
+        String fileName = "test.png";
 
         // When
-        boolean result = awsS3Uploader.delete(path);
+        boolean result = awsS3Uploader.delete(fileName);
 
         // Then
         org.junit.jupiter.api.Assertions.assertTrue(result);

@@ -1,0 +1,75 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== 이메일 인증
+
+[[resources-post-create]]
+=== 이메일 중복 검사 - 사용가능
+
+==== HTTP request
+
+include::{snippets}/email-duplicateCheck-success/http-request.adoc[]
+
+==== request-param 설명
+include::{snippets}/email-duplicateCheck-success/query-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/email-duplicateCheck-success/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/email-duplicateCheck-success/response-fields.adoc[]
+
+
+
+=== 이메일 중복 검사 - 사용불가
+
+==== HTTP request
+
+include::{snippets}/email-duplicateCheck-fail/http-request.adoc[]
+
+==== request-param 설명
+include::{snippets}/email-duplicateCheck-fail/query-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/email-duplicateCheck-fail/http-response.adoc[]
+
+
+
+
+=== 인증 이메일 전송
+
+==== HTTP request
+
+include::{snippets}/email-verification-send/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/email-verification-send/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/email-verification-send/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/email-verification-send/response-fields.adoc[]
+
+
+=== 인증 이메일 검증 요청
+
+==== HTTP request
+
+include::{snippets}/email-authentication-success/http-request.adoc[]
+
+==== request-param 설명
+include::{snippets}/email-authentication-success/query-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/email-authentication-success/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/email-authentication-success/response-fields.adoc[]

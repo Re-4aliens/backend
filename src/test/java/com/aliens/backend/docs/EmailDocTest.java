@@ -55,7 +55,7 @@ class EmailDocTest {
 
         this.mockMvc.perform(get("/members/exist").param("email", request))
                 .andExpect(status().isOk())
-                .andDo(document("email-duplicateCheck-fail",
+                .andDo(document("email-duplicateCheck-duplicate",
                         queryParameters(
                                 parameterWithName("email").description("검증 요청 이메일")
                         ),
@@ -75,7 +75,7 @@ class EmailDocTest {
 
         this.mockMvc.perform(get("/members/exist").param("email", request))
                 .andExpect(status().isOk())
-                .andDo(document("email-duplicateCheck-success",
+                .andDo(document("email-duplicateCheck-available",
                         queryParameters(
                                 parameterWithName("email").description("검증 요청 이메일")
                         ),

@@ -11,17 +11,17 @@
 
 ==== HTTP request
 
-include::{snippets}/email-duplicateCheck-success/http-request.adoc[]
+include::{snippets}/email-duplicateCheck-available/http-request.adoc[]
 
 ==== request-param 설명
-include::{snippets}/email-duplicateCheck-success/query-parameters.adoc[]
+include::{snippets}/email-duplicateCheck-available/query-parameters.adoc[]
 
 ==== HTTP response
 
-include::{snippets}/email-duplicateCheck-success/http-response.adoc[]
+include::{snippets}/email-duplicateCheck-available/http-response.adoc[]
 
 ==== response-body 설명
-include::{snippets}/email-duplicateCheck-success/response-fields.adoc[]
+include::{snippets}/email-duplicateCheck-available/response-fields.adoc[]
 
 
 
@@ -29,14 +29,14 @@ include::{snippets}/email-duplicateCheck-success/response-fields.adoc[]
 
 ==== HTTP request
 
-include::{snippets}/email-duplicateCheck-fail/http-request.adoc[]
+include::{snippets}/email-duplicateCheck-duplicate/http-request.adoc[]
 
 ==== request-param 설명
-include::{snippets}/email-duplicateCheck-fail/query-parameters.adoc[]
+include::{snippets}/email-duplicateCheck-duplicate/query-parameters.adoc[]
 
 ==== HTTP response
 
-include::{snippets}/email-duplicateCheck-fail/http-response.adoc[]
+include::{snippets}/email-duplicateCheck-duplicate/http-response.adoc[]
 
 
 

@@ -25,17 +25,17 @@ jobs:
           distribution: 'temurin'
 
       # 설정 파일 추가
-      - name: make application-prod.yml
+      - name: make application-secret.yml
         run: |
           cd ./src/main/resources
-          touch ./application-prod.yml
-          echo "${{ secrets.APPLICATION_PROD }}" > ./application-prod.yml
+          touch ./application-secret.yml
+          echo "${{ secrets.APPLICATION_SECRET }}" > ./application-secret.yml
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: ./gradlew build
 
       - name: Docker build
         run: |

@@ -20,10 +20,6 @@ public class EmailSender {
         this.javaMailSender = javaMailSender;
     }
 
-    public void setJavaMailSender(final JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
-
     public void sendAuthenticationEmail(final String email, final String emailToken) {
         SimpleMailMessage mailMessage = createAuthenticationMail(email, emailToken);
         javaMailSender.send(mailMessage);

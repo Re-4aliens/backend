@@ -43,6 +43,9 @@ dependencies {
     //AWS S3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     testImplementation 'io.findify:s3mock_2.13:0.2.6'
+
+    //SMTP
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 ext {

@@ -1,4 +1,4 @@
-package com.aliens.backend.encode;
+package com.aliens.backend.global.property;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class EncoderProperties {
+public class SymmetricEncoderProperties {
 
     @Value("${encode.symmetric.key}")
     private String secretKey;

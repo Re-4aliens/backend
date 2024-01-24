@@ -37,6 +37,8 @@ dependencies {
     //MYSQL
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    //SMTP
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 ext {

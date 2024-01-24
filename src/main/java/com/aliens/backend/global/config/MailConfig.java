@@ -30,10 +30,10 @@ public class MailConfig {
 
     private Properties getMailProperties() {
         Properties prop = new Properties();
-        prop.setProperty("mail.transport.protocol", "smtp");
-        prop.setProperty("mail.smtp.auth", "true");
-        prop.setProperty("mail.smtp.starttls.enable", "true");
-        prop.setProperty("mail.debug", "true");
+        prop.setProperty("mail.transport.protocol", emailProperties.getProtocol());
+        prop.setProperty("mail.smtp.auth", emailProperties.getAuth());
+        prop.setProperty("mail.smtp.starttls.enable", emailProperties.getStarttls());
+        prop.setProperty("mail.debug",emailProperties.getDebug());
         return prop;
     }
 }

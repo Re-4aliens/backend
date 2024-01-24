@@ -22,6 +22,34 @@ public class EmailProperties {
     @Value("${smtp.port}")
     private int port;
 
+    @Value("${smtp.protocol}")
+    private String protocol;
+
+    @Value("${smtp.auth}")
+    private String auth;
+
+    @Value("${smtp.starttls}")
+    private String starttls;
+
+    @Value("${smtp.debug}")
+    private String debug;
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public String getDebug() {
+        return debug;
+    }
+
+    public String getStarttls() {
+        return starttls;
+    }
+
     public String getDomainUrl() {
         return domainUrl;
     }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -16,21 +17,22 @@ import static org.mockito.Mockito.verify;
 class EmailSenderTest {
 
     @Autowired
-    EmailSender emailSender;
+    private EmailSender emailSender;
+
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @Test
     @DisplayName("인증 이메일 전송 테스트")
     void sendAuthenticationEmailTest() {
-        //Given
+        // Given
         String email = "tmp@example.com";
         String token = "1";
-        JavaMailSender javaMailSender = mock(JavaMailSender.class);
-        emailSender.setJavaMailSender(javaMailSender);
 
-        //When
+        // When
         emailSender.sendAuthenticationEmail(email, token);
 
-        //Then
+        // Then
         verify(javaMailSender).send(ArgumentMatchers.any(SimpleMailMessage.class));
     }
 }

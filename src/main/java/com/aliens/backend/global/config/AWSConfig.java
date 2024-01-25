@@ -1,5 +1,6 @@
-package com.aliens.backend.uploader;
+package com.aliens.backend.global.config;
 
+import com.aliens.backend.global.property.S3UploadProperties;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;

@@ -1,5 +1,6 @@
 package com.aliens.backend.uploader;
 
+import com.aliens.backend.global.property.S3UploadProperties;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.http.MediaType;

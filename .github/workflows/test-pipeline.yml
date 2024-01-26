@@ -1,0 +1,25 @@
+name: test
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: JDK 17 설치
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle 권한 허용
+        run: chmod +x gradlew
+      - name: PR 및 PUSH 전, 테스트 확인
+        run: ./gradlew test

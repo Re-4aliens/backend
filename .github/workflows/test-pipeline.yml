@@ -19,6 +19,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: secret 설정 파일(yml) 추가
+        run: |
+          cd ./src/main/resources
+          touch ./application-secret.yml
+                echo "${{ secrets.APPLICATION_SECRET }}" > ./application-secret.yml
+
       - name: Gradle 권한 허용
         run: chmod +x gradlew
       - name: PR 및 PUSH 전, 테스트 확인

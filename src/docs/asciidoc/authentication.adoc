@@ -1,0 +1,58 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== Authentication
+
+[[resources-post-create]]
+=== 로그인 시도
+
+==== HTTP request
+
+include::{snippets}/auth-login/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/auth-login/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/auth-login/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/auth-login/response-fields.adoc[]
+
+
+
+=== 로그아웃
+
+==== HTTP request
+
+include::{snippets}/auth-logout/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/auth-logout/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/auth-logout/http-response.adoc[]
+
+
+
+
+=== 토큰재발급
+
+==== HTTP request
+
+include::{snippets}/auth-reissue/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/auth-reissue/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/auth-reissue/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/auth-reissue/response-fields.adoc[]

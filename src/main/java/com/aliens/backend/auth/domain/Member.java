@@ -6,7 +6,7 @@ import com.aliens.backend.member.domain.Image;
 import com.aliens.backend.member.domain.MemberInfo;
 import com.aliens.backend.member.domain.MemberStatus;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
-import com.aliens.backend.uploader.S3File;
+import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

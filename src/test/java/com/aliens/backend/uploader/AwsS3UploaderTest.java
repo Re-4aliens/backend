@@ -1,5 +1,6 @@
 package com.aliens.backend.uploader;
 
+import com.aliens.backend.uploader.dto.S3File;
 import io.findify.s3mock.S3Mock;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

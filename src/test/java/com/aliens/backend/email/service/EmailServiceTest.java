@@ -3,7 +3,7 @@ package com.aliens.backend.email.service;
 import com.aliens.backend.email.controller.response.EmailResponse;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
-import com.aliens.backend.global.encode.SymmetricKeyEncoder;
+import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

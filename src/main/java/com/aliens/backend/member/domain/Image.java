@@ -1,6 +1,6 @@
 package com.aliens.backend.member.domain;
 
-import com.aliens.backend.uploader.S3File;
+import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
 
 @Entity

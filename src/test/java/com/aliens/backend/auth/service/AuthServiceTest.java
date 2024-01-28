@@ -9,7 +9,7 @@ import com.aliens.backend.global.property.JWTProperties;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
 import com.aliens.backend.member.domain.Image;
 import com.aliens.backend.member.domain.repository.ImageRepository;
-import com.aliens.backend.uploader.S3File;
+import com.aliens.backend.uploader.dto.S3File;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

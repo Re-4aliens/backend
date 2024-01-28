@@ -93,6 +93,7 @@ class TokenProviderTest {
     @DisplayName("기간이 유효한 토큰 검증")
     void notExpiredTokenTest() {
         //Given
+        jwtProperties.setAccessTokenValidTime(86400000L); //AccessToken 유효기한 원상복구
         String accessToken = tokenProvider.generateAccessToken(givenLoginMember);
 
         //When
@@ -131,9 +132,11 @@ class TokenProviderTest {
         //Given
         jwtProperties.setRefreshTokenValidTime(1L); //RefreshToken 유효기한 짧게변경
         String expiredRefreshToken = tokenProvider.generateRefreshToken(givenLoginMember, givenTokenId);
-        jwtProperties.setRefreshTokenValidTime(2592000000L); //RefreshToken 유효기한 원상복구
 
         //When & Then
         Assertions.assertThrows(RestApiException.class, () -> tokenProvider.getTokenIdFromToken(expiredRefreshToken));
+
+        //CleanUp
+        jwtProperties.setRefreshTokenValidTime(2592000000L); //RefreshToken 유효기한 원상복구
     }
 }

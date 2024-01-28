@@ -46,6 +46,9 @@ dependencies {
 
     //SMTP
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    //FCM
+    implementation 'com.google.firebase:firebase-admin:9.1.1'
 }
 
 ext {

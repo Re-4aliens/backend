@@ -6,6 +6,8 @@ import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
 import com.aliens.backend.global.encode.SymmetricKeyEncoder;
 import com.aliens.backend.global.error.EmailError;
 import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.member.controller.dto.event.TemporaryPasswordEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,5 +59,10 @@ public class EmailService {
 
     private EmailAuthentication getEmailAuthentication(final Long emailEntityId) {
         return emailAuthenticationRepository.findById(emailEntityId).orElseThrow(() -> new RestApiException(EmailError.NULL_EMAIL));
+    }
+
+    @EventListener
+    public void listen(TemporaryPasswordEvent event) {
+        emailSender.sendTemporaryPassword(event);
     }
 }

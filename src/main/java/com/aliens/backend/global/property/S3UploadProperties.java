@@ -18,6 +18,12 @@ public class S3UploadProperties {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    @Value("${cloud.aws.default.file-name}")
+    private String fileName;
+
+    @Value("${cloud.aws.default.file-url}")
+    private String fileUrl;
+
     public String getBucket() {
         return bucket;
     }
@@ -32,5 +38,13 @@ public class S3UploadProperties {
 
     public String getRegion() {
         return region;
+    }
+
+    public String getDefaultFileName() {
+        return fileName;
+    }
+
+    public String getDefaultFileURL() {
+        return fileUrl;
     }
 }

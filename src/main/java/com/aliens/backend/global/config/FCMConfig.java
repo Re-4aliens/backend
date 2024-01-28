@@ -2,6 +2,7 @@ package com.aliens.backend.global.config;
 
 import com.aliens.backend.global.error.CommonError;
 import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.global.property.FCMProperties;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -14,14 +15,18 @@ import java.io.IOException;
 @Configuration
 public class FCMConfig{
 
-    private static final String path = "firebase/firebase_service_key.json";
+    private final FCMProperties fcmProperties;
+
+    public FCMConfig(final FCMProperties fcmProperties) {
+        this.fcmProperties = fcmProperties;
+    }
 
     @PostConstruct
     public void init() {
         try {FirebaseOptions options = FirebaseOptions.builder()
                             .setCredentials(GoogleCredentials.
                                     fromStream(
-                                            new ClassPathResource(path).getInputStream()
+                                            new ClassPathResource(fcmProperties.getLocationOfFcmJson()).getInputStream()
                                     )
                             )
                     .build();

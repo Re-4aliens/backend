@@ -3,6 +3,7 @@ package com.aliens.backend.event;
 import com.aliens.backend.notification.FcmSender;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +30,7 @@ class EventPublisherTest {
     String givenToken = "token";
 
     @Test
+    @DisplayName("단일 메시지 이벤트 발행 및 전송 ")
     void listenSingleMessageRequestTest() {
         Message givenSingleMessage = Message.builder()
                 .putData("type", givenType)
@@ -42,6 +44,7 @@ class EventPublisherTest {
     }
 
     @Test
+    @DisplayName("다수 메시지 이벤트 발행 및 전송 ")
     void listenMultiMessageRequestTest() {
         MulticastMessage givenSingleMessage = MulticastMessage.builder()
                 .putData("type", givenType)

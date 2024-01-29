@@ -18,33 +18,39 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - name: JDK 17 설치
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
       # 설정 파일 추가
-      - name: make application-secret.yml
+      - name: application-secret.yml 구성
         run: |
           cd ./src/main/resources
           touch ./application-secret.yml
           echo "${{ secrets.APPLICATION_SECRET }}" > ./application-secret.yml
 
-      - name: Grant execute permission for gradlew
+      - name: firebase_service_key.json 구성
+        run: |
+          cd ./src/main/resources
+          touch ./firebase_service_key.json
+          echo "${{ secrets.FCM_KEY }}" > ./firebase_service_key.json
+
+      - name: gradlew 실행 권한 부여
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Gradle 빌드
+        run: ./gradlew build -x test
 
-      - name: Docker build
+      - name: Docker 이미지 파일 PUSH
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build --platform linux/arm64/v8 -t app .
           docker tag app ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
 
-      - name: Deploy
+      - name: AWS 배포
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }} # EC2 인스턴스 퍼블릭 DNS

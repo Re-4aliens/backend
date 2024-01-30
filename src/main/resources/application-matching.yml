@@ -10,6 +10,8 @@ matching:
       hours: 20
     day-of-week:
       if:
+        default:
+          hours: 48
         monday:
           hours: 52
         thursday:

@@ -1,0 +1,16 @@
+matching:
+  round:
+    update-date: 0 0 0 * * MON,THU
+    start: 0 0 18 ? * MON,THU"
+  request:
+    time:
+      hours: 18
+  valid:
+    time:
+      hours: 20
+    day-of-week:
+      if:
+        monday:
+          hours: 52
+        thursday:
+          hours: 76

@@ -6,11 +6,13 @@ import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingRequest;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingRound;
+import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.model.Language;
 import com.aliens.backend.mathcing.validator.MatchingApplicationValidator;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static com.aliens.backend.mathcing.controller.dto.request.MatchingRequest.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 
@@ -47,7 +50,6 @@ public class MatchingApplicationServiceTest {
     MatchingRound currentRound;
 
     @BeforeEach
-    @Transactional
     void setUp() {
         LocalDateTime monday = LocalDateTime.of(2024, 1, 29, 0, 0);
         matchingRoundRepository.save(MatchingRound.of(monday, matchingTimeProperties));
@@ -59,11 +61,17 @@ public class MatchingApplicationServiceTest {
 
     @Test
     @DisplayName("매칭 신청 단위 테스트")
+    @Transactional
     void applyMatchTest() {
         given(matchingApplicationValidator.canApplyMatching(currentRound)).willReturn(true);
 
         matchingApplicationService.saveParticipant(matchingApplicationRequest);
 
-
+        MatchingApplication result =
+                matchingApplicationRepository.findById(
+                        new MatchingApplicationId(currentRound, matchingApplicationRequest.getMemberId()))
+                        .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
+        assertThat(result.getMatchingApplicationId().getMemberId())
+                .isEqualTo(matchingApplicationRequest.getMemberId());
     }
 }

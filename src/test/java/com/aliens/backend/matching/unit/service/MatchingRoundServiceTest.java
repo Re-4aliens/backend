@@ -1,4 +1,4 @@
-package com.aliens.backend.matching.service;
+package com.aliens.backend.matching.unit.service;
 
 import com.aliens.backend.global.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
@@ -27,7 +27,8 @@ public class MatchingRoundServiceTest {
     @DisplayName("매주 월, 목 매칭 회차 업데이트")
     @Transactional
     void saveMatchRoundTest() {
-        MatchingRound result = saveMatchRound();
+        LocalDateTime monday = LocalDateTime.of(2024, 1, 29, 0, 0);
+        MatchingRound result = matchingRoundRepository.save(MatchingRound.of(monday, matchingTimeProperties));
 
         assertThat(result.getRound()).isNotNull();
     }
@@ -36,16 +37,12 @@ public class MatchingRoundServiceTest {
     @DisplayName("현재 매칭 회차 조회")
     @Transactional
     void getCurrentRound() {
-        saveMatchRound();
+        LocalDateTime monday = LocalDateTime.of(2024, 1, 29, 0, 0);
+        matchingRoundRepository.save(MatchingRound.of(monday, matchingTimeProperties));
 
         MatchingRound result = matchingRoundRepository.findCurrentRound()
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
 
         assertThat(result.getRound()).isNotNull();
-    }
-
-    private MatchingRound saveMatchRound() {
-        LocalDateTime monday = LocalDateTime.of(2024, 1, 29, 0, 0);
-        return matchingRoundRepository.save(MatchingRound.of(monday, matchingTimeProperties));
     }
 }

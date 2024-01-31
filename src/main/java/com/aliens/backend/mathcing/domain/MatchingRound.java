@@ -57,7 +57,7 @@ public class MatchingRound {
         this.matchingValidEndTime = matchingValidEndTime;
     }
 
-    public static MatchingRound of(LocalDateTime today, MatchingTimeProperties matchingTimeProperties) {
+    public static MatchingRound of(final LocalDateTime today, final MatchingTimeProperties matchingTimeProperties) {
         DayOfWeek dayOfWeek = today.getDayOfWeek();
 
         LocalDateTime matchingRequestStartTime = today.withHour(0).withMinute(0).withSecond(0).withNano(0);

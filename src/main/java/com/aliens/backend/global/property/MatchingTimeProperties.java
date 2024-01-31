@@ -32,7 +32,7 @@ public class MatchingTimeProperties {
         return Integer.parseInt(matchingValidBeginHours);
     }
 
-    public Long getMatchingValidHours(DayOfWeek dayOfWeek) {
+    public Long getMatchingValidHours(final DayOfWeek dayOfWeek) {
         if (dayOfWeek.equals(DayOfWeek.MONDAY)) {
             return Long.parseLong(mondayMatchingValidHours);
         }

@@ -25,8 +25,8 @@ public class MatchingController {
     }
 
     @PostMapping("/applications")
-    public ResponseEntity<?> applyMatch(@Login LoginMember loginMember,
-                                        @RequestBody MatchingApplicationInput matchingApplicationInput) {
+    public ResponseEntity<?> applyMatch(final @Login LoginMember loginMember,
+                                        final @RequestBody MatchingApplicationInput matchingApplicationInput) {
         matchingApplicationService.saveParticipant(matchingApplicationInput.toRequest(loginMember.memberId()));
         return SuccessResponseWithoutResult.toResponseEntity(MatchingSuccessCode.APPLY_MATCHING_SUCCESS);
     }

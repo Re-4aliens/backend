@@ -110,6 +110,15 @@ public class MatchingApplicationServiceTest {
     }
 
     @Test
+    @DisplayName("매칭 신청하지 않은 사용자 조회 테스트")
+    @Transactional
+    void getMatchingApplicationIfNotApplied() {
+        // when & then
+        assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(matchingApplicationRequest.memberId()))
+                .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getMessage());
+    }
+
+    @Test
     @DisplayName("매칭 신청 취소 단위 테스트")
     @Transactional
     void deleteMatchingApplicationTest() {

@@ -4,8 +4,9 @@ import org.springframework.http.HttpStatus;
 
 public enum MatchingError implements ErrorCode {
     NOT_FOUND_MATCHING_ROUND(HttpStatus.NOT_FOUND, "MA1", "매칭 회차를 찾을 수 없음"),
-    NOT_VALID_MATCHING_TIME(HttpStatus.BAD_REQUEST, "MA2", "매칭 시간이 아님"),
+    NOT_VALID_MATCHING_RECEPTION_TIME(HttpStatus.BAD_REQUEST, "MA2", "매칭 접수 시간이 아님"),
     NOT_FOUND_MATCHING_APPLICATION_INFO(HttpStatus.NOT_FOUND, "MA3", "매칭 신청 정보 찾을 수 없음"),
+
 
     ;
 

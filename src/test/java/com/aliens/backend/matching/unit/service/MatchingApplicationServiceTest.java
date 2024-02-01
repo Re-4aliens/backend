@@ -52,12 +52,13 @@ public class MatchingApplicationServiceTest {
     MatchingApplicationRequest matchingApplicationRequest;
     MatchingRound currentRound;
 
+    final LocalDateTime VALID_TIME = LocalDateTime.of(2024, 1, 29, 10, 0);
+    final LocalDateTime INVALID_TIME = LocalDateTime.of(2024, 1, 29, 19, 0);
+
     @BeforeEach
     void setUp() {
-        LocalDateTime testTime = LocalDateTime.of(2024, 1, 29, 0, 0);
-
-        matchingRoundRepository.save(MatchingRound.of(testTime, matchingTimeProperties));
-
+        LocalDateTime roundBeginTime = LocalDateTime.of(2024, 1, 29, 0, 0);
+        matchingRoundRepository.save(MatchingRound.of(roundBeginTime, matchingTimeProperties));
         matchingApplicationRequest = new MatchingApplicationRequest(1L, Language.KOREAN, Language.ENGLISH);
         currentRound = matchingRoundRepository.findCurrentRound()
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
@@ -68,9 +69,7 @@ public class MatchingApplicationServiceTest {
     @Transactional
     void applyMatchTest() {
         // given
-        LocalDateTime validTime = LocalDateTime.of(2024, 1, 29, 10, 0);
-        mockTime(validTime);
-        given(matchingApplicationValidator.canApplyMatch(currentRound, validTime)).willCallRealMethod();
+        mockTime(VALID_TIME);
 
         // when
         matchingApplicationService.saveParticipant(matchingApplicationRequest);
@@ -86,14 +85,12 @@ public class MatchingApplicationServiceTest {
     @Transactional
     void applyMatchIfNotValidTime() {
         // given
-        LocalDateTime invalidTime = LocalDateTime.of(2024, 1, 29, 19, 0);
-        mockTime(invalidTime);
-        given(matchingApplicationValidator.canApplyMatch(currentRound, invalidTime)).willCallRealMethod();
+        mockTime(INVALID_TIME);
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.saveParticipant(matchingApplicationRequest))
                 .isInstanceOf(RestApiException.class)
-                .hasMessage(MatchingError.NOT_VALID_MATCHING_TIME.getMessage());
+                .hasMessage(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME.getMessage());
     }
 
 
@@ -101,18 +98,59 @@ public class MatchingApplicationServiceTest {
     @DisplayName("매칭 신청 조회 단위 테스트")
     @Transactional
     void getMatchingApplicationTest() {
+        // given
         applyToMatch();
 
+        //when
         MatchingApplicationResponse result = matchingApplicationService
                 .findMatchingApplication(matchingApplicationRequest.memberId());
 
+        // then
         assertThat(result.memberId()).isEqualTo(matchingApplicationRequest.memberId());
     }
 
+    @Test
+    @DisplayName("매칭 신청 취소 단위 테스트")
+    @Transactional
+    void deleteMatchingApplicationTest() {
+        // given
+        applyToMatch();
+        mockTime(VALID_TIME);
+
+        // when
+        matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId());
+
+        // then
+        assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(matchingApplicationRequest.memberId()))
+                .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getMessage());
+    }
+
+    @Test
+    @DisplayName("지정 시간 외 매칭 취소 신청시, 에러 발생")
+    @Transactional
+    void deleteMatchIfNotValidTime() {
+        // given
+        applyToMatch();
+        mockTime(INVALID_TIME);
+
+        // when & then
+        assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId()))
+                .hasMessage(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME.getMessage());
+    }
+
+    @Test
+    @DisplayName("매칭을 신청하지 않은 사용자 매칭 삭제 요청 테스트")
+    @Transactional
+    void deleteMatchIfNotApplied() {
+        // given
+        mockTime(VALID_TIME);
+
+        assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId()))
+                .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getMessage());
+    }
+
     private void applyToMatch() {
-        LocalDateTime validTime = LocalDateTime.of(2024, 1, 29, 10, 0);
-        mockTime(validTime);
-        given(matchingApplicationValidator.canApplyMatch(currentRound, validTime)).willReturn(true);
+        mockTime(VALID_TIME);
         matchingApplicationService.saveParticipant(matchingApplicationRequest);
     }
 
@@ -120,5 +158,7 @@ public class MatchingApplicationServiceTest {
         Clock fixedClock = Clock.fixed(time.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
         when(clock.instant()).thenReturn(fixedClock.instant());
         when(clock.getZone()).thenReturn(fixedClock.getZone());
+
+        doCallRealMethod().when(matchingApplicationValidator).checkReceptionTime(currentRound, time);
     }
 }

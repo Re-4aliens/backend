@@ -34,4 +34,10 @@ public class MatchingController {
         return SuccessResponse.toResponseEntity(MatchingSuccessCode.GET_MATCHING_APPLICATION_STATUS_SUCCESS,
                 matchingApplicationService.findMatchingApplication(loginMember.memberId()));
     }
+
+    @DeleteMapping("/applications")
+    public ResponseEntity<?> cancelMatchingApplication(final @Login LoginMember loginMember) {
+        matchingApplicationService.deleteMatchingApplication(loginMember.memberId());
+        return SuccessResponseWithoutResult.toResponseEntity(MatchingSuccessCode.CANCEL_MATCHING_APPLICATION_SUCCESS);
+    }
 }

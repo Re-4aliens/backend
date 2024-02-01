@@ -8,9 +8,6 @@ import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.validator.MatchingApplicationValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,18 +37,28 @@ public class MatchingApplicationService {
     @Transactional
     public void saveParticipant(final MatchingApplicationRequest matchingApplicationRequest) {
         MatchingRound currentRound = getCurrentRound();
-        if (matchingApplicationValidator.canApplyMatch(currentRound, LocalDateTime.now(clock))) {
-            matchingApplicationRepository.save(matchingApplicationRequest.toEntity(currentRound));
-        }
+        matchingApplicationValidator.checkReceptionTime(currentRound, LocalDateTime.now(clock));
+        matchingApplicationRepository.save(matchingApplicationRequest.toEntity(currentRound));
     }
 
     @Transactional(readOnly = true)
     public MatchingApplicationResponse findMatchingApplication(final Long memberId) {
         MatchingRound currentRound = getCurrentRound();
+        matchingApplicationValidator.checkReceptionTime(currentRound, LocalDateTime.now(clock));
         MatchingApplication matchingApplication =
                 matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, memberId))
                 .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
         return MatchingApplicationResponse.of(matchingApplication);
+    }
+
+    @Transactional
+    public void deleteMatchingApplication(final Long memberId) {
+        MatchingRound currentRound = getCurrentRound();
+        matchingApplicationValidator.checkReceptionTime(currentRound, LocalDateTime.now(clock));
+        MatchingApplication matchingApplication =
+                matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, memberId))
+                        .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
+        matchingApplicationRepository.delete(matchingApplication);
     }
 
     private MatchingRound getCurrentRound() {

@@ -44,7 +44,6 @@ public class MatchingApplicationService {
     @Transactional(readOnly = true)
     public MatchingApplicationResponse findMatchingApplication(final Long memberId) {
         MatchingRound currentRound = getCurrentRound();
-        matchingApplicationValidator.checkReceptionTime(currentRound, LocalDateTime.now(clock));
         MatchingApplication matchingApplication =
                 matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, memberId))
                 .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));

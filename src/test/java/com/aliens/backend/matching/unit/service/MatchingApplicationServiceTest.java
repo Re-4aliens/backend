@@ -69,7 +69,7 @@ public class MatchingApplicationServiceTest {
 
         MatchingApplication result =
                 matchingApplicationRepository.findById(
-                                new MatchingApplicationId(currentRound, matchingApplicationRequest.memberId()))
+                        MatchingApplicationId.of(currentRound, matchingApplicationRequest.memberId()))
                         .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
         assertThat(result.getMatchingApplicationId().getMemberId())
                 .isEqualTo(matchingApplicationRequest.memberId());

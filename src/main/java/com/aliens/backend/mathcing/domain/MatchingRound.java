@@ -47,7 +47,7 @@ public class MatchingRound {
         return matchingValidEndTime;
     }
 
-    public MatchingRound(final LocalDateTime matchingRequestStartTime,
+    private MatchingRound(final LocalDateTime matchingRequestStartTime,
                          final LocalDateTime matchingRequestEndTime,
                          final LocalDateTime matchingValidStartTime,
                          final LocalDateTime matchingValidEndTime) {

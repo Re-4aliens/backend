@@ -24,7 +24,7 @@ public class MatchingApplication {
     protected MatchingApplication() {
     }
 
-    public MatchingApplication(final MatchingApplicationId matchingApplicationId,
+    private MatchingApplication(final MatchingApplicationId matchingApplicationId,
                                final Language firstPreferLanguage,
                                final Language secondPreferLanguage) {
         this.matchingApplicationId = matchingApplicationId;
@@ -48,7 +48,7 @@ public class MatchingApplication {
                                          final Long memberId,
                                          final Language firstPreferLanguage, final Language secondPreferLanguage) {
         return new MatchingApplication(
-                new MatchingApplicationId(matchingRound, memberId),
+                MatchingApplicationId.of(matchingRound, memberId),
                 firstPreferLanguage, secondPreferLanguage);
     }
 

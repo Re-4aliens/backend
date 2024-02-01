@@ -17,7 +17,7 @@ public class MatchingApplicationId implements Serializable {
     protected MatchingApplicationId() {
     }
 
-    public MatchingApplicationId(final MatchingRound matchingRound, final Long memberId) {
+    private MatchingApplicationId(final MatchingRound matchingRound, final Long memberId) {
         this.matchingRound = matchingRound;
         this.memberId = memberId;
     }
@@ -28,6 +28,10 @@ public class MatchingApplicationId implements Serializable {
 
     public Long getMemberId() {
         return memberId;
+    }
+
+    public static MatchingApplicationId of(final MatchingRound matchingRound, final Long memberId) {
+        return new MatchingApplicationId(matchingRound, memberId);
     }
 
     @Override

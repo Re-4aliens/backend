@@ -3,14 +3,12 @@ package com.aliens.backend.mathcing.controller;
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.global.config.resolver.Login;
 import com.aliens.backend.global.success.MatchingSuccessCode;
+import com.aliens.backend.global.success.SuccessResponse;
 import com.aliens.backend.global.success.SuccessResponseWithoutResult;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.aliens.backend.mathcing.controller.dto.input.MatchingInput.*;
 
@@ -29,5 +27,11 @@ public class MatchingController {
                                         final @RequestBody MatchingApplicationInput matchingApplicationInput) {
         matchingApplicationService.saveParticipant(matchingApplicationInput.toRequest(loginMember.memberId()));
         return SuccessResponseWithoutResult.toResponseEntity(MatchingSuccessCode.APPLY_MATCHING_SUCCESS);
+    }
+
+    @GetMapping("/applications")
+    public ResponseEntity<?> getMatchingApplication(final @Login LoginMember loginMember) {
+        return SuccessResponse.toResponseEntity(MatchingSuccessCode.GET_MATCHING_APPLICATION_STATUS_SUCCESS,
+                matchingApplicationService.findMatchingApplication(loginMember.memberId()));
     }
 }

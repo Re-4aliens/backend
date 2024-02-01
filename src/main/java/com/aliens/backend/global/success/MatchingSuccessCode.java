@@ -2,10 +2,10 @@ package com.aliens.backend.global.success;
 
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.*;
-
 public enum MatchingSuccessCode implements SuccessCode {
-    APPLY_MATCHING_SUCCESS(CREATED, "MA001", "매칭 신청 성공"),
+    APPLY_MATCHING_SUCCESS(HttpStatus.CREATED, "MA001", "매칭 신청 성공"),
+    GET_MATCHING_APPLICATION_STATUS_SUCCESS(HttpStatus.OK, "MA002", "매칭 신청 정보 조회 성공"),
+
     ;
 
     private final HttpStatus httpStatus;

@@ -3,7 +3,6 @@ package com.aliens.backend.matching.unit.service;
 import com.aliens.backend.global.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
-import com.aliens.backend.mathcing.controller.dto.request.MatchingRequest;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
@@ -12,11 +11,9 @@ import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.model.Language;
 import com.aliens.backend.mathcing.validator.MatchingApplicationValidator;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static com.aliens.backend.mathcing.controller.dto.request.MatchingRequest.*;
+import static com.aliens.backend.mathcing.controller.dto.response.MatchingResponse.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -63,7 +61,7 @@ public class MatchingApplicationServiceTest {
     @DisplayName("매칭 신청 단위 테스트")
     @Transactional
     void applyMatchTest() {
-        given(matchingApplicationValidator.canApplyMatching(currentRound)).willReturn(true);
+        given(matchingApplicationValidator.canApplyMatching(any())).willReturn(true);
 
         matchingApplicationService.saveParticipant(matchingApplicationRequest);
 
@@ -77,8 +75,18 @@ public class MatchingApplicationServiceTest {
 
     @Test
     @DisplayName("매칭 신청 조회 테스트")
-    @Transactional(readOnly = true)
+    @Transactional
     void getMatchingApplicationTest() {
+        applyToMatch();
 
+        MatchingApplicationResponse result = matchingApplicationService
+                .findMatchingApplication(matchingApplicationRequest.memberId());
+
+        assertThat(result.memberId()).isEqualTo(matchingApplicationRequest.memberId());
+    }
+
+    private void applyToMatch() {
+        given(matchingApplicationValidator.canApplyMatching(any())).willReturn(true);
+        matchingApplicationService.saveParticipant(matchingApplicationRequest);
     }
 }

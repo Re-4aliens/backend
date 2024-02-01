@@ -7,22 +7,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 @Service
 public class MatchingRoundService {
-    private MatchingRoundRepository matchingRoundRepository;
-    private MatchingTimeProperties matchingTimeProperties;
+    private final MatchingRoundRepository matchingRoundRepository;
+    private final MatchingTimeProperties matchingTimeProperties;
+    private final Clock clock;
 
-    @Autowired
     public MatchingRoundService(final MatchingRoundRepository matchingRoundRepository,
-                                final MatchingTimeProperties matchingTimeProperties) {
+                                final MatchingTimeProperties matchingTimeProperties,
+                                final Clock clock) {
         this.matchingRoundRepository = matchingRoundRepository;
         this.matchingTimeProperties = matchingTimeProperties;
+        this.clock = clock;
     }
 
     @Scheduled(cron = "${matching.round.update-date}")
     private void saveMatchRound() {
-        matchingRoundRepository.save(MatchingRound.of(LocalDateTime.now(), matchingTimeProperties));
+        matchingRoundRepository.save(MatchingRound.of(LocalDateTime.now(clock), matchingTimeProperties));
     }
 }

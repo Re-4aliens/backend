@@ -56,7 +56,7 @@ public class MatchingApplicationServiceTest {
 
         matchingApplicationRequest = new MatchingApplicationRequest(1L, Language.KOREAN, Language.ENGLISH);
         currentRound = matchingRoundRepository.findCurrentRound()
-                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 
     @Test
@@ -69,9 +69,16 @@ public class MatchingApplicationServiceTest {
 
         MatchingApplication result =
                 matchingApplicationRepository.findById(
-                        new MatchingApplicationId(currentRound, matchingApplicationRequest.getMemberId()))
-                        .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
+                                new MatchingApplicationId(currentRound, matchingApplicationRequest.memberId()))
+                        .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
         assertThat(result.getMatchingApplicationId().getMemberId())
-                .isEqualTo(matchingApplicationRequest.getMemberId());
+                .isEqualTo(matchingApplicationRequest.memberId());
+    }
+
+    @Test
+    @DisplayName("매칭 신청 조회 테스트")
+    @Transactional(readOnly = true)
+    void getMatchingApplicationTest() {
+
     }
 }

@@ -2,7 +2,7 @@ package com.aliens.backend.mathcing.business.util;
 
 import com.aliens.backend.mathcing.service.model.Language;
 import com.aliens.backend.mathcing.service.model.Participant;
-import com.aliens.backend.mathcing.service.model.PreferLanguage;
+import com.aliens.backend.mathcing.service.model.MatchingMode;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -13,7 +13,7 @@ public class MatchingQueueBuilder {
         Map<Language, Queue<Participant>> languageQueue = createQueuesByLanguage();
 
         for (Participant participant : participants) {
-            languageQueue.get(participant.getPreferLanguage(PreferLanguage.FIRST)).add(participant);
+            languageQueue.get(participant.getPreferLanguage(MatchingMode.FIRST_PREFER_LANGUAGE)).add(participant);
         }
 
         return languageQueue;

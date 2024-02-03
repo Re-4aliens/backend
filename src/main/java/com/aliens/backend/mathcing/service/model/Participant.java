@@ -11,11 +11,11 @@ public record Participant(
         Language secondPreferLanguage,
         List<Partner> partners
 ) {
-    public Language getPreferLanguage(PreferLanguage preferLanguage) {
-        if (preferLanguage.equals(PreferLanguage.FIRST)) {
+    public Language getPreferLanguage(MatchingMode matchingMode) {
+        if (matchingMode.equals(MatchingMode.FIRST_PREFER_LANGUAGE)) {
             return firstPreferLanguage;
         }
-        if (preferLanguage.equals(PreferLanguage.SECOND)) {
+        if (matchingMode.equals(MatchingMode.SECOND_PREFER_LANGUAGE)) {
             return secondPreferLanguage;
         }
         throw new RestApiException(MatchingError.NOT_FOUND_PREFER_LANGUAGE);

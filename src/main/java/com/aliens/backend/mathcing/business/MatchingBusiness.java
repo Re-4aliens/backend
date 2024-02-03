@@ -10,7 +10,7 @@ import com.aliens.backend.mathcing.domain.repository.MatchingApplicationReposito
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.model.Language;
 import com.aliens.backend.mathcing.service.model.Participant;
-import com.aliens.backend.mathcing.service.model.PreferLanguage;
+import com.aliens.backend.mathcing.service.model.MatchingMode;
 import com.aliens.backend.mathcing.service.model.Relationship;
 import com.aliens.backend.mathcing.validator.MatchingBusinessValidator;
 import jakarta.annotation.PostConstruct;
@@ -59,38 +59,57 @@ public class MatchingBusiness {
 
     @Scheduled(cron = "${matching.round.start}")
     public void operateMatching() {
-        matchParticipantsWith(PreferLanguage.FIRST);
-        matchParticipantsWith(PreferLanguage.SECOND);
-
+        matchParticipantsWith(MatchingMode.FIRST_PREFER_LANGUAGE);
+        matchParticipantsWith(MatchingMode.SECOND_PREFER_LANGUAGE);
+        matchParticipantsWith(MatchingMode.RANDOM);
+        matchParticipantsWith(MatchingMode.SPECIAL);
     }
 
-    private void matchParticipantsWith(PreferLanguage preferLanguage) {
-        if (preferLanguage.equals(PreferLanguage.FIRST)) {
-            matchWith(preferLanguage, participants);
+    private void matchParticipantsWith(MatchingMode matchingMode) {
+        List<Participant> participants = null;
+        if (matchingMode.equals(MatchingMode.FIRST_PREFER_LANGUAGE)) {
+            participants = this.participants;
         }
-        if (preferLanguage.equals(PreferLanguage.SECOND)) {
-            List<Participant> lessMatchedParticipants = getParticipantsLessThan(matchingRuleProperties.getMaxNormalPartners());
-            languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(participants);
-            matchWith(preferLanguage, lessMatchedParticipants);
+        if (matchingMode.equals(MatchingMode.SECOND_PREFER_LANGUAGE)) {
+            participants = getParticipantsLessThan(matchingRuleProperties.getMaxNormalPartners());
+            languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(this.participants);
         }
+        if (matchingMode.equals(MatchingMode.RANDOM)) {
+            relationship = Relationship.SPECIAL;
+            participants = getParticipantsLessThan(matchingRuleProperties.getMaxNormalPartners());
+        }
+        if (matchingMode.equals(MatchingMode.SPECIAL)) {
+            participants = getParticipantsLessThan(matchingRuleProperties.getMaxPartners());
+        }
+        matchWith(matchingMode, participants);
     }
 
-    private void matchWith(PreferLanguage preferLanguage, List<Participant> participants) {
+    private void matchWith(MatchingMode matchingMode, List<Participant> participants) {
+        Queue<Participant> candidates = null;
+        if (matchingMode.equals(MatchingMode.RANDOM)) {
+            candidates = new LinkedList<>(getParticipantsLessThan(matchingRuleProperties.getMaxPartners()));
+        }
+        if (matchingMode.equals(MatchingMode.SPECIAL)) {
+            candidates = new LinkedList<>(participants);
+        }
         for (Participant participant : participants) {
-            Queue<Participant> candidates = languageQueueWithParticipants.get(participant.getPreferLanguage(preferLanguage));
+            if (matchingMode.equals(MatchingMode.FIRST_PREFER_LANGUAGE) ||
+                    matchingMode.equals(MatchingMode.SECOND_PREFER_LANGUAGE)) {
+                candidates = languageQueueWithParticipants.get(participant.getPreferLanguage(matchingMode));
+            }
             tryMatchBetween(participant, candidates);
         }
     }
 
     private void tryMatchBetween(Participant participant, Queue<Participant> candidates) {
         int tries = 0;
-        while (matchingBusinessValidator.isExceededMaxNormalPartners(participant) &&
+        while (matchingBusinessValidator.isExceededMaxPartners(relationship, participant) &&
                 matchingBusinessValidator.isExceedMaxTries(tries) && !candidates.isEmpty()) {
             Participant partner = candidates.poll();
             tries++;
-            if (matchingBusinessValidator.isValidMatching(participant, partner)) {
+            if (matchingBusinessValidator.isValidMatching(relationship, participant, partner)) {
                 addMatching(participant, partner);
-                if (!matchingBusinessValidator.isExceededMaxNormalPartners(partner)) {
+                if (!matchingBusinessValidator.isExceededMaxPartners(relationship, partner)) {
                     candidates.add(partner);
                 }
             } else {

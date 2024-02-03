@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ class AwsS3UploaderTest {
         String contentType = "image/png";
         MockMultipartFile file = new MockMultipartFile("test", path, contentType, "test".getBytes());
 
-        UploadFileRequest request = new UploadFileRequest(List.of(file,file,file));
+        List<MultipartFile> request =  List.of(file,file,file);
 
         // When
         List<S3File> S3Files = awsS3Uploader.upload(request);

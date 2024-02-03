@@ -1,24 +1,16 @@
 package com.aliens.backend.mathcing.service.model;
 
+import com.aliens.backend.global.error.MatchingError;
+import com.aliens.backend.global.exception.RestApiException;
+
 import java.util.List;
 
-public class Participant {
-    private Long memberId;
-    private Language firstPreferLanguage;
-    private Language secondPreferLanguage;
-    private List<Participant> partners;
-
-    public Participant(final Long memberId, final Language firstPreferLanguage, final Language secondPreferLanguage, final List<Participant> partners) {
-        this.memberId = memberId;
-        this.firstPreferLanguage = firstPreferLanguage;
-        this.secondPreferLanguage = secondPreferLanguage;
-        this.partners = partners;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
+public record Participant(
+        Long memberId,
+        Language firstPreferLanguage,
+        Language secondPreferLanguage,
+        List<Partner> partners
+) {
     public Language getPreferLanguage(PreferLanguage preferLanguage) {
         if (preferLanguage.equals(PreferLanguage.FIRST)) {
             return firstPreferLanguage;
@@ -26,18 +18,19 @@ public class Participant {
         if (preferLanguage.equals(PreferLanguage.SECOND)) {
             return secondPreferLanguage;
         }
-        return Language.KOREAN;
-    }
-
-    public List<Participant> getPartners() {
-        return partners;
+        throw new RestApiException(MatchingError.NOT_FOUND_PREFER_LANGUAGE);
     }
 
     public int getNumberOfPartners() {
         return partners.size();
     }
 
-    public void addPartner(Participant participant) {
-        partners.add(participant);
+    public void addPartner(Relationship relationship, Participant participant) {
+        partners.add(Partner.of(relationship, participant));
+    }
+
+    public boolean isPartnerWith(Participant participant) {
+        return partners.stream()
+                .anyMatch(partner -> partner.participant().equals(participant));
     }
 }

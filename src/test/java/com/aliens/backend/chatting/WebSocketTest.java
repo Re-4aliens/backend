@@ -1,21 +1,27 @@
 package com.aliens.backend.chatting;
 
+import com.aliens.backend.chat.controller.ChatController;
+import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.chatting.util.ChatClient;
 import com.aliens.backend.global.property.WebSocketProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.messaging.simp.stomp.StompSession;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class WebSocketTest {
 
     @Autowired
     private WebSocketProperties properties;
+    @MockBean
+    private ChatController chatController;
     private ChatClient chatClient;
 
     @BeforeEach
@@ -24,12 +30,44 @@ public class WebSocketTest {
     }
 
     @Test
-    @DisplayName("웹소켓 연결 테스트")
+    @DisplayName("웹소켓 - 연결")
     public void WebSocketConnection() throws Exception {
-        //given
         //when
         StompSession session = chatClient.connect();
         //then
         assert session.isConnected();
+    }
+
+    @Test
+    @DisplayName("웹소켓 - 메시지 전송 요청시 sendMessage() 호출")
+    public void WebSocketSendMessage() throws Exception {
+        //given
+        StompSession session = chatClient.connect();
+        //when
+        session.send(properties.getRequest()+"/send","");
+        //then
+        verify(chatController, timeout(100).times(1)).sendMessage();
+    }
+
+    @Test
+    @DisplayName("웹소켓 - 읽음 처리 요청 시 readMessage() 호출")
+    public void WebSocketReadMessage() throws Exception {
+        //given
+        StompSession session = chatClient.connect();
+        //when
+        session.send(properties.getRequest()+"/read","");
+        //then
+        verify(chatController, timeout(100).times(1)).readMessage();
+    }
+
+    @Test
+    @DisplayName("웹소켓 - 채팅 요약 정보 요청 시 getChatSummary() 호출")
+    public void WebSocketGetChatSummary() throws Exception {
+        //given
+        StompSession session = chatClient.connect();
+        //when
+        session.send(properties.getRequest()+"/summary","");
+        //then
+        verify(chatController, timeout(100).times(1)).getChatSummary();
     }
 }

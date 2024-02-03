@@ -1,6 +1,5 @@
 package com.aliens.backend.mathcing.domain;
 
-import com.aliens.backend.mathcing.controller.dto.request.MatchingRequest;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
 import com.aliens.backend.mathcing.service.model.Language;
 import jakarta.persistence.EmbeddedId;
@@ -8,12 +7,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
-import static com.aliens.backend.mathcing.controller.dto.request.MatchingRequest.*;
-
 @Entity
 public class MatchingApplication {
     @EmbeddedId
-    private MatchingApplicationId matchingApplicationId;
+    private MatchingApplicationId id;
 
     @Enumerated(EnumType.STRING)
     private Language firstPreferLanguage;
@@ -24,16 +21,16 @@ public class MatchingApplication {
     protected MatchingApplication() {
     }
 
-    private MatchingApplication(final MatchingApplicationId matchingApplicationId,
+    private MatchingApplication(final MatchingApplicationId id,
                                final Language firstPreferLanguage,
                                final Language secondPreferLanguage) {
-        this.matchingApplicationId = matchingApplicationId;
+        this.id = id;
         this.firstPreferLanguage = firstPreferLanguage;
         this.secondPreferLanguage = secondPreferLanguage;
     }
 
-    public MatchingApplicationId getMatchingApplicationId() {
-        return matchingApplicationId;
+    public MatchingApplicationId getId() {
+        return id;
     }
 
     public Language getFirstPreferLanguage() {
@@ -55,7 +52,7 @@ public class MatchingApplication {
     @Override
     public String toString() {
         return "MatchingApplication{" +
-                "matchingApplicationId=" + matchingApplicationId +
+                "matchingApplicationId=" + id +
                 ", firstLanguage=" + firstPreferLanguage +
                 ", secondLanguage=" + secondPreferLanguage +
                 '}';

@@ -11,8 +11,8 @@ public class MatchingResponse {
             Language secondPreferLanguage) {
         public static MatchingApplicationResponse of(MatchingApplication matchingApplication) {
             return new MatchingApplicationResponse(
-                    matchingApplication.getMatchingApplicationId().getMatchingRound().getRound(),
-                    matchingApplication.getMatchingApplicationId().getMemberId(),
+                    matchingApplication.getId().getMatchingRound().getRound(),
+                    matchingApplication.getId().getMemberId(),
                     matchingApplication.getFirstPreferLanguage(),
                     matchingApplication.getSecondPreferLanguage());
         }

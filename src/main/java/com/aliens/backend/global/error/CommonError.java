@@ -4,7 +4,8 @@ import org.springframework.http.HttpStatus;
 
 public enum CommonError implements ErrorCode {
 
-    INTERNAL_SERVER_ERROR(HttpStatus.NOT_FOUND, "S1", "에러");
+    INTERNAL_SERVER_ERROR(HttpStatus.NOT_FOUND, "S1", "에러"),
+    ENCODE_ERROR(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED,"S2" ,"암-복호화 실패" );
 
     private final HttpStatus httpStatusCode;
     private final String developCode;

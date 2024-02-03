@@ -13,6 +13,9 @@ public class SymmetricEncoderProperties {
     @Value("${encode.symmetric.key}")
     private String secretKey;
 
+    @Value("${encode.symmetric.chipper}")
+    private String chipper;
+
     private SecretKeySpec encodeKey;
 
     @PostConstruct
@@ -23,5 +26,9 @@ public class SymmetricEncoderProperties {
 
     public SecretKeySpec getEncodeKey() {
         return encodeKey;
+    }
+
+    public String getChipper() {
+        return chipper;
     }
 }

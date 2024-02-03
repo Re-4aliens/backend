@@ -1,4 +1,9 @@
 matching:
+  rule:
+    max-matches:
+      partner : 5
+      normal-partner: 4
+    max-tries: 200
   round:
     update-date: 0 0 0 * * MON,THU
     start: 0 0 18 ? * MON,THU"

@@ -49,6 +49,9 @@ dependencies {
 
     //WEBSOCKET
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    //MONGO_DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 ext {

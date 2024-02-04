@@ -1,25 +1,16 @@
 package com.aliens.backend.mathcing.business;
 
-import com.aliens.backend.global.error.MatchingError;
-import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingRuleProperties;
-import com.aliens.backend.mathcing.business.util.MatchingConverter;
-import com.aliens.backend.mathcing.business.util.MatchingQueueBuilder;
+import com.aliens.backend.mathcing.util.MatchingConverter;
+import com.aliens.backend.mathcing.util.MatchingQueueBuilder;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
-import com.aliens.backend.mathcing.domain.MatchingRound;
-import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
-import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
-import com.aliens.backend.mathcing.service.MatchingRoundService;
 import com.aliens.backend.mathcing.service.model.Language;
 import com.aliens.backend.mathcing.service.model.Participant;
 import com.aliens.backend.mathcing.service.model.MatchingMode;
 import com.aliens.backend.mathcing.service.model.Relationship;
 import com.aliens.backend.mathcing.validator.MatchingBusinessValidator;
-import jakarta.annotation.PostConstruct;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 

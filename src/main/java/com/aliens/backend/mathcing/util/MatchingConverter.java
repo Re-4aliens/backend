@@ -1,4 +1,4 @@
-package com.aliens.backend.mathcing.business.util;
+package com.aliens.backend.mathcing.util;
 
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.service.model.Participant;

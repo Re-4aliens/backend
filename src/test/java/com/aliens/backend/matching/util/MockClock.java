@@ -1,8 +1,7 @@
-package com.aliens.backend.matching;
+package com.aliens.backend.matching.util;
 
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.validator.MatchingApplicationValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.stereotype.Component;
 

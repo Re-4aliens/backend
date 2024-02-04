@@ -3,8 +3,7 @@ package com.aliens.backend.matching.unit.service;
 import com.aliens.backend.global.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
-import com.aliens.backend.matching.MockClock;
-import com.aliens.backend.matching.MockTime;
+import com.aliens.backend.matching.util.MockClock;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
@@ -12,20 +11,17 @@ import com.aliens.backend.mathcing.domain.repository.MatchingApplicationReposito
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.model.Language;
-import com.aliens.backend.mathcing.validator.MatchingApplicationValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 
-import static com.aliens.backend.matching.MockTime.INVALID_TIME;
-import static com.aliens.backend.matching.MockTime.VALID_TIME;
+import static com.aliens.backend.matching.util.MockTime.INVALID_TIME;
+import static com.aliens.backend.matching.util.MockTime.VALID_TIME;
 import static com.aliens.backend.mathcing.controller.dto.request.MatchingRequest.*;
 import static com.aliens.backend.mathcing.controller.dto.response.MatchingResponse.*;
 import static org.assertj.core.api.Assertions.*;

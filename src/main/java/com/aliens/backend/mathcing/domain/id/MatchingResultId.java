@@ -11,26 +11,34 @@ public class MatchingResultId implements Serializable {
     @JoinColumn(name = "matching_round")
     private MatchingRound matchingRound;
 
-    @Column(name = "member_id")
-    private Long memberId;
+    @Column(name = "matching_member_id")
+    private Long matchingMemberId;
+
+    @Column(name = "matched_member_id")
+    private Long matchedMemberId;
 
     protected MatchingResultId() {
     }
 
-    private MatchingResultId(final MatchingRound matchingRound, final Long memberId) {
+    private MatchingResultId(final MatchingRound matchingRound, final Long matchingMemberId, final Long matchedMemberId) {
         this.matchingRound = matchingRound;
-        this.memberId = memberId;
+        this.matchingMemberId = matchingMemberId;
+        this.matchedMemberId = matchedMemberId;
     }
 
-    public MatchingResultId of(MatchingRound matchingRound, Long memberId) {
-        return new MatchingResultId(matchingRound, memberId);
+    public static MatchingResultId of(MatchingRound matchingRound, Long matchingMemberId, Long matchedMemberId) {
+        return new MatchingResultId(matchingRound, matchingMemberId, matchedMemberId);
     }
 
     public MatchingRound getMatchingRound() {
         return matchingRound;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Long getMatchingMemberId() {
+        return matchingMemberId;
+    }
+
+    public Long getMatchedMemberId() {
+        return matchedMemberId;
     }
 }

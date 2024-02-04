@@ -3,6 +3,8 @@ package com.aliens.backend.matching.unit.service;
 import com.aliens.backend.global.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
+import com.aliens.backend.matching.MockClock;
+import com.aliens.backend.matching.MockTime;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
@@ -21,12 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
+import static com.aliens.backend.matching.MockTime.INVALID_TIME;
+import static com.aliens.backend.matching.MockTime.VALID_TIME;
 import static com.aliens.backend.mathcing.controller.dto.request.MatchingRequest.*;
 import static com.aliens.backend.mathcing.controller.dto.response.MatchingResponse.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
 
 
 @SpringBootTest
@@ -43,17 +45,11 @@ public class MatchingApplicationServiceTest {
     @Autowired
     MatchingTimeProperties matchingTimeProperties;
 
-    @MockBean
-    MatchingApplicationValidator matchingApplicationValidator;
-
-    @MockBean
-    Clock clock;
+    @Autowired
+    MockClock mockClock;
 
     MatchingApplicationRequest matchingApplicationRequest;
     MatchingRound currentRound;
-
-    final LocalDateTime VALID_TIME = LocalDateTime.of(2024, 1, 29, 10, 0);
-    final LocalDateTime INVALID_TIME = LocalDateTime.of(2024, 1, 29, 19, 0);
 
     @BeforeEach
     void setUp() {
@@ -69,7 +65,7 @@ public class MatchingApplicationServiceTest {
     @Transactional
     void applyMatchTest() {
         // given
-        mockTime(VALID_TIME);
+        mockClock.mockTime(currentRound, VALID_TIME);
 
         // when
         matchingApplicationService.saveParticipant(matchingApplicationRequest);
@@ -85,7 +81,7 @@ public class MatchingApplicationServiceTest {
     @Transactional
     void applyMatchIfNotValidTime() {
         // given
-        mockTime(INVALID_TIME);
+        mockClock.mockTime(currentRound, INVALID_TIME);
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.saveParticipant(matchingApplicationRequest))
@@ -124,7 +120,7 @@ public class MatchingApplicationServiceTest {
     void deleteMatchingApplicationTest() {
         // given
         applyToMatch();
-        mockTime(VALID_TIME);
+        mockClock.mockTime(currentRound, VALID_TIME);
 
         // when
         matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId());
@@ -140,7 +136,7 @@ public class MatchingApplicationServiceTest {
     void deleteMatchIfNotValidTime() {
         // given
         applyToMatch();
-        mockTime(INVALID_TIME);
+        mockClock.mockTime(currentRound, INVALID_TIME);
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId()))
@@ -152,22 +148,14 @@ public class MatchingApplicationServiceTest {
     @Transactional
     void deleteMatchIfNotApplied() {
         // given
-        mockTime(VALID_TIME);
+        mockClock.mockTime(currentRound, VALID_TIME);
 
         assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId()))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getMessage());
     }
 
     private void applyToMatch() {
-        mockTime(VALID_TIME);
+        mockClock.mockTime(currentRound, VALID_TIME);
         matchingApplicationService.saveParticipant(matchingApplicationRequest);
-    }
-
-    private void mockTime(LocalDateTime time) {
-        Clock fixedClock = Clock.fixed(time.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
-        when(clock.instant()).thenReturn(fixedClock.instant());
-        when(clock.getZone()).thenReturn(fixedClock.getZone());
-
-        doCallRealMethod().when(matchingApplicationValidator).checkReceptionTime(currentRound, time);
     }
 }

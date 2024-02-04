@@ -49,18 +49,9 @@ public class MatchingBusiness {
         this.matchingRuleProperties = matchingRuleProperties;
     }
 
-    @PostConstruct
-    private void initialize() {
-        relationship = Relationship.NORMAL;
-    }
-
     @Scheduled(cron = "${matching.round.start}")
     public void operateMatching() {
-        MatchingRound currentRound = matchingRoundRepository.findCurrentRound()
-                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
-        participants = matchingConverter.toParticipantList(
-                matchingApplicationRepository.findAllByMatchingRound(currentRound));
-        languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(participants);
+        initialize();
 
         matchParticipantsWith(MatchingMode.FIRST_PREFER_LANGUAGE);
         matchParticipantsWith(MatchingMode.SECOND_PREFER_LANGUAGE);
@@ -130,6 +121,15 @@ public class MatchingBusiness {
         return participants.stream()
                 .filter(participant -> participant.getNumberOfPartners() < numberOfPartner)
                 .collect(Collectors.toList());
+    }
+
+    private void initialize() {
+        MatchingRound currentRound = matchingRoundRepository.findCurrentRound()
+                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+        participants = matchingConverter.toParticipantList(
+                matchingApplicationRepository.findAllByMatchingRound(currentRound));
+        languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(participants);
+        relationship = Relationship.NORMAL;
     }
 
     public List<Participant> getMatchedParticipants() {

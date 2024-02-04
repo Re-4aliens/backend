@@ -11,8 +11,7 @@ import static com.aliens.backend.mathcing.controller.dto.request.MatchingRequest
 
 @Component
 public class MatchingApplicationGenerator {
-    @Autowired
-    MatchingApplicationService matchingApplicationService;
+    @Autowired MatchingApplicationService matchingApplicationService;
 
 
 

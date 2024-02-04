@@ -28,32 +28,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 public class MatchingBusinessTest {
-    @Autowired
-    MatchingApplicationService matchingApplicationService;
-
-    @Autowired
-    MatchingService matchingService;
-
-    @Autowired
-    MatchingApplicationRepository matchingApplicationRepository;
-
-    @Autowired
-    MatchingRoundRepository matchingRoundRepository;
-
-    @Autowired
-    MatchingResultRepository matchingResultRepository;
-
-    @Autowired
-    MatchingBusiness matchingBusiness;
-
-    @Autowired
-    MatchingApplicationGenerator matchingApplicationGenerator;
-
-    @Autowired
-    MatchingTimeProperties matchingTimeProperties;
-
-    @Autowired
-    MockClock mockClock;
+    @Autowired MatchingService matchingService;
+    @Autowired MatchingApplicationRepository matchingApplicationRepository;
+    @Autowired MatchingRoundRepository matchingRoundRepository;
+    @Autowired MatchingResultRepository matchingResultRepository;
+    @Autowired MatchingBusiness matchingBusiness;
+    @Autowired MatchingApplicationGenerator matchingApplicationGenerator;
+    @Autowired MatchingTimeProperties matchingTimeProperties;
+    @Autowired MockClock mockClock;
 
     MatchingRound currentRound;
 

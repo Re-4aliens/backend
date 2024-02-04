@@ -29,20 +29,11 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 public class MatchingApplicationServiceTest {
-    @Autowired
-    MatchingApplicationService matchingApplicationService;
-
-    @Autowired
-    MatchingApplicationRepository matchingApplicationRepository;
-
-    @Autowired
-    MatchingRoundRepository matchingRoundRepository;
-
-    @Autowired
-    MatchingTimeProperties matchingTimeProperties;
-
-    @Autowired
-    MockClock mockClock;
+    @Autowired MatchingApplicationService matchingApplicationService;
+    @Autowired MatchingApplicationRepository matchingApplicationRepository;
+    @Autowired MatchingRoundRepository matchingRoundRepository;
+    @Autowired MatchingTimeProperties matchingTimeProperties;
+    @Autowired MockClock mockClock;
 
     MatchingApplicationRequest matchingApplicationRequest;
     MatchingRound currentRound;

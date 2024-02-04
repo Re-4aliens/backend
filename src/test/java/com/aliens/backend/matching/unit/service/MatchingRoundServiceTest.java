@@ -17,11 +17,8 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 public class MatchingRoundServiceTest {
-    @Autowired
-    MatchingRoundRepository matchingRoundRepository;
-
-    @Autowired
-    MatchingTimeProperties matchingTimeProperties;
+    @Autowired MatchingRoundRepository matchingRoundRepository;
+    @Autowired MatchingTimeProperties matchingTimeProperties;
 
     @Test
     @DisplayName("매주 월, 목 매칭 회차 업데이트")

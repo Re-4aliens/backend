@@ -25,12 +25,16 @@ public record Participant(
         return partners.size();
     }
 
-    public void addPartner(Relationship relationship, Participant participant) {
-        partners.add(Partner.of(relationship, participant));
+    public void addPartner(Relationship relationship, Long memberId) {
+        partners.add(Partner.of(relationship, memberId));
     }
 
     public boolean isPartnerWith(Participant participant) {
-        return partners.stream()
-                .anyMatch(partner -> partner.participant().equals(participant));
+        for (Partner partner : partners) {
+            if (partner.memberId().equals(participant.memberId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

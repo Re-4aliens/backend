@@ -67,4 +67,15 @@ public class MatchingRound {
 
         return new MatchingRound(matchingRequestStartTime, matchingRequestEndTime, matchingValidStartTime, matchingValidEndTime);
     }
+
+    @Override
+    public String toString() {
+        return "MatchingRound{" +
+                "round=" + round +
+                ", matchingRequestStartTime=" + matchingRequestStartTime +
+                ", matchingRequestEndTime=" + matchingRequestEndTime +
+                ", matchingValidStartTime=" + matchingValidStartTime +
+                ", matchingValidEndTime=" + matchingValidEndTime +
+                '}';
+    }
 }

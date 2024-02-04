@@ -8,6 +8,7 @@ import com.aliens.backend.mathcing.business.util.MatchingQueueBuilder;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
+import com.aliens.backend.mathcing.service.MatchingRoundService;
 import com.aliens.backend.mathcing.service.model.Language;
 import com.aliens.backend.mathcing.service.model.Participant;
 import com.aliens.backend.mathcing.service.model.MatchingMode;
@@ -17,6 +18,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,16 +51,17 @@ public class MatchingBusiness {
 
     @PostConstruct
     private void initialize() {
-        MatchingRound currentRound = matchingRoundRepository.findCurrentRound()
-                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
-        participants = matchingConverter.toParticipantList(
-                matchingApplicationRepository.findAllByMatchingRound(currentRound));
-        languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(participants);
         relationship = Relationship.NORMAL;
     }
 
     @Scheduled(cron = "${matching.round.start}")
     public void operateMatching() {
+        MatchingRound currentRound = matchingRoundRepository.findCurrentRound()
+                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+        participants = matchingConverter.toParticipantList(
+                matchingApplicationRepository.findAllByMatchingRound(currentRound));
+        languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(participants);
+
         matchParticipantsWith(MatchingMode.FIRST_PREFER_LANGUAGE);
         matchParticipantsWith(MatchingMode.SECOND_PREFER_LANGUAGE);
         matchParticipantsWith(MatchingMode.RANDOM);
@@ -103,8 +106,8 @@ public class MatchingBusiness {
 
     private void tryMatchBetween(Participant participant, Queue<Participant> candidates) {
         int tries = 0;
-        while (matchingBusinessValidator.isExceededMaxPartners(relationship, participant) &&
-                matchingBusinessValidator.isExceedMaxTries(tries) && !candidates.isEmpty()) {
+        while (!matchingBusinessValidator.isExceededMaxPartners(relationship, participant) &&
+                !matchingBusinessValidator.isExceedMaxTries(tries) && !candidates.isEmpty()) {
             Participant partner = candidates.poll();
             tries++;
             if (matchingBusinessValidator.isValidMatching(relationship, participant, partner)) {
@@ -119,13 +122,17 @@ public class MatchingBusiness {
     }
 
     private void addMatching(Participant participant, Participant partner) {
-        participant.addPartner(relationship, partner);
-        partner.addPartner(relationship, participant);
+        participant.addPartner(relationship, partner.memberId());
+        partner.addPartner(relationship, participant.memberId());
     }
 
     private List<Participant> getParticipantsLessThan(int numberOfPartner) {
         return participants.stream()
                 .filter(participant -> participant.getNumberOfPartners() < numberOfPartner)
                 .collect(Collectors.toList());
+    }
+
+    public List<Participant> getMatchedParticipants() {
+        return participants;
     }
 }

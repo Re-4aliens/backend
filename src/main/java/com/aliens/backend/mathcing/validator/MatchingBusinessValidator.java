@@ -17,14 +17,14 @@ public class MatchingBusinessValidator {
         return participant != partner &&
                 !participant.isPartnerWith(partner) &&
                 !partner.isPartnerWith(participant) &&
-                isExceededMaxPartners(relationship, partner);
+                !isExceededMaxPartners(relationship, partner);
     }
 
     public boolean isExceededMaxPartners(Relationship relationship, Participant participant) {
         if (relationship.equals(Relationship.NORMAL)) {
-            return participant.getNumberOfPartners() > matchingRuleProperties.getMaxNormalPartners();
+            return participant.getNumberOfPartners() >= matchingRuleProperties.getMaxNormalPartners(); // 4
         }
-        return participant.getNumberOfPartners() > matchingRuleProperties.getMaxPartners();
+        return participant.getNumberOfPartners() >= matchingRuleProperties.getMaxPartners(); // 5
     }
 
     public boolean isExceedMaxTries(int tries) {

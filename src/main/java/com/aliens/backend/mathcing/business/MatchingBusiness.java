@@ -5,6 +5,7 @@ import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingRuleProperties;
 import com.aliens.backend.mathcing.business.util.MatchingConverter;
 import com.aliens.backend.mathcing.business.util.MatchingQueueBuilder;
+import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
@@ -24,8 +25,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class MatchingBusiness {
-    private final MatchingApplicationRepository matchingApplicationRepository;
-    private final MatchingRoundRepository matchingRoundRepository;
     private final MatchingConverter matchingConverter;
     private final MatchingQueueBuilder matchingQueueBuilder;
     private final MatchingBusinessValidator matchingBusinessValidator;
@@ -35,28 +34,31 @@ public class MatchingBusiness {
     private Map<Language, Queue<Participant>> languageQueueWithParticipants = new HashMap<>();
     private Relationship relationship;
 
-    public MatchingBusiness(final MatchingApplicationRepository matchingApplicationRepository,
-                            final MatchingRoundRepository matchingRoundRepository,
-                            final MatchingConverter matchingConverter,
+    public MatchingBusiness(final MatchingConverter matchingConverter,
                             final MatchingQueueBuilder matchingQueueBuilder,
                             final MatchingBusinessValidator matchingBusinessValidator,
                             final MatchingRuleProperties matchingRuleProperties) {
-        this.matchingApplicationRepository = matchingApplicationRepository;
-        this.matchingRoundRepository = matchingRoundRepository;
         this.matchingConverter = matchingConverter;
         this.matchingQueueBuilder = matchingQueueBuilder;
         this.matchingBusinessValidator = matchingBusinessValidator;
         this.matchingRuleProperties = matchingRuleProperties;
     }
 
-    @Scheduled(cron = "${matching.round.start}")
-    public void operateMatching() {
-        initialize();
+    private void initialize(List<MatchingApplication> matchingApplications) {
+        participants = matchingConverter.toParticipantList(matchingApplications);
+        languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(participants);
+        relationship = Relationship.NORMAL;
+    }
+
+    public List<Participant> operateMatching(List<MatchingApplication> matchingApplications) {
+        initialize(matchingApplications);
 
         matchParticipantsWith(MatchingMode.FIRST_PREFER_LANGUAGE);
         matchParticipantsWith(MatchingMode.SECOND_PREFER_LANGUAGE);
         matchParticipantsWith(MatchingMode.RANDOM);
         matchParticipantsWith(MatchingMode.SPECIAL);
+
+        return participants;
     }
 
     private void matchParticipantsWith(MatchingMode matchingMode) {
@@ -121,15 +123,6 @@ public class MatchingBusiness {
         return participants.stream()
                 .filter(participant -> participant.getNumberOfPartners() < numberOfPartner)
                 .collect(Collectors.toList());
-    }
-
-    private void initialize() {
-        MatchingRound currentRound = matchingRoundRepository.findCurrentRound()
-                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
-        participants = matchingConverter.toParticipantList(
-                matchingApplicationRepository.findAllByMatchingRound(currentRound));
-        languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(participants);
-        relationship = Relationship.NORMAL;
     }
 
     public List<Participant> getMatchedParticipants() {

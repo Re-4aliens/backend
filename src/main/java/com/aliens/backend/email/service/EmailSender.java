@@ -1,6 +1,7 @@
 package com.aliens.backend.email.service;
 
 import com.aliens.backend.global.property.EmailProperties;
+import com.aliens.backend.member.controller.dto.event.TemporaryPasswordEvent;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -28,10 +29,25 @@ public class EmailSender {
     private SimpleMailMessage createAuthenticationMail(final String email, final String emailToken) {
         SimpleMailMessage authenticationEmail = new SimpleMailMessage();
         authenticationEmail.setTo(email);
-        authenticationEmail.setSubject(emailContent.getTitle());
+        authenticationEmail.setSubject(emailContent.getAuthenticationMailTitle());
 
-        String content = emailContent.getContent(emailToken, emailProperties.getDomainUrl());
+        String content = emailContent.getAuthenticationMailContent(emailToken, emailProperties.getDomainUrl());
         authenticationEmail.setText(content);
         return authenticationEmail;
+    }
+
+    public void sendTemporaryPassword(final TemporaryPasswordEvent event) {
+        SimpleMailMessage mailMessage = createTemporaryPassword(event);
+        javaMailSender.send(mailMessage);
+    }
+
+    private SimpleMailMessage createTemporaryPassword(final TemporaryPasswordEvent event) {
+        SimpleMailMessage temporaryPasswordEmail = new SimpleMailMessage();
+        temporaryPasswordEmail.setTo(event.email());
+        temporaryPasswordEmail.setSubject(emailContent.getTemporaryMailTitle());
+
+        String content = emailContent.getTemporaryMailContent(event.tmpPassword());
+        temporaryPasswordEmail.setText(content);
+        return temporaryPasswordEmail;
     }
 }

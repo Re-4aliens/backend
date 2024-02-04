@@ -4,9 +4,12 @@ import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
-import com.aliens.backend.auth.domain.MemberRole;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
+import com.aliens.backend.member.controller.dto.EncodedSignUp;
+import com.aliens.backend.member.domain.Image;
+import com.aliens.backend.member.domain.repository.ImageRepository;
+import com.aliens.backend.uploader.S3File;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -23,25 +26,32 @@ class AuthServiceTest {
     @Autowired
     MemberRepository memberRepository;
     @Autowired
+    ImageRepository imageRepository;
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     Member member;
+    String name;
     String email;
     String password;
     LoginRequest loginRequest;
 
     @BeforeEach
     void setUp() {
+        name = "김명준";
         email = "tmp@example.com";
         password = "tmpPassword";
-        member = new Member(email, passwordEncoder.encrypt(password), MemberRole.MEMBER);
-        loginRequest = new LoginRequest(email, password);
+        EncodedSignUp encodedSignUp = new EncodedSignUp(name, email, passwordEncoder.encrypt(password));
+        Image image = Image.from(new S3File("tmpFileName", "tmpFileURL"));
+        member = Member.of(encodedSignUp, image);
         memberRepository.save(member);
+        loginRequest = new LoginRequest(email, password);
     }
 
     @AfterEach
     void afterDown() {
         memberRepository.deleteAll();
+        imageRepository.deleteAll();
     }
 
     @Test

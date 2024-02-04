@@ -1,0 +1,158 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== 회원
+
+[[resources-post-create]]
+=== 회원 가입
+
+==== HTTP request
+include::{snippets}/member-signup/http-request.adoc[]
+
+
+==== HTTP response
+include::{snippets}/member-signup/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-signup/response-fields.adoc[]
+
+
+
+=== 프로필 이미지 변경
+
+==== HTTP request
+include::{snippets}/member-change-profile-image/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/member-change-profile-image/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-change-profile-image/response-fields.adoc[]
+
+
+=== 임시 비밀번호 발급
+
+==== HTTP request
+include::{snippets}/member-temporary-password/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/member-temporary-password/request-fields.adoc[]
+
+==== HTTP response
+include::{snippets}/member-temporary-password/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/email-verification-send/response-fields.adoc[]
+
+
+=== 비밀번호 변경
+
+==== HTTP request
+
+include::{snippets}/member-change-password/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/member-change-password/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/member-change-password/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-change-password/response-fields.adoc[]
+
+
+
+
+=== 회원 탈퇴
+
+==== HTTP request
+
+include::{snippets}/member-withdraw/http-request.adoc[]
+
+
+==== HTTP response
+
+include::{snippets}/member-withdraw/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-withdraw/response-fields.adoc[]
+
+
+
+
+
+=== 회원 상태
+
+==== HTTP request
+
+include::{snippets}/member-get-status/http-request.adoc[]
+
+
+==== HTTP response
+
+include::{snippets}/member-get-status/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-get-status/response-fields.adoc[]
+
+
+
+
+=== 개인 정보 조회
+
+==== HTTP request
+
+include::{snippets}/member-get-member-page/http-request.adoc[]
+
+
+==== HTTP response
+
+include::{snippets}/member-get-member-page/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-get-member-page/response-fields.adoc[]
+
+
+
+
+=== 자기소개 변경
+
+==== HTTP request
+
+include::{snippets}/member-change-about-me/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/member-change-about-me/request-fields.adoc[]
+
+
+
+==== HTTP response
+
+include::{snippets}/member-change-about-me/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-change-about-me/response-fields.adoc[]
+
+
+
+=== MBTI 변경
+
+==== HTTP request
+
+include::{snippets}/member-change-mbti/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/member-change-mbti/request-fields.adoc[]
+
+
+
+==== HTTP response
+
+include::{snippets}/member-change-mbti/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/member-change-mbti/response-fields.adoc[]

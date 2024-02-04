@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 public enum EmailError implements ErrorCode {
 
     NULL_EMAIL(HttpStatus.UNPROCESSABLE_ENTITY, "E1", "해당 EmailAuthentication 엔티티 조회 불가"),
+    NOT_AUTHENTICATED_EMAIL(HttpStatus.UNPROCESSABLE_ENTITY, "E2", "인증되지 않은 이메일"),
     ;
 
     private final HttpStatus httpStatusCode;

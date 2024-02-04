@@ -6,7 +6,7 @@ matching:
     max-tries: 200
   round:
     update-date: 0 0 0 * * MON,THU
-    start: 0 0 18 ? * MON,THU"
+    start: 0 0 18 * * MON,THU
   request:
     time:
       hours: 18

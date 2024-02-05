@@ -36,15 +36,11 @@ public class MatchingApplicationServiceTest {
     @Autowired MockClock mockClock;
 
     MatchingApplicationRequest matchingApplicationRequest;
-    MatchingRound currentRound;
 
     @BeforeEach
     void setUp() {
-        LocalDateTime roundBeginTime = LocalDateTime.of(2024, 1, 29, 0, 0);
-        matchingRoundRepository.save(MatchingRound.of(roundBeginTime, matchingTimeProperties));
+        createNewMatchingRound();
         matchingApplicationRequest = new MatchingApplicationRequest(1L, Language.KOREAN, Language.ENGLISH);
-        currentRound = matchingRoundRepository.findCurrentRound()
-                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 
     @Test
@@ -52,13 +48,14 @@ public class MatchingApplicationServiceTest {
     @Transactional
     void applyMatchTest() {
         // given
-        mockClock.mockTime(currentRound, VALID_TIME);
+        mockClock.mockTime(VALID_TIME);
 
         // when
         matchingApplicationService.saveParticipant(matchingApplicationRequest);
 
         // then
-        MatchingApplication result = matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, matchingApplicationRequest.memberId()))
+        MatchingApplication result = matchingApplicationRepository
+                .findById(MatchingApplicationId.of(getCurrentRound(), matchingApplicationRequest.memberId()))
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
         assertThat(result.getId().getMemberId()).isEqualTo(matchingApplicationRequest.memberId());
     }
@@ -68,7 +65,7 @@ public class MatchingApplicationServiceTest {
     @Transactional
     void applyMatchIfNotValidTime() {
         // given
-        mockClock.mockTime(currentRound, INVALID_TIME);
+        mockClock.mockTime(INVALID_TIME);
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.saveParticipant(matchingApplicationRequest))
@@ -107,7 +104,7 @@ public class MatchingApplicationServiceTest {
     void deleteMatchingApplicationTest() {
         // given
         applyToMatch();
-        mockClock.mockTime(currentRound, VALID_TIME);
+        mockClock.mockTime(VALID_TIME);
 
         // when
         matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId());
@@ -123,7 +120,7 @@ public class MatchingApplicationServiceTest {
     void deleteMatchIfNotValidTime() {
         // given
         applyToMatch();
-        mockClock.mockTime(currentRound, INVALID_TIME);
+        mockClock.mockTime(INVALID_TIME);
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId()))
@@ -135,14 +132,24 @@ public class MatchingApplicationServiceTest {
     @Transactional
     void deleteMatchIfNotApplied() {
         // given
-        mockClock.mockTime(currentRound, VALID_TIME);
+        mockClock.mockTime(VALID_TIME);
 
         assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId()))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getMessage());
     }
 
     private void applyToMatch() {
-        mockClock.mockTime(currentRound, VALID_TIME);
+        mockClock.mockTime(VALID_TIME);
         matchingApplicationService.saveParticipant(matchingApplicationRequest);
+    }
+
+    private void createNewMatchingRound() {
+        LocalDateTime roundBeginTime = LocalDateTime.of(2024, 1, 29, 0, 0);
+        matchingRoundRepository.save(MatchingRound.of(roundBeginTime, matchingTimeProperties));
+    }
+
+    private MatchingRound getCurrentRound() {
+        return matchingRoundRepository.findCurrentRound()
+                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 }

@@ -51,7 +51,7 @@ public class MatchingBusinessTest {
     @Transactional
     @DisplayName("매칭 로직 실행 테스트")
     void matchingLogicTest() {
-        mockClock.mockTime(currentRound, MockTime.VALID_TIME);
+        mockClock.mockTime(MockTime.VALID_TIME);
         matchingApplicationGenerator.applyToMatch(15L);
 
         matchingBusiness.operateMatching(matchingApplicationRepository.findAllByMatchingRound(currentRound));
@@ -64,7 +64,7 @@ public class MatchingBusinessTest {
     @Transactional
     void operateMatchingTest() {
         // given
-        mockClock.mockTime(currentRound, MockTime.VALID_TIME);
+        mockClock.mockTime(MockTime.VALID_TIME);
         matchingApplicationGenerator.applyToMatch(20L);
 
         // when

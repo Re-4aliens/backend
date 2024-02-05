@@ -7,7 +7,6 @@ import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
-import com.aliens.backend.mathcing.validator.MatchingApplicationValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,23 +20,22 @@ import static com.aliens.backend.mathcing.controller.dto.response.MatchingRespon
 public class MatchingApplicationService {
     private final MatchingApplicationRepository matchingApplicationRepository;
     private final MatchingRoundRepository matchingRoundRepository;
-    private final MatchingApplicationValidator matchingApplicationValidator;
     private final Clock clock;
 
     public MatchingApplicationService(final MatchingApplicationRepository matchingApplicationRepository,
                                       final MatchingRoundRepository matchingRoundRepository,
-                                      final MatchingApplicationValidator matchingApplicationValidator,
                                       final Clock clock) {
         this.matchingApplicationRepository = matchingApplicationRepository;
         this.matchingRoundRepository = matchingRoundRepository;
-        this.matchingApplicationValidator = matchingApplicationValidator;
         this.clock = clock;
     }
 
     @Transactional
     public void saveParticipant(final MatchingApplicationRequest matchingApplicationRequest) {
         MatchingRound currentRound = getCurrentRound();
-        matchingApplicationValidator.checkReceptionTime(currentRound, LocalDateTime.now(clock));
+        if (!currentRound.isReceptionTime(LocalDateTime.now(clock))) {
+            throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
+        }
         matchingApplicationRepository.save(matchingApplicationRequest.toEntity(currentRound));
     }
 
@@ -53,7 +51,9 @@ public class MatchingApplicationService {
     @Transactional
     public void deleteMatchingApplication(final Long memberId) {
         MatchingRound currentRound = getCurrentRound();
-        matchingApplicationValidator.checkReceptionTime(currentRound, LocalDateTime.now(clock));
+        if (!currentRound.isReceptionTime(LocalDateTime.now(clock))) {
+            throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
+        }
         MatchingApplication matchingApplication =
                 matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, memberId))
                         .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));

@@ -5,6 +5,7 @@ import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chatting.util.ChatClient;
 import com.aliens.backend.global.property.WebSocketProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ public class WebSocketTest {
     @MockBean
     private ChatController chatController;
     private ChatClient chatClient;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
@@ -50,8 +52,9 @@ public class WebSocketTest {
         Long senderId = 1L;
         Long receiverId = 2L;
         MessageSendRequest messageSendRequest = new MessageSendRequest(type, content, roomId, senderId, receiverId);
+        String jsonMessage = objectMapper.writeValueAsString(messageSendRequest);
         //when
-        session.send(properties.getRequest()+"/send", messageSendRequest);
+        session.send(properties.getAppDestinationPrefix()+"/send", jsonMessage.getBytes());
         //then
         verify(chatController, timeout(100).times(1)).sendMessage(messageSendRequest);
     }
@@ -63,9 +66,10 @@ public class WebSocketTest {
         Long chatRoomId = 1L;
         Long memberId = 1L;
         ReadRequest readRequest = new ReadRequest(chatRoomId, memberId);
+        String jsonMessage = objectMapper.writeValueAsString(readRequest);
         StompSession session = chatClient.connect();
         //when
-        session.send(properties.getRequest()+"/read",readRequest);
+        session.send(properties.getAppDestinationPrefix()+"/read", jsonMessage.getBytes());
         //then
         verify(chatController, timeout(100).times(1)).readMessage(readRequest);
     }
@@ -76,7 +80,7 @@ public class WebSocketTest {
         //given
         StompSession session = chatClient.connect();
         //when
-        session.send(properties.getRequest()+"/summary","");
+        session.send(properties.getAppDestinationPrefix()+"/summary","");
         //then
         verify(chatController, timeout(100).times(1)).getChatSummary();
     }

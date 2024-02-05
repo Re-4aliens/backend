@@ -10,10 +10,7 @@ public class WebSocketProperties {
     private String port;
 
     @Value("${websocket.request}")
-    private String request;
-
-    @Value("${websocket.topic}")
-    private String topic;
+    private String appDestinationPrefix;
 
     @Value("${websocket.endpoint}")
     private String endpoint;
@@ -22,12 +19,8 @@ public class WebSocketProperties {
         return port;
     }
 
-    public String getRequest() {
-        return request;
-    }
-
-    public String getTopic() {
-        return topic;
+    public String getAppDestinationPrefix() {
+        return appDestinationPrefix;
     }
 
     public String getEndpoint() {

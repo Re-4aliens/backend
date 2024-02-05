@@ -13,4 +13,8 @@ import java.util.List;
 public interface MatchingResultRepository extends JpaRepository<MatchingResult, MatchingResultId> {
     @Query("SELECT mr FROM MatchingResult mr WHERE mr.id.matchingRound = :matchingRound")
     List<MatchingResult> findAllByMatchingRound(MatchingRound matchingRound);
+
+    @Query("SELECT mr FROM MatchingResult mr " +
+            "WHERE mr.id.matchingRound = :matchingRound AND mr.id.matchingMemberId = :memberId")
+    List<MatchingResult> findAllByMatchingRoundAndMemberId(MatchingRound matchingRound, Long memberId);
 }

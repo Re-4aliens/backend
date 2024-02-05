@@ -65,7 +65,7 @@ public class MatchingBusinessTest {
     void operateMatchingTest() {
         // given
         mockClock.mockTime(currentRound, MockTime.VALID_TIME);
-        matchingApplicationGenerator.applyToMatch(100L);
+        matchingApplicationGenerator.applyToMatch(20L);
 
         // when
         matchingService.operateMatching();

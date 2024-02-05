@@ -61,7 +61,7 @@ public class MatchingService {
         List<MatchingResult> matchingResults =
                 matchingResultRepository.findAllByMatchingRoundAndMemberId(currentRound, memberId);
         matchingServiceValidator.checkHasApplied(matchingResults);
-        return matchingResults.stream().map(matchingResult -> MatchingResultResponse.of(matchingResult)).toList();
+        return matchingResults.stream().map(MatchingResultResponse::of).toList();
     }
 
     private void saveMatchingResult(final List<Participant> participants) {

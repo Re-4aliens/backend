@@ -8,7 +8,6 @@ import com.aliens.backend.mathcing.service.model.Language;
 import com.aliens.backend.mathcing.service.model.Participant;
 import com.aliens.backend.mathcing.service.model.MatchingMode;
 import com.aliens.backend.mathcing.service.model.Relationship;
-import com.aliens.backend.mathcing.validator.MatchingBusinessValidator;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 public class MatchingBusiness {
     private final MatchingConverter matchingConverter;
     private final MatchingQueueBuilder matchingQueueBuilder;
-    private final MatchingBusinessValidator matchingBusinessValidator;
     private final MatchingRuleProperties matchingRuleProperties;
 
     private List<Participant> participants = new ArrayList<>();
@@ -27,11 +25,9 @@ public class MatchingBusiness {
 
     public MatchingBusiness(final MatchingConverter matchingConverter,
                             final MatchingQueueBuilder matchingQueueBuilder,
-                            final MatchingBusinessValidator matchingBusinessValidator,
                             final MatchingRuleProperties matchingRuleProperties) {
         this.matchingConverter = matchingConverter;
         this.matchingQueueBuilder = matchingQueueBuilder;
-        this.matchingBusinessValidator = matchingBusinessValidator;
         this.matchingRuleProperties = matchingRuleProperties;
     }
 
@@ -90,13 +86,12 @@ public class MatchingBusiness {
 
     private void tryMatchBetween(final Participant participant, final Queue<Participant> candidates) {
         int tries = 0;
-        while (!matchingBusinessValidator.isExceededMaxPartners(relationship, participant) &&
-                !matchingBusinessValidator.isExceedMaxTries(tries) && !candidates.isEmpty()) {
+        while (!isExceededMaxPartners(relationship, participant) && !isExceedMaxTries(tries) && !candidates.isEmpty()) {
             Participant partner = candidates.poll();
             tries++;
-            if (matchingBusinessValidator.isValidMatching(relationship, participant, partner)) {
+            if (isValidMatching(relationship, participant, partner)) {
                 addMatching(participant, partner);
-                if (!matchingBusinessValidator.isExceededMaxPartners(relationship, partner)) {
+                if (!isExceededMaxPartners(relationship, partner)) {
                     candidates.add(partner);
                 }
             } else {
@@ -118,5 +113,26 @@ public class MatchingBusiness {
 
     public List<Participant> getMatchedParticipants() {
         return participants;
+    }
+
+
+    private boolean isValidMatching(final Relationship relationship,
+                                   final Participant participant,
+                                   final Participant partner) {
+        return participant != partner &&
+                !participant.isPartnerWith(partner) &&
+                !partner.isPartnerWith(participant) &&
+                !isExceededMaxPartners(relationship, partner);
+    }
+
+    private boolean isExceededMaxPartners(final Relationship relationship, final Participant participant) {
+        if (relationship.equals(Relationship.NORMAL)) {
+            return participant.getNumberOfPartners() >= matchingRuleProperties.getMaxNormalPartners(); // 4
+        }
+        return participant.getNumberOfPartners() >= matchingRuleProperties.getMaxPartners(); // 5
+    }
+
+    private boolean isExceedMaxTries(int tries) {
+        return tries > matchingRuleProperties.getMaxTries();
     }
 }

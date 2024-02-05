@@ -1,7 +1,7 @@
 package com.aliens.backend.chatting;
 
 import com.aliens.backend.chat.controller.ChatController;
-import com.aliens.backend.chat.service.ChatService;
+import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chatting.util.ChatClient;
 import com.aliens.backend.global.property.WebSocketProperties;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,10 +43,16 @@ public class WebSocketTest {
     public void WebSocketSendMessage() throws Exception {
         //given
         StompSession session = chatClient.connect();
+        String type = "NORMAL";
+        String content = "Hello";
+        Long roomId = 1L;
+        Long senderId = 1L;
+        Long receiverId = 2L;
+        MessageSendRequest messageSendRequest = new MessageSendRequest(type, content, roomId, senderId, receiverId);
         //when
-        session.send(properties.getRequest()+"/send","");
+        session.send(properties.getRequest()+"/send", messageSendRequest);
         //then
-        verify(chatController, timeout(100).times(1)).sendMessage();
+        verify(chatController, timeout(100).times(1)).sendMessage(messageSendRequest);
     }
 
     @Test

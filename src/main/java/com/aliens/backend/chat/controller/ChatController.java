@@ -1,7 +1,9 @@
 package com.aliens.backend.chat.controller;
 
+import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.service.ChatService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 
 
@@ -15,18 +17,17 @@ public class ChatController {
     }
 
     @MessageMapping("/send")
-    public void sendMessage() {
-        chatService.sendMessage();
+    public void sendMessage(@Payload MessageSendRequest messageSendRequest) {
+        chatService.sendMessage(messageSendRequest);
     }
 
     @MessageMapping("/read")
     public void readMessage() {
-        chatService.readMessage();
+        chatService.readMessages();
     }
 
     @MessageMapping("/summary")
     public void getChatSummary() {
         chatService.getChatSummary();
     }
-
 }

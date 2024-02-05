@@ -1,6 +1,7 @@
 package com.aliens.backend.chat.controller;
 
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
+import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.service.ChatService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -22,8 +23,8 @@ public class ChatController {
     }
 
     @MessageMapping("/read")
-    public void readMessage() {
-        chatService.readMessages();
+    public void readMessage(@Payload ReadRequest readRequest) {
+        chatService.readMessages(readRequest);
     }
 
     @MessageMapping("/summary")

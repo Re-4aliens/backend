@@ -1,4 +1,4 @@
-package com.aliens.backend.chat.controller.dto;
+package com.aliens.backend.chat.controller.dto.response;
 
 import com.aliens.backend.chat.domain.Message;
 

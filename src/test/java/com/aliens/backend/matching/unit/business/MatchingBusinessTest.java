@@ -13,6 +13,7 @@ import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.MatchingService;
+import com.aliens.backend.mathcing.service.model.Participant;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,9 +55,9 @@ public class MatchingBusinessTest {
         mockClock.mockTime(MockTime.VALID_TIME);
         matchingApplicationGenerator.applyToMatch(15L);
 
-        matchingBusiness.operateMatching(matchingApplicationRepository.findAllByMatchingRound(currentRound));
+        List<Participant> result = matchingBusiness.operateMatching(matchingApplicationRepository.findAllByMatchingRound(currentRound));
 
-        matchingBusiness.getMatchedParticipants().forEach(participant -> assertThat(participant.partners()).isNotNull());
+        result.forEach(participant -> assertThat(participant.partners()).isNotNull());
     }
 
     @Test

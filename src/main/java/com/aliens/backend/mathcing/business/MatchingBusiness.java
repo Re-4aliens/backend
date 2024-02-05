@@ -1,8 +1,6 @@
 package com.aliens.backend.mathcing.business;
 
 import com.aliens.backend.global.property.MatchingRuleProperties;
-import com.aliens.backend.mathcing.util.MatchingConverter;
-import com.aliens.backend.mathcing.util.MatchingQueueBuilder;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.service.model.Language;
 import com.aliens.backend.mathcing.service.model.Participant;
@@ -15,25 +13,19 @@ import java.util.stream.Collectors;
 
 @Component
 public class MatchingBusiness {
-    private final MatchingConverter matchingConverter;
-    private final MatchingQueueBuilder matchingQueueBuilder;
     private final MatchingRuleProperties matchingRuleProperties;
 
     private List<Participant> participants = new ArrayList<>();
     private Map<Language, Queue<Participant>> languageQueueWithParticipants = new HashMap<>();
     private Relationship relationship;
 
-    public MatchingBusiness(final MatchingConverter matchingConverter,
-                            final MatchingQueueBuilder matchingQueueBuilder,
-                            final MatchingRuleProperties matchingRuleProperties) {
-        this.matchingConverter = matchingConverter;
-        this.matchingQueueBuilder = matchingQueueBuilder;
+    public MatchingBusiness(final MatchingRuleProperties matchingRuleProperties) {
         this.matchingRuleProperties = matchingRuleProperties;
     }
 
     private void initialize(final List<MatchingApplication> matchingApplications) {
-        participants = matchingConverter.toParticipantList(matchingApplications);
-        languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(participants);
+        participants = MatchingApplication.toParticipantList(matchingApplications);
+        languageQueueWithParticipants = Language.buildLanguageQueues(participants);
         relationship = Relationship.NORMAL;
     }
 
@@ -55,7 +47,7 @@ public class MatchingBusiness {
         }
         if (matchingMode.equals(MatchingMode.SECOND_PREFER_LANGUAGE)) {
             participants = getParticipantsLessThan(matchingRuleProperties.getMaxNormalPartners());
-            languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(this.participants);
+            languageQueueWithParticipants = Language.buildLanguageQueues(this.participants);
         }
         if (matchingMode.equals(MatchingMode.RANDOM)) {
             relationship = Relationship.SPECIAL;
@@ -110,11 +102,6 @@ public class MatchingBusiness {
                 .filter(participant -> participant.getNumberOfPartners() < numberOfPartner)
                 .collect(Collectors.toList());
     }
-
-    public List<Participant> getMatchedParticipants() {
-        return participants;
-    }
-
 
     private boolean isValidMatching(final Relationship relationship,
                                    final Participant participant,

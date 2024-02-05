@@ -25,7 +25,7 @@ public class MatchingBusiness {
 
     private void initialize(final List<MatchingApplication> matchingApplications) {
         participants = MatchingApplication.toParticipantList(matchingApplications);
-        languageQueueWithParticipants = Language.buildLanguageQueues(participants);
+        languageQueueWithParticipants = Language.createQueueWith(participants);
         relationship = Relationship.NORMAL;
     }
 
@@ -47,7 +47,7 @@ public class MatchingBusiness {
         }
         if (matchingMode.equals(MatchingMode.SECOND_PREFER_LANGUAGE)) {
             participants = getParticipantsLessThan(matchingRuleProperties.getMaxNormalPartners());
-            languageQueueWithParticipants = Language.buildLanguageQueues(this.participants);
+            languageQueueWithParticipants = Language.createQueueWith(this.participants);
         }
         if (matchingMode.equals(MatchingMode.RANDOM)) {
             relationship = Relationship.SPECIAL;

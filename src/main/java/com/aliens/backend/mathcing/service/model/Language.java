@@ -9,7 +9,7 @@ public enum Language {
     CHINESE
     ;
 
-    public static Map<Language, Queue<Participant>> buildLanguageQueues(final List<Participant> participants) {
+    public static Map<Language, Queue<Participant>> createQueueWith(final List<Participant> participants) {
         Map<Language, Queue<Participant>> languageQueue = new HashMap<>();
         for (Language language : values()) {
             languageQueue.put(language, new LinkedList<>());

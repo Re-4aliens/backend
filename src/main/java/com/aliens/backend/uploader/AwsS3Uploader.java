@@ -26,11 +26,11 @@ public class AwsS3Uploader {
         this.s3UploadProperties = s3UploadProperties;
     }
 
-    public List<S3File> upload(List<MultipartFile> files) {
+    public List<S3File> multiUpload(List<MultipartFile> files) {
         return files.stream().map(this::uploadToS3).toList();
     }
 
-    public S3File upload(MultipartFile file) {
+    public S3File singleUpload(MultipartFile file) {
         return uploadToS3(file);
     }
 

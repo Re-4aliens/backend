@@ -1,5 +1,6 @@
 package com.aliens.backend.event;
 
+import com.aliens.backend.global.BaseTest;
 import com.aliens.backend.notification.FcmSender;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
@@ -17,12 +17,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @SpringBootTest
-class EventPublisherTest {
+class EventPublisherTest extends BaseTest {
 
     @Autowired
     ApplicationEventPublisher publisher;
 
-    @MockBean
+    @Autowired
     FcmSender fcmSender;
 
     String givenType = "normal";

@@ -89,7 +89,7 @@ public class MemberInfoService {
                     s3UploadProperties.getDefaultFileURL()));
         }
 
-        S3File uploadedFile = uploader.upload(profileImage);
+        S3File uploadedFile = uploader.singleUpload(profileImage);
         return Image.from(uploadedFile);
     }
 
@@ -136,6 +136,10 @@ public class MemberInfoService {
 
     @Transactional
     public String changeProfileImage(final LoginMember loginMember, final MultipartFile newProfileImage) {
+        if (newProfileImage == null || newProfileImage.isEmpty()) {
+            throw new RestApiException(MemberError.INVALID_EMAIL); // 예외 처리를 원하는 대로 수정 필요
+        }
+
         Member member = getMember(loginMember);
         changeImageInDB(newProfileImage, member);
         return MemberResponse.PROFILE_IMAGE_CHANGE_SUCCESS.getMessage();
@@ -148,7 +152,7 @@ public class MemberInfoService {
             uploader.delete(savedProfileName);
         }
 
-        S3File newFile = uploader.upload(newProfileImage);
+        S3File newFile = uploader.singleUpload(newProfileImage);
         member.changeProfileImage(newFile);
     }
 

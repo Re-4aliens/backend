@@ -29,6 +29,7 @@ public class Member {
     @Column
     private String password;
 
+    @Enumerated(value = EnumType.STRING)
     @Column
     private MemberRole role = MemberRole.MEMBER;
 

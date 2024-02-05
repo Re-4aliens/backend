@@ -6,6 +6,7 @@ import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
+import com.aliens.backend.global.BaseTest;
 import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import com.aliens.backend.member.controller.dto.*;
 import com.aliens.backend.member.controller.dto.request.SignUpRequest;
@@ -18,26 +19,21 @@ import com.aliens.backend.member.domain.repository.ImageRepository;
 import com.aliens.backend.member.domain.repository.MemberInfoRepository;
 import com.aliens.backend.member.domain.MemberStatus;
 import com.aliens.backend.member.sevice.MemberInfoService;
-import com.aliens.backend.uploader.AwsS3Uploader;
 import com.aliens.backend.uploader.dto.S3File;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class MemberInfoServiceTest {
+class MemberInfoServiceTest extends BaseTest {
 
     @Autowired
-    MemberInfoRepository memberInfoRepository;
-    @Autowired
     MemberInfoService memberInfoService;
+    @Autowired
+    MemberInfoRepository memberInfoRepository;
     @Autowired
     EmailAuthenticationRepository emailAuthenticationRepository;
     @Autowired
@@ -49,12 +45,7 @@ class MemberInfoServiceTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @MockBean
-    AwsS3Uploader awsS3Uploader;
-    @MockBean
-    JavaMailSender javaMailSender;
-
-    MockMultipartFile file;
+    MultipartFile file;
     LoginMember loginMember;
     String givenName = "김명준";
     String givenEmail = "tmp@example";
@@ -74,30 +65,20 @@ class MemberInfoServiceTest {
         Member member = setUpMember(image);
         setUpMemberInfo(member);
         setUpLoginMember(member);
-        setUpMockMultipartFile();
-    }
-
-    @AfterEach
-    void setDown() {
-        emailAuthenticationRepository.deleteAll();
-        memberInfoRepository.deleteAll();
-        memberRepository.deleteAll();
-        imageRepository.deleteAll();
+        file = setUpMockMultipartFile();
     }
 
     @Test
     @DisplayName("회원가입")
     void signUpTest() {
         //Given
-        S3File tmpFile = new S3File(givenFileName, givenFileURL);
-        when(awsS3Uploader.upload((MultipartFile) any())).thenReturn(tmpFile);
         SignUpRequest signUpRequest = createSignUpRequest();
 
         //When
         String result = memberInfoService.signUp(signUpRequest, file);
 
         //Then
-        Assertions.assertEquals(MemberResponse.SIGN_UP_SUCCESS.getMessage(),result);
+        Assertions.assertEquals(MemberResponse.SIGN_UP_SUCCESS.getMessage(), result);
     }
 
     @Test
@@ -139,10 +120,6 @@ class MemberInfoServiceTest {
     @Test
     @DisplayName("프로필 이미지 변경")
     void changeProfileImage() {
-        //Given
-        S3File tmpFile = new S3File(givenFileName, givenFileURL);
-        when(awsS3Uploader.upload((MultipartFile) any())).thenReturn(tmpFile);
-
         //When
         String result = memberInfoService.changeProfileImage(loginMember, file);
 
@@ -205,11 +182,11 @@ class MemberInfoServiceTest {
         Assertions.assertEquals(expectedResponse,result);
     }
 
-    public void setUpLoginMember(final Member member) {
+    private void setUpLoginMember(final Member member) {
         loginMember = member.getLoginMember();
     }
 
-    public void setUpMemberInfo(final Member member) {
+    private void setUpMemberInfo(final Member member) {
         EncodedMember encodedRequest = new EncodedMember(symmetricKeyEncoder.encrypt(givenGender),
                 symmetricKeyEncoder.encrypt(givenMbti),
                 symmetricKeyEncoder.encrypt(givenBirthday),
@@ -220,32 +197,32 @@ class MemberInfoServiceTest {
         memberInfoRepository.save(memberInfo);
     }
 
-    public Member setUpMember(final Image image) {
+    private Member setUpMember(final Image image) {
         EncodedSignUp signUp = new EncodedSignUp(givenName, givenEmail, passwordEncoder.encrypt(givenPassword));
         Member member = Member.of(signUp, image);
         return member;
     }
 
-    public Image setUpImage() {
+    private Image setUpImage() {
         Image image = Image.from(new S3File(givenFileName, givenFileURL));
         return image;
     }
 
-    public void setUpMockMultipartFile() {
+    private MultipartFile setUpMockMultipartFile() {
         String fileName = "test";
         String path = "/test";
         String contentType = "image/png";
         byte[] content = fileName.getBytes();
-        file = new MockMultipartFile(fileName, path, contentType, content);
+        return new MockMultipartFile(fileName, path, contentType, content);
     }
 
-    public void setUpEmailEntity(final String givenEmail) {
+    private void setUpEmailEntity(final String givenEmail) {
         EmailAuthentication emailEntity = new EmailAuthentication(givenEmail);
         emailEntity.authenticate();
         emailAuthenticationRepository.save(emailEntity);
     }
 
-    public SignUpRequest createSignUpRequest() {
+    private SignUpRequest createSignUpRequest() {
         SignUpRequest signUpRequest = new SignUpRequest(givenEmail,
                 "password",
                 "tmpName",

@@ -4,6 +4,7 @@ import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
+import com.aliens.backend.global.BaseTest;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
@@ -17,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AuthServiceTest {
+class AuthServiceTest extends BaseTest {
 
     @Autowired
     AuthService authService;
@@ -46,12 +47,6 @@ class AuthServiceTest {
         member = Member.of(encodedSignUp, image);
         memberRepository.save(member);
         loginRequest = new LoginRequest(email, password);
-    }
-
-    @AfterEach
-    void afterDown() {
-        memberRepository.deleteAll();
-        imageRepository.deleteAll();
     }
 
     @Test

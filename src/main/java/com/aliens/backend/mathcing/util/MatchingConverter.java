@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 
 @Component
 public class MatchingConverter {
-    public List<Participant> toParticipantList(List<MatchingApplication> matchingApplications) {
+    public List<Participant> toParticipantList(final List<MatchingApplication> matchingApplications) {
         return matchingApplications.stream()
                 .map(this::toParticipantList)
                 .collect(Collectors.toList());
     }
 
-    private Participant toParticipantList(MatchingApplication matchingApplication) {
+    private Participant toParticipantList(final MatchingApplication matchingApplication) {
         return new Participant(
                 matchingApplication.getId().getMemberId(),
                 matchingApplication.getFirstPreferLanguage(),

@@ -9,7 +9,7 @@ import java.util.*;
 
 @Component
 public class MatchingQueueBuilder {
-    public Map<Language, Queue<Participant>> buildLanguageQueues(List<Participant> participants) {
+    public Map<Language, Queue<Participant>> buildLanguageQueues(final List<Participant> participants) {
         Map<Language, Queue<Participant>> languageQueue = createQueuesByLanguage();
 
         for (Participant participant : participants) {

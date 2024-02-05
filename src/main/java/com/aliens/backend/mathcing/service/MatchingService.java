@@ -55,7 +55,7 @@ public class MatchingService {
     }
 
     @Transactional(readOnly = true)
-    public List<MatchingResultResponse> findMatchingResult(Long memberId) {
+    public List<MatchingResultResponse> findMatchingResult(final Long memberId) {
         currentRound = matchingRoundRepository.findCurrentRound()
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
         List<MatchingResult> matchingResults =
@@ -64,7 +64,7 @@ public class MatchingService {
         return matchingResults.stream().map(matchingResult -> MatchingResultResponse.of(matchingResult)).toList();
     }
 
-    private void saveMatchingResult(List<Participant> participants) {
+    private void saveMatchingResult(final List<Participant> participants) {
         for (Participant participant : participants) {
             Long memberId = participant.memberId();
             for (Partner partner : participant.partners()) {

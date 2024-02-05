@@ -35,13 +35,13 @@ public class MatchingBusiness {
         this.matchingRuleProperties = matchingRuleProperties;
     }
 
-    private void initialize(List<MatchingApplication> matchingApplications) {
+    private void initialize(final List<MatchingApplication> matchingApplications) {
         participants = matchingConverter.toParticipantList(matchingApplications);
         languageQueueWithParticipants = matchingQueueBuilder.buildLanguageQueues(participants);
         relationship = Relationship.NORMAL;
     }
 
-    public List<Participant> operateMatching(List<MatchingApplication> matchingApplications) {
+    public List<Participant> operateMatching(final List<MatchingApplication> matchingApplications) {
         initialize(matchingApplications);
 
         matchParticipantsWith(MatchingMode.FIRST_PREFER_LANGUAGE);
@@ -52,7 +52,7 @@ public class MatchingBusiness {
         return participants;
     }
 
-    private void matchParticipantsWith(MatchingMode matchingMode) {
+    private void matchParticipantsWith(final MatchingMode matchingMode) {
         List<Participant> participants = null;
         if (matchingMode.equals(MatchingMode.FIRST_PREFER_LANGUAGE)) {
             participants = this.participants;
@@ -71,7 +71,7 @@ public class MatchingBusiness {
         matchWith(matchingMode, participants);
     }
 
-    private void matchWith(MatchingMode matchingMode, List<Participant> participants) {
+    private void matchWith(final MatchingMode matchingMode, final List<Participant> participants) {
         Queue<Participant> candidates = null;
         if (matchingMode.equals(MatchingMode.RANDOM)) {
             candidates = new LinkedList<>(getParticipantsLessThan(matchingRuleProperties.getMaxPartners()));
@@ -88,7 +88,7 @@ public class MatchingBusiness {
         }
     }
 
-    private void tryMatchBetween(Participant participant, Queue<Participant> candidates) {
+    private void tryMatchBetween(final Participant participant, final Queue<Participant> candidates) {
         int tries = 0;
         while (!matchingBusinessValidator.isExceededMaxPartners(relationship, participant) &&
                 !matchingBusinessValidator.isExceedMaxTries(tries) && !candidates.isEmpty()) {
@@ -105,7 +105,7 @@ public class MatchingBusiness {
         }
     }
 
-    private void addMatching(Participant participant, Participant partner) {
+    private void addMatching(final Participant participant, final Participant partner) {
         participant.addPartner(relationship, partner.memberId());
         partner.addPartner(relationship, participant.memberId());
     }

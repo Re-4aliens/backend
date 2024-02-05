@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 
 @Component
 public class MatchingApplicationValidator {
-    public void checkReceptionTime(MatchingRound matchingRound, LocalDateTime now) {
+    public void checkReceptionTime(final MatchingRound matchingRound, final LocalDateTime now) {
         if (!isMatchingReceptionTime(matchingRound, now)) {
             throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
         }
     }
 
-    private boolean isMatchingReceptionTime(MatchingRound matchingRound, LocalDateTime now) {
+    private boolean isMatchingReceptionTime(final MatchingRound matchingRound, final LocalDateTime now) {
         return now.isAfter(matchingRound.getMatchingRequestStartTime()) &&
                 now.isBefore(matchingRound.getMatchingRequestEndTime());
     }

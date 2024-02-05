@@ -13,14 +13,16 @@ public class MatchingBusinessValidator {
         this.matchingRuleProperties = matchingRuleProperties;
     }
 
-    public boolean isValidMatching(Relationship relationship, Participant participant, Participant partner) {
+    public boolean isValidMatching(final Relationship relationship,
+                                   final Participant participant,
+                                   final Participant partner) {
         return participant != partner &&
                 !participant.isPartnerWith(partner) &&
                 !partner.isPartnerWith(participant) &&
                 !isExceededMaxPartners(relationship, partner);
     }
 
-    public boolean isExceededMaxPartners(Relationship relationship, Participant participant) {
+    public boolean isExceededMaxPartners(final Relationship relationship, final Participant participant) {
         if (relationship.equals(Relationship.NORMAL)) {
             return participant.getNumberOfPartners() >= matchingRuleProperties.getMaxNormalPartners(); // 4
         }

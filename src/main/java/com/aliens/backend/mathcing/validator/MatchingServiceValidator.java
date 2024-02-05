@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 public class MatchingServiceValidator {
-    public void checkHasApplied(List<MatchingResult> matchingResults) {
+    public void checkHasApplied(final List<MatchingResult> matchingResults) {
         if (matchingResults.isEmpty()) {
             throw new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO);
         }

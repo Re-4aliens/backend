@@ -2,6 +2,7 @@ package com.aliens.backend.chatting;
 
 import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
+import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chatting.util.ChatClient;
 import com.aliens.backend.global.property.WebSocketProperties;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,11 +60,14 @@ public class WebSocketTest {
     @DisplayName("웹소켓 - 읽음 처리 요청 시 readMessage() 호출")
     public void WebSocketReadMessage() throws Exception {
         //given
+        Long chatRoomId = 1L;
+        Long memberId = 1L;
+        ReadRequest readRequest = new ReadRequest(chatRoomId, memberId);
         StompSession session = chatClient.connect();
         //when
-        session.send(properties.getRequest()+"/read","");
+        session.send(properties.getRequest()+"/read",readRequest);
         //then
-        verify(chatController, timeout(100).times(1)).readMessage();
+        verify(chatController, timeout(100).times(1)).readMessage(readRequest);
     }
 
     @Test

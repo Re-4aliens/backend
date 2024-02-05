@@ -1,5 +1,6 @@
 package com.aliens.backend.chatting.service;
 
+import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummary;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.domain.ChatRepository.MessageRepository;
@@ -42,8 +43,11 @@ public class ChatServiceTest {
     @DisplayName("메시지 읽음 처리")
     void readMessages() {
         //given
+        Long chatRoomId = 1L;
+        Long memberId = 1L;
+        ReadRequest readRequest = new ReadRequest(chatRoomId, memberId);
         //when
-        String result = chatService.readMessages();
+        String result = chatService.readMessages(readRequest);
         //then
         Assertions.assertEquals(ChatSuccessCode.READ_MESSAGES_SUCCESS.getMessage(), result);
     }

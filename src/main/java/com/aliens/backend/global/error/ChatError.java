@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 public enum ChatError implements ErrorCode {
 
     INVALID_MESSAGE_TYPE(HttpStatus.BAD_REQUEST, "CH1", "메시지 타입이 잘못되었습니다."),
-    INVALID_ROOM_ACCESS(HttpStatus.FORBIDDEN, "CH2", "채팅방 접근 권한이 없습니다.")
+    INVALID_ROOM_ACCESS(HttpStatus.FORBIDDEN, "CH2", "채팅방 접근 권한이 없습니다."),
+    INVALID_REPORT_CATEGORY(HttpStatus.BAD_REQUEST, "CH3", "신고 카테고리가 잘못되었습니다.")
     ;
 
     private final HttpStatus httpStatusCode;

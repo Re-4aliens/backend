@@ -5,6 +5,12 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+import org.springframework.web.socket.sockjs.client.SockJsClient;
+import org.springframework.web.socket.sockjs.client.Transport;
+import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatClient {
     private final String endPoint;
@@ -26,8 +32,14 @@ public class ChatClient {
     }
 
     private WebSocketStompClient createStompClient() {
-        WebSocketClient webSocketClient = new StandardWebSocketClient();
+        WebSocketClient webSocketClient = new SockJsClient(createTransport());
         WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
         return stompClient;
+    }
+
+    private List<Transport> createTransport() {
+        List<Transport> transports = new ArrayList<>();
+        transports.add(new WebSocketTransport(new StandardWebSocketClient()));
+        return transports;
     }
 }

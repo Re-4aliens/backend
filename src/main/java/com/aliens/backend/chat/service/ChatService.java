@@ -26,7 +26,7 @@ public class ChatService {
     public String sendMessage(MessageSendRequest messageSendRequest) {
         Message message = Message.of(messageSendRequest);
         saveMessage(message);
-        publishMessage(message,messageSendRequest.roomId());
+        publishMessage(message, messageSendRequest.roomId());
         sendNotification(message);
         return ChatSuccessCode.SEND_MESSAGE_SUCCESS.getMessage();
     }
@@ -42,8 +42,8 @@ public class ChatService {
         return chatSummarys;
     }
 
-    public List<Message> getMessages() {
-        List<Message> messages = new ArrayList<>();
+    public List<Message> getMessages(Long chatRoomId, String lastMessageId) {
+        List<Message> messages = findMessages(chatRoomId, lastMessageId);
         return messages;
     }
 
@@ -52,7 +52,7 @@ public class ChatService {
     }
 
     private void publishMessage(Message message, Long ChatRoomId) {
-        messagingTemplate.convertAndSend("/room/"+ChatRoomId, message);
+        messagingTemplate.convertAndSend("/room/"+ ChatRoomId, message);
     }
 
     private void sendNotification(Message message) {
@@ -64,6 +64,6 @@ public class ChatService {
 
     private void publishReadState(Long chatRoomId, Long memberId) {
         ReadResponse readResponse = new ReadResponse(memberId);
-        messagingTemplate.convertAndSend("/room/"+chatRoomId, readResponse);
+        messagingTemplate.convertAndSend("/room/" + chatRoomId, readResponse);
     }
 }

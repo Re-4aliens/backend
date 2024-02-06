@@ -1,7 +1,7 @@
 package com.aliens.backend.chatting.service;
 
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
-import com.aliens.backend.chat.controller.dto.response.ChatSummary;
+import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.domain.ChatRepository.MessageRepository;
 import com.aliens.backend.chat.domain.Message;
@@ -56,8 +56,9 @@ public class ChatServiceTest {
     @DisplayName("채팅 요약 정보 조회")
     void getChatSummary() {
         //given
+        Long memberId = 1L;
         //when
-        List<ChatSummary> result = chatService.getChatSummary();
+        ChatSummaryResponse result = chatService.getChatSummaries(memberId);
         //then
         Assertions.assertNotNull(result);
     }

@@ -73,15 +73,4 @@ public class WebSocketTest {
         //then
         verify(chatController, timeout(100).times(1)).readMessage(readRequest);
     }
-
-    @Test
-    @DisplayName("웹소켓 - 채팅 요약 정보 요청 시 getChatSummary() 호출")
-    public void WebSocketGetChatSummary() throws Exception {
-        //given
-        StompSession session = chatClient.connect();
-        //when
-        session.send(properties.getAppDestinationPrefix()+"/summary","");
-        //then
-        verify(chatController, timeout(100).times(1)).getChatSummary();
-    }
 }

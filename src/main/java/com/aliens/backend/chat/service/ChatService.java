@@ -54,6 +54,10 @@ public class ChatService {
         return messages;
     }
 
+    public List<ChatRoom> getChatRooms(Long memberId) {
+        return chatRepository.findByMemberId(memberId);
+    }
+
     private void saveMessage(Message message) {
         messageRepository.save(message);
     }

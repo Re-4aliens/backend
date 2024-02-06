@@ -30,4 +30,8 @@ public class ChatRoom {
     public ChatRoomStatus getStatus() {
         return status;
     }
+
+    public void block() {
+        this.status = ChatRoomStatus.BLOCKED;
+    }
 }

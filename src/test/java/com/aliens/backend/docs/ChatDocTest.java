@@ -1,9 +1,12 @@
 package com.aliens.backend.docs;
 
 import com.aliens.backend.auth.service.TokenProvider;
+import com.aliens.backend.chat.controller.dto.request.ChatReportRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.domain.Message;
+import com.aliens.backend.chat.service.ChatReportService;
 import com.aliens.backend.chat.service.ChatService;
+import com.aliens.backend.global.success.ChatSuccessCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,9 +22,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,6 +39,8 @@ class ChatDocTest {
     private MockMvc mockMvc;
     @MockBean
     private ChatService chatService;
+    @MockBean
+    private ChatReportService chatReportService;
     @MockBean
     private TokenProvider tokenProvider;
 
@@ -79,6 +86,29 @@ class ChatDocTest {
                 .andDo(document("chat-get-summary",
                         responseFields(
                                 fieldWithPath("response").description("채팅방 요약 정보 조회 결과")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("채팅 상대 신고")
+    void reportPartner() throws Exception {
+        Long memberId = 1L;
+        Long chatRoomId = 1L;
+        String reportCategory = "ETC";
+        String reportContent = "신고 사유";
+        ChatReportRequest request = new ChatReportRequest(memberId, chatRoomId, reportCategory, reportContent);
+        String response = ChatSuccessCode.REPORT_SUCCESS.getMessage();
+        when(chatReportService.reportPartner(any(), any())).thenReturn(response);
+        mockMvc.perform(post("/chat/report")
+                        .header("Authorization", accessToken)
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType("application/json")
+                )
+                .andExpect(status().isOk())
+                .andDo(document("chat-report",
+                        responseFields(
+                                fieldWithPath("response").description("채팅 상대 신고 결과")
                         )
                 ));
     }

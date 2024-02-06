@@ -3,7 +3,7 @@ package com.aliens.backend.chatting.service;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
-import com.aliens.backend.chat.domain.ChatRepository.MessageRepository;
+import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.global.success.ChatSuccessCode;

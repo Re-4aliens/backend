@@ -4,8 +4,8 @@ import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.controller.dto.response.ReadResponse;
-import com.aliens.backend.chat.domain.ChatRepository.ChatRepository;
-import com.aliens.backend.chat.domain.ChatRepository.MessageRepository;
+import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
+import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.service.model.ChatMessageSummary;
@@ -19,11 +19,11 @@ import java.util.List;
 public class ChatService {
     private final MessageRepository messageRepository;
     private final SimpMessagingTemplate messagingTemplate;
-    private final ChatRepository chatRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
-    public ChatService(MessageRepository messageRepository, ChatRepository chatRepository, SimpMessagingTemplate messagingTemplate) {
+    public ChatService(MessageRepository messageRepository, ChatRoomRepository chatRoomRepository, SimpMessagingTemplate messagingTemplate) {
         this.messageRepository = messageRepository;
-        this.chatRepository = chatRepository;
+        this.chatRoomRepository = chatRoomRepository;
         this.messagingTemplate = messagingTemplate;
     }
 
@@ -42,7 +42,7 @@ public class ChatService {
     }
 
     public ChatSummaryResponse getChatSummaries(Long memberId) {
-        List<ChatRoom> chatRooms = chatRepository.findByMemberId(memberId);
+        List<ChatRoom> chatRooms = chatRoomRepository.findByMemberId(memberId);
         List<Long> chatRoomIds = chatRooms.stream().map(ChatRoom::getId).toList();
         List<ChatMessageSummary> chatMessageSummaries = messageRepository.aggregateMessageSummaries(chatRoomIds, memberId);
         ChatSummaryResponse chatSummaryResponse = new ChatSummaryResponse(chatRooms, chatMessageSummaries);
@@ -55,7 +55,7 @@ public class ChatService {
     }
 
     public List<ChatRoom> getChatRooms(Long memberId) {
-        return chatRepository.findByMemberId(memberId);
+        return chatRoomRepository.findByMemberId(memberId);
     }
 
     private void saveMessage(Message message) {

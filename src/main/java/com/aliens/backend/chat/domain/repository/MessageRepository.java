@@ -1,4 +1,4 @@
-package com.aliens.backend.chat.domain.ChatRepository;
+package com.aliens.backend.chat.domain.repository;
 
 import com.aliens.backend.chat.domain.Message;
 import org.springframework.data.mongodb.repository.MongoRepository;

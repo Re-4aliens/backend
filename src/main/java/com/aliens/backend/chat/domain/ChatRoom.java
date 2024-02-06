@@ -3,7 +3,7 @@ package com.aliens.backend.chat.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "CHAT_ROOM ")
+@Table(name = "CHAT_ROOM")
 public class ChatRoom {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)

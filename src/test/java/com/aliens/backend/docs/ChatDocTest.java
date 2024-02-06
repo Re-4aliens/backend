@@ -1,9 +1,11 @@
 package com.aliens.backend.docs;
 
 import com.aliens.backend.auth.service.TokenProvider;
+import com.aliens.backend.chat.controller.dto.request.ChatBlockRequest;
 import com.aliens.backend.chat.controller.dto.request.ChatReportRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.domain.Message;
+import com.aliens.backend.chat.service.ChatBlockService;
 import com.aliens.backend.chat.service.ChatReportService;
 import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.global.success.ChatSuccessCode;
@@ -41,6 +43,8 @@ class ChatDocTest {
     private ChatService chatService;
     @MockBean
     private ChatReportService chatReportService;
+    @MockBean
+    private ChatBlockService chatBlockService;
     @MockBean
     private TokenProvider tokenProvider;
 
@@ -109,6 +113,27 @@ class ChatDocTest {
                 .andDo(document("chat-report",
                         responseFields(
                                 fieldWithPath("response").description("채팅 상대 신고 결과")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("채팅 상대 차단")
+    void blockPartner() throws Exception {
+        Long chatRoomId = 1L;
+        Long memberId = 1L;
+        ChatBlockRequest request = new ChatBlockRequest(memberId, chatRoomId);
+        String response = ChatSuccessCode.BLOCK_SUCCESS.getMessage();
+        when(chatBlockService.blockPartner(any(), any())).thenReturn(response);
+        mockMvc.perform(post("/chat/block")
+                        .header("Authorization", accessToken)
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType("application/json")
+                )
+                .andExpect(status().isOk())
+                .andDo(document("chat-block",
+                        responseFields(
+                                fieldWithPath("response").description("채팅 상대 차단 결과")
                         )
                 ));
     }

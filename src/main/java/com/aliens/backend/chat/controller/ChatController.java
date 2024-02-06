@@ -31,4 +31,12 @@ public class ChatController {
     public void getChatSummary() {
         chatService.getChatSummary();
     }
+
+    @GetMapping("/chat/room/{roomId}/messages")
+    public ResponseEntity<Map<String, List>> getMessages(@PathVariable("roomId") Long chatRoomId,
+                                                         @RequestParam("lastMessageId") String lastMessageId) {
+        List<Message> messages = chatService.getMessages(chatRoomId,lastMessageId);
+        Map<String, List> response = Collections.singletonMap("response", messages);
+        return ResponseEntity.ok(response);
+    }
 }

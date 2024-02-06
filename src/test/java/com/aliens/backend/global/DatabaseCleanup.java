@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@ActiveProfiles("test")
 public class DatabaseCleanup implements InitializingBean {
 
     @PersistenceContext

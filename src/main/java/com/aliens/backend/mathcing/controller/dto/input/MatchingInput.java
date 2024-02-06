@@ -15,6 +15,10 @@ public class MatchingInput {
             return new MatchingApplicationRequest(memberId, firstPreferLanguage, secondPreferLanguage);
         }
 
+        public static MatchingApplicationInput of(Language firstPreferLanguage, Language secondPreferLanguage) {
+            return new MatchingApplicationInput(firstPreferLanguage, secondPreferLanguage);
+        }
+
         private void validateInput() {
             if (firstPreferLanguage.equals(secondPreferLanguage)) {
                 throw new RestApiException(MatchingError.INVALID_LANGUAGE_INPUT);

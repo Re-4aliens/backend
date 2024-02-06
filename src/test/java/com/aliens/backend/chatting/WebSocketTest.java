@@ -1,5 +1,8 @@
 package com.aliens.backend.chatting;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.auth.domain.MemberRole;
+import com.aliens.backend.auth.service.TokenProvider;
 import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
@@ -14,8 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.messaging.simp.stomp.StompSession;
 
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class WebSocketTest {
@@ -24,11 +26,15 @@ public class WebSocketTest {
     private WebSocketProperties properties;
     @MockBean
     private ChatController chatController;
+    @MockBean
+    private TokenProvider tokenProvider;
     private ChatClient chatClient;
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
+        LoginMember loginMember = new LoginMember(1L, MemberRole.MEMBER);
+        when(tokenProvider.getLoginMemberFromToken(any())).thenReturn(loginMember);
         chatClient = new ChatClient(properties);
     }
 

@@ -66,8 +66,9 @@ public class ChatServiceTest {
     @DisplayName("메시지 조회")
     void getMessages() {
         //given
+        Long chatRoomId = 1L;
         //when
-        List<Message> result = chatService.getMessages();
+        List<Message> result = chatService.getMessages(chatRoomId, null);
         //then
         Assertions.assertNotNull(result);
     }

@@ -55,20 +55,23 @@ public class MatchingService {
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
         List<MatchingResult> matchingResults =
                 matchingResultRepository.findAllByMatchingRoundAndMemberId(currentRound, memberId);
-        if (matchingResults.isEmpty()) {
-            throw new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO);
-        }
+        checkHasApplied(matchingResults);
         return matchingResults.stream().map(MatchingResultResponse::of).toList();
     }
 
     private void saveMatchingResult(final List<Participant> participants) {
         for (Participant participant : participants) {
-            Long memberId = participant.memberId();
             for (Partner partner : participant.partners()) {
                 matchingResultRepository.save(
-                        MatchingResult.of(currentRound, memberId, partner.memberId(), partner.relationship()));
+                        MatchingResult.of(currentRound, partner.memberId(), partner.memberId(), partner.relationship()));
             }
             // TODO : 매칭 완료 알림 이벤트 발송 & 채팅방 개설 이벤트 발송
+        }
+    }
+
+    private void checkHasApplied(List<MatchingResult> matchingResults) {
+        if (matchingResults.isEmpty()) {
+            throw new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO);
         }
     }
 }

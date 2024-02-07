@@ -33,9 +33,7 @@ public class MatchingApplicationService {
     @Transactional
     public void saveParticipant(final MatchingApplicationRequest matchingApplicationRequest) {
         MatchingRound currentRound = getCurrentRound();
-        if (!currentRound.isReceptionTime(LocalDateTime.now(clock))) {
-            throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
-        }
+        checkReceptionTime(currentRound);
         matchingApplicationRepository.save(matchingApplicationRequest.toEntity(currentRound));
     }
 
@@ -51,9 +49,7 @@ public class MatchingApplicationService {
     @Transactional
     public void deleteMatchingApplication(final Long memberId) {
         MatchingRound currentRound = getCurrentRound();
-        if (!currentRound.isReceptionTime(LocalDateTime.now(clock))) {
-            throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
-        }
+        checkReceptionTime(currentRound);
         MatchingApplication matchingApplication =
                 matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, memberId))
                         .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
@@ -63,5 +59,11 @@ public class MatchingApplicationService {
     private MatchingRound getCurrentRound() {
         return matchingRoundRepository.findCurrentRound()
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+    }
+
+    private void checkReceptionTime(MatchingRound matchingRound) {
+        if (!matchingRound.isReceptionTime(LocalDateTime.now(clock))) {
+            throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
+        }
     }
 }

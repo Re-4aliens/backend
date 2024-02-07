@@ -56,17 +56,8 @@ public class MatchingApplication {
 
     public static List<Participant> toParticipantList(final List<MatchingApplication> matchingApplications) {
         return matchingApplications.stream()
-                .map(MatchingApplication::of)
+                .map(Participant::of)
                 .collect(Collectors.toList());
-    }
-
-    private static Participant of(final MatchingApplication matchingApplication) {
-        return new Participant(
-                matchingApplication.getId().getMemberId(),
-                matchingApplication.getFirstPreferLanguage(),
-                matchingApplication.getSecondPreferLanguage(),
-                new ArrayList<>()
-        );
     }
 
     @Override

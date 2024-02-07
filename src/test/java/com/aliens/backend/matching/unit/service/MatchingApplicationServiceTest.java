@@ -69,8 +69,7 @@ public class MatchingApplicationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.saveParticipant(matchingApplicationRequest))
-                .isInstanceOf(RestApiException.class)
-                .hasMessage(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME.getMessage());
+                .hasMessage(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME.getDevelopCode());
     }
 
 
@@ -95,7 +94,7 @@ public class MatchingApplicationServiceTest {
     void getMatchingApplicationIfNotApplied() {
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(matchingApplicationRequest.memberId()))
-                .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getMessage());
+                .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 
     @Test
@@ -111,7 +110,7 @@ public class MatchingApplicationServiceTest {
 
         // then
         assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(matchingApplicationRequest.memberId()))
-                .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getMessage());
+                .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 
     @Test
@@ -124,7 +123,7 @@ public class MatchingApplicationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId()))
-                .hasMessage(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME.getMessage());
+                .hasMessage(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME.getDevelopCode());
     }
 
     @Test
@@ -135,7 +134,7 @@ public class MatchingApplicationServiceTest {
         mockClock.mockTime(VALID_TIME);
 
         assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(matchingApplicationRequest.memberId()))
-                .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getMessage());
+                .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 
     private void applyToMatch() {

@@ -5,10 +5,11 @@ import com.aliens.backend.chat.domain.ChatBlock;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.repository.ChatBlockRepository;
 import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
-import com.aliens.backend.global.error.ChatError;
-import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.success.ChatSuccessCode;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ChatBlockService {
@@ -20,6 +21,7 @@ public class ChatBlockService {
         this.chatRoomRepository = chatRoomRepository;
     }
 
+    @Transactional
     public String blockPartner(Long memberId, ChatBlockRequest chatBlockRequest) {
         ChatBlock chatBlock = ChatBlock.of(memberId, chatBlockRequest);
         chatBlockRepository.save(chatBlock);
@@ -28,9 +30,8 @@ public class ChatBlockService {
     }
 
     private void blockChatRoom(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(() -> new RestApiException(ChatError.CHAT_ROOM_NOT_FOUND));
-        chatRoom.block();
-        chatRoomRepository.save(chatRoom);
+        List<ChatRoom> chatRooms = chatRoomRepository.findByRoomId(chatRoomId);
+        chatRooms.forEach(ChatRoom::block);
+        chatRoomRepository.saveAll(chatRooms);
     }
 }

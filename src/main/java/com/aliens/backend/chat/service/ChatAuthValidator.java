@@ -17,7 +17,7 @@ public class ChatAuthValidator {
     }
 
     private boolean isValidRoom (List<ChatRoom> validChatRooms, Long roomId) {
-        return validChatRooms.stream().anyMatch(chatRoom -> chatRoom.getId().equals(roomId));
+        return validChatRooms.stream().anyMatch(chatRoom -> chatRoom.getRoomId().equals(roomId));
     }
 
     private long getRoomIdFromTopic(String topic) {

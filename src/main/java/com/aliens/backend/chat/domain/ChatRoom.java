@@ -9,6 +9,7 @@ public class ChatRoom {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column
     private Long id;
+    private Long roomId;
     @Column(name = "member_id")
     private Long memberId;
     @Column(name = "partner_id")
@@ -19,8 +20,8 @@ public class ChatRoom {
     protected ChatRoom() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getRoomId() {
+        return roomId;
     }
 
     public Long getPartnerId() {

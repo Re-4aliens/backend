@@ -4,10 +4,10 @@ import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.controller.dto.response.ReadResponse;
-import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
-import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.Message;
+import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
+import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.service.model.ChatMessageSummary;
 import com.aliens.backend.global.success.ChatSuccessCode;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -43,7 +43,7 @@ public class ChatService {
 
     public ChatSummaryResponse getChatSummaries(Long memberId) {
         List<ChatRoom> chatRooms = chatRoomRepository.findByMemberId(memberId);
-        List<Long> chatRoomIds = chatRooms.stream().map(ChatRoom::getId).toList();
+        List<Long> chatRoomIds = chatRooms.stream().map(ChatRoom::getRoomId).toList();
         List<ChatMessageSummary> chatMessageSummaries = messageRepository.aggregateMessageSummaries(chatRoomIds, memberId);
         ChatSummaryResponse chatSummaryResponse = new ChatSummaryResponse(chatRooms, chatMessageSummaries);
         return chatSummaryResponse;

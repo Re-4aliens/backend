@@ -4,15 +4,15 @@ import com.aliens.backend.chat.controller.dto.request.ChatBlockRequest;
 import com.aliens.backend.chat.service.ChatBlockService;
 import com.aliens.backend.global.config.resolver.Login;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.Map;
 
 
-@Controller
+@RestController
 public class ChatBlockController {
 
     private final ChatBlockService chatBlockService;

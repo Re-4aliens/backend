@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class ChatChannelInterceptor implements ChannelInterceptor {
 
-    ChatAuthValidator chatAuthValidator;
+    private final ChatAuthValidator chatAuthValidator;
 
     public ChatChannelInterceptor(ChatAuthValidator chatAuthValidator) {
         this.chatAuthValidator = chatAuthValidator;

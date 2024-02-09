@@ -38,7 +38,7 @@ public class ChatController {
         chatService.readMessages(readRequest);
     }
 
-    @GetMapping("chat/summaries")
+    @GetMapping("/chat/summaries")
     public ResponseEntity<Map<String, ChatSummaryResponse>> getChatSummaries(@Login Long memberId) {
         ChatSummaryResponse chatSummaryResponse = chatService.getChatSummaries(memberId);
         Map<String, ChatSummaryResponse> response = Collections.singletonMap("response", chatSummaryResponse);

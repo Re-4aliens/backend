@@ -45,7 +45,7 @@ public class MatchingApplicationService {
         MatchingApplication matchingApplication =
                 matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, memberId))
                 .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
-        return MatchingApplicationResponse.of(matchingApplication);
+        return MatchingApplicationResponse.from(matchingApplication);
     }
 
     @Transactional

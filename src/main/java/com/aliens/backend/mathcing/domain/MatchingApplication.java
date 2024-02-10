@@ -1,5 +1,7 @@
 package com.aliens.backend.mathcing.domain;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
 import com.aliens.backend.mathcing.service.model.Language;
 import com.aliens.backend.mathcing.service.model.Participant;
@@ -34,10 +36,6 @@ public class MatchingApplication {
         this.secondPreferLanguage = secondPreferLanguage;
     }
 
-    public MatchingApplicationId getId() {
-        return id;
-    }
-
     public Language getFirstPreferLanguage() {
         return firstPreferLanguage;
     }
@@ -54,10 +52,30 @@ public class MatchingApplication {
                 firstPreferLanguage, secondPreferLanguage);
     }
 
+    public static MatchingApplication from(final LoginMember loginMember,
+                                           final MatchingApplicationRequest matchingApplicationRequest,
+                                           final MatchingRound matchingRound) {
+        return MatchingApplication.of(matchingRound, loginMember.memberId(),
+                matchingApplicationRequest.firstPreferLanguage(),
+                matchingApplicationRequest.secondPreferLanguage());
+    }
+
     public static List<Participant> toParticipantList(final List<MatchingApplication> matchingApplications) {
         return matchingApplications.stream()
                 .map(Participant::of)
                 .collect(Collectors.toList());
+    }
+
+    public Long getMemberId() {
+        return id.getMemberId();
+    }
+
+    public MatchingRound getMatchingRound() {
+        return id.getMatchingRound();
+    }
+
+    public Long getRound() {
+        return getMatchingRound().getRound();
     }
 
     @Override

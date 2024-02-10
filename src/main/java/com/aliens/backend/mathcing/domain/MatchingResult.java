@@ -27,9 +27,16 @@ public class MatchingResult {
         return new MatchingResult(
                 MatchingResultId.of(matchingRound, matchingMemberId, matchedMemberId), relationship);
     }
+    public MatchingRound getMatchingRound() {
+        return id.getMatchingRound();
+    }
 
-    public MatchingResultId getId() {
-        return id;
+    public Long getMatchingMemberId() {
+        return id.getMatchingMemberId();
+    }
+
+    public Long getMatchedMemberId() {
+        return id.getMatchedMemberId();
     }
 
     public Relationship getRelationship() {

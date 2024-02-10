@@ -1,6 +1,6 @@
 package com.aliens.backend.matching.util;
 
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;
@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 @Component
 public class MockClock {
-    @MockBean
+    @SpyBean
     private Clock clock;
 
     public void mockTime(MockTime mockTime) {

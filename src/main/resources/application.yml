@@ -11,3 +11,9 @@ spring:
 
   profiles:
     include: secret, matching
+
+websocket:
+  port: 8080
+  endpoint: /ws
+  topic: /room
+  request: /chatting

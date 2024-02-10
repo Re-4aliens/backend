@@ -47,6 +47,12 @@ dependencies {
     //SMTP
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+    //WEBSOCKET
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    //MONGO_DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
     //FCM
     implementation 'com.google.firebase:firebase-admin:9.1.1'
 }

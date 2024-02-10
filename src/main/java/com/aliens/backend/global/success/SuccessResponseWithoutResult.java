@@ -11,6 +11,7 @@ public class SuccessResponseWithoutResult {
         this.message = message;
     }
 
+
     public static ResponseEntity<SuccessResponseWithoutResult> toResponseEntity(final SuccessCode successCode) {
         SuccessResponseWithoutResult res = new SuccessResponseWithoutResult(successCode.getCode(), successCode.getMessage());
         return new ResponseEntity<>(res, successCode.getHttpStatus());

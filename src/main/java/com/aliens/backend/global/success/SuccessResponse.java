@@ -14,6 +14,7 @@ public class SuccessResponse<T> {
         this.result = result;
     }
 
+
     public static ResponseEntity<SuccessResponse> toResponseEntity(final SuccessCode successCode, final Object result) {
         SuccessResponse res = new SuccessResponse(successCode.getCode(), successCode.getMessage(), result);
         return new ResponseEntity<>(res, successCode.getHttpStatus());

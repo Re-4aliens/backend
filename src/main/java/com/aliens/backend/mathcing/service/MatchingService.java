@@ -3,6 +3,7 @@ package com.aliens.backend.mathcing.service;
 import com.aliens.backend.global.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
+import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
 import com.aliens.backend.mathcing.domain.MatchingResult;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static com.aliens.backend.mathcing.controller.dto.response.MatchingResponse.*;
 
 @Service
 public class MatchingService {
@@ -56,7 +55,7 @@ public class MatchingService {
         List<MatchingResult> matchingResults =
                 matchingResultRepository.findAllByMatchingRoundAndMemberId(currentRound, memberId);
         checkHasApplied(matchingResults);
-        return matchingResults.stream().map(MatchingResultResponse::of).toList();
+        return matchingResults.stream().map(MatchingResultResponse::from).toList();
     }
 
     private void saveMatchingResult(final List<Participant> participants) {

@@ -5,13 +5,13 @@ import com.aliens.backend.global.config.resolver.Login;
 import com.aliens.backend.global.success.MatchingSuccessCode;
 import com.aliens.backend.global.success.SuccessResponse;
 import com.aliens.backend.global.success.SuccessResponseWithoutResult;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.MatchingService;
+import com.aliens.backend.mathcing.util.validator.LanguageCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static com.aliens.backend.mathcing.controller.dto.input.MatchingInput.*;
 
 @RestController
 @RequestMapping("/matchings")
@@ -28,8 +28,8 @@ public class MatchingController {
 
     @PostMapping("/applications")
     public ResponseEntity<?> applyMatch(final @Login LoginMember loginMember,
-                                        final @RequestBody MatchingApplicationInput matchingApplicationInput) {
-        matchingApplicationService.saveParticipant(matchingApplicationInput.toRequest(loginMember.memberId()));
+                                        final @RequestBody @LanguageCheck MatchingApplicationRequest matchingApplicationRequest) {
+        matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
         return SuccessResponseWithoutResult.toResponseEntity(MatchingSuccessCode.APPLY_MATCHING_SUCCESS);
     }
 

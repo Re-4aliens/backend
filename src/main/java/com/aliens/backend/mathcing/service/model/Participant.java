@@ -25,7 +25,7 @@ public record Participant(
 
     public static Participant of(final MatchingApplication matchingApplication) {
         return new Participant(
-                matchingApplication.getId().getMemberId(),
+                matchingApplication.getMemberId(),
                 matchingApplication.getFirstPreferLanguage(),
                 matchingApplication.getSecondPreferLanguage(),
                 new ArrayList<>()

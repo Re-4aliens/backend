@@ -1,7 +1,10 @@
 package com.aliens.backend.mathcing.service;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.global.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
+import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationResponse;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
@@ -12,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-
-import static com.aliens.backend.mathcing.controller.dto.request.MatchingRequest.*;
-import static com.aliens.backend.mathcing.controller.dto.response.MatchingResponse.*;
 
 @Service
 public class MatchingApplicationService {
@@ -31,10 +31,12 @@ public class MatchingApplicationService {
     }
 
     @Transactional
-    public void saveParticipant(final MatchingApplicationRequest matchingApplicationRequest) {
+    public void saveParticipant(final LoginMember loginMember,
+                                final MatchingApplicationRequest matchingApplicationRequest) {
         MatchingRound currentRound = getCurrentRound();
         checkReceptionTime(currentRound);
-        matchingApplicationRepository.save(matchingApplicationRequest.toEntity(currentRound));
+        MatchingApplication matchingApplication = MatchingApplication.from(loginMember, matchingApplicationRequest, currentRound);
+        matchingApplicationRepository.save(matchingApplication);
     }
 
     @Transactional(readOnly = true)

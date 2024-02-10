@@ -1,4 +1,4 @@
-package com.aliens.backend.uploader;
+package com.aliens.backend.uploader.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 

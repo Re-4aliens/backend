@@ -1,6 +1,6 @@
 package com.aliens.backend.encode;
 
-import com.aliens.backend.global.encode.SymmetricKeyEncoder;
+import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

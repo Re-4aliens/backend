@@ -1,4 +1,4 @@
-package com.aliens.backend.global.encode;
+package com.aliens.backend.member.sevice;
 
 import com.aliens.backend.global.error.CommonError;
 import com.aliens.backend.global.exception.RestApiException;

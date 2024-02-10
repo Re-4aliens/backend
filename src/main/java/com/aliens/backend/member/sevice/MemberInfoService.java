@@ -6,7 +6,6 @@ import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
-import com.aliens.backend.global.encode.SymmetricKeyEncoder;
 import com.aliens.backend.global.error.EmailError;
 import com.aliens.backend.global.error.MemberError;
 import com.aliens.backend.global.exception.RestApiException;
@@ -20,7 +19,7 @@ import com.aliens.backend.member.controller.dto.request.SignUpRequest;
 import com.aliens.backend.member.domain.*;
 import com.aliens.backend.member.domain.repository.MemberInfoRepository;
 import com.aliens.backend.uploader.AwsS3Uploader;
-import com.aliens.backend.uploader.S3File;
+import com.aliens.backend.uploader.dto.S3File;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,7 +89,7 @@ public class MemberInfoService {
                     s3UploadProperties.getDefaultFileURL()));
         }
 
-        S3File uploadedFile = uploader.upload(profileImage);
+        S3File uploadedFile = uploader.singleUpload(profileImage);
         return Image.from(uploadedFile);
     }
 
@@ -137,6 +136,10 @@ public class MemberInfoService {
 
     @Transactional
     public String changeProfileImage(final LoginMember loginMember, final MultipartFile newProfileImage) {
+        if (newProfileImage == null || newProfileImage.isEmpty()) {
+            throw new RestApiException(MemberError.INVALID_EMAIL); // 예외 처리를 원하는 대로 수정 필요
+        }
+
         Member member = getMember(loginMember);
         changeImageInDB(newProfileImage, member);
         return MemberResponse.PROFILE_IMAGE_CHANGE_SUCCESS.getMessage();
@@ -149,7 +152,7 @@ public class MemberInfoService {
             uploader.delete(savedProfileName);
         }
 
-        S3File newFile = uploader.upload(newProfileImage);
+        S3File newFile = uploader.singleUpload(newProfileImage);
         member.changeProfileImage(newFile);
     }
 

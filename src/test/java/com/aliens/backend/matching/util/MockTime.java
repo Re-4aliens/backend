@@ -8,7 +8,7 @@ public enum MockTime {
 
     public LocalDateTime time;
 
-    private MockTime(LocalDateTime time) {
+    MockTime(LocalDateTime time) {
         this.time = time;
     }
 }

@@ -61,8 +61,8 @@ public class MatchingRound {
         DayOfWeek dayOfWeek = today.getDayOfWeek();
 
         LocalDateTime matchingRequestStartTime = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime matchingRequestEndTime = matchingRequestStartTime.plusHours(matchingTimeProperties.getMatchingRequestAvailableTime());
-        LocalDateTime matchingValidStartTime = today.withHour(matchingTimeProperties.getMatchingValidBeginHours()).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime matchingRequestEndTime = matchingRequestStartTime.plusHours(matchingTimeProperties.getRequestAvailableTime());
+        LocalDateTime matchingValidStartTime = today.withHour(matchingTimeProperties.getValidBeginHours()).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime matchingValidEndTime = matchingValidStartTime.plusHours(matchingTimeProperties.getMatchingValidHours(dayOfWeek));
 
         return new MatchingRound(matchingRequestStartTime, matchingRequestEndTime, matchingValidStartTime, matchingValidEndTime);

@@ -27,7 +27,6 @@ public class MatchingService {
     private final MatchingResultRepository matchingResultRepository;
     private final MatchingBusiness matchingBusiness;
 
-    @Autowired
     public MatchingService(final MatchingRoundRepository matchingRoundRepository,
                            final MatchingApplicationRepository matchingApplicationRepository,
                            final MatchingResultRepository matchingResultRepository,

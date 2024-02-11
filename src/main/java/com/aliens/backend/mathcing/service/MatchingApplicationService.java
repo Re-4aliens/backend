@@ -54,7 +54,6 @@ public class MatchingApplicationService {
         matchingApplicationRepository.delete(matchingApplication);
     }
 
-
     private void checkReceptionTime(MatchingRound matchingRound) {
         if (!matchingRound.isReceptionTime(LocalDateTime.now(clock))) {
             throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);

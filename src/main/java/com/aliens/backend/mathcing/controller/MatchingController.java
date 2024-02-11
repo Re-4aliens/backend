@@ -24,7 +24,6 @@ public class MatchingController {
     private final MatchingApplicationService matchingApplicationService;
     private final MatchingService matchingService;
 
-    @Autowired
     public MatchingController(final MatchingApplicationService matchingApplicationService,
                               final MatchingService matchingService) {
         this.matchingApplicationService = matchingApplicationService;

@@ -12,17 +12,17 @@ public class MatchingRound {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long round;
 
-    @Column(name = "matching_request_start_time")
-    private LocalDateTime matchingRequestStartTime;
+    @Column(name = "request_start_time")
+    private LocalDateTime requestStartTime;
 
-    @Column(name = "matching_request_end_time")
-    private LocalDateTime matchingRequestEndTime;
+    @Column(name = "request_end_time")
+    private LocalDateTime requestEndTime;
 
-    @Column(name = "matching_valid_start_time")
-    private LocalDateTime matchingValidStartTime;
+    @Column(name = "valid_start_time")
+    private LocalDateTime validStartTime;
 
-    @Column(name = "matching_valid_end_time")
-    private LocalDateTime matchingValidEndTime;
+    @Column(name = "valid_end_time")
+    private LocalDateTime validEndTime;
 
     protected MatchingRound() {
     }
@@ -31,30 +31,30 @@ public class MatchingRound {
         return round;
     }
 
-    public LocalDateTime getMatchingRequestStartTime() {
-        return matchingRequestStartTime;
+    public LocalDateTime getRequestStartTime() {
+        return requestStartTime;
     }
 
-    public LocalDateTime getMatchingRequestEndTime() {
-        return matchingRequestEndTime;
+    public LocalDateTime getRequestEndTime() {
+        return requestEndTime;
     }
 
-    public LocalDateTime getMatchingValidStartTime() {
-        return matchingValidStartTime;
+    public LocalDateTime getValidStartTime() {
+        return validStartTime;
     }
 
-    public LocalDateTime getMatchingValidEndTime() {
-        return matchingValidEndTime;
+    public LocalDateTime getValidEndTime() {
+        return validEndTime;
     }
 
-    private MatchingRound(final LocalDateTime matchingRequestStartTime,
-                         final LocalDateTime matchingRequestEndTime,
-                         final LocalDateTime matchingValidStartTime,
-                         final LocalDateTime matchingValidEndTime) {
-        this.matchingRequestStartTime = matchingRequestStartTime;
-        this.matchingRequestEndTime = matchingRequestEndTime;
-        this.matchingValidStartTime = matchingValidStartTime;
-        this.matchingValidEndTime = matchingValidEndTime;
+    private MatchingRound(final LocalDateTime requestStartTime,
+                         final LocalDateTime requestEndTime,
+                         final LocalDateTime validStartTime,
+                         final LocalDateTime validEndTime) {
+        this.requestStartTime = requestStartTime;
+        this.requestEndTime = requestEndTime;
+        this.validStartTime = validStartTime;
+        this.validEndTime = validEndTime;
     }
 
     public static MatchingRound of(final LocalDateTime today, final MatchingTimeProperties matchingTimeProperties) {
@@ -69,17 +69,17 @@ public class MatchingRound {
     }
 
     public boolean isReceptionTime(LocalDateTime now) {
-        return now.isAfter(this.getMatchingRequestStartTime()) && now.isBefore(this.getMatchingRequestEndTime());
+        return now.isAfter(this.getRequestStartTime()) && now.isBefore(this.getRequestEndTime());
     }
 
     @Override
     public String toString() {
         return "MatchingRound{" +
                 "round=" + round +
-                ", matchingRequestStartTime=" + matchingRequestStartTime +
-                ", matchingRequestEndTime=" + matchingRequestEndTime +
-                ", matchingValidStartTime=" + matchingValidStartTime +
-                ", matchingValidEndTime=" + matchingValidEndTime +
+                ", matchingRequestStartTime=" + requestStartTime +
+                ", matchingRequestEndTime=" + requestEndTime +
+                ", matchingValidStartTime=" + validStartTime +
+                ", matchingValidEndTime=" + validEndTime +
                 '}';
     }
 }

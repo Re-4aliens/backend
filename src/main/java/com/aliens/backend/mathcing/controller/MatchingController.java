@@ -6,12 +6,17 @@ import com.aliens.backend.global.success.MatchingSuccessCode;
 import com.aliens.backend.global.success.SuccessResponse;
 import com.aliens.backend.global.success.SuccessResponseWithoutResult;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
+import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationResponse;
+import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
+import com.aliens.backend.mathcing.domain.MatchingResult;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.MatchingService;
 import com.aliens.backend.mathcing.util.validator.LanguageCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/matchings")
@@ -35,8 +40,9 @@ public class MatchingController {
 
     @GetMapping("/applications")
     public ResponseEntity<?> getMatchingApplication(final @Login LoginMember loginMember) {
+        MatchingApplicationResponse matchingApplicationResponse = matchingApplicationService.findMatchingApplication(loginMember);
         return SuccessResponse.toResponseEntity(MatchingSuccessCode.GET_MATCHING_APPLICATION_STATUS_SUCCESS,
-                matchingApplicationService.findMatchingApplication(loginMember));
+                matchingApplicationResponse);
     }
 
     @DeleteMapping("/applications")
@@ -47,7 +53,8 @@ public class MatchingController {
 
     @GetMapping("/partners")
     public ResponseEntity<?> getMatchingPartners(final @Login LoginMember loginMember) {
+        List<MatchingResultResponse> matchingResultResponses = matchingService.findMatchingResult(loginMember);
         return SuccessResponse.toResponseEntity(MatchingSuccessCode.GET_MATCHING_PARTNERS_SUCCESS,
-                matchingService.findMatchingResult(loginMember));
+                matchingResultResponses);
     }
 }

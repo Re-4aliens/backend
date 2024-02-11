@@ -87,10 +87,9 @@ public class MatchingApplicationServiceTest {
         Long expectedResult = loginMember.memberId();
 
         //when
-        MatchingApplicationResponse result = matchingApplicationService.findMatchingApplication(loginMember.memberId());
+        MatchingApplicationResponse result = matchingApplicationService.findMatchingApplication(loginMember);
 
         // then
-
         assertThat(result.memberId()).isEqualTo(expectedResult);
     }
 
@@ -99,7 +98,7 @@ public class MatchingApplicationServiceTest {
     @Transactional
     void getMatchingApplicationIfNotApplied() {
         // when & then
-        assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(loginMember.memberId()))
+        assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 
@@ -112,10 +111,10 @@ public class MatchingApplicationServiceTest {
         mockClock.mockTime(VALID_TIME);
 
         // when
-        matchingApplicationService.deleteMatchingApplication(loginMember.memberId());
+        matchingApplicationService.deleteMatchingApplication(loginMember);
 
         // then
-        assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(loginMember.memberId()))
+        assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 
@@ -128,7 +127,7 @@ public class MatchingApplicationServiceTest {
         mockClock.mockTime(INVALID_TIME);
 
         // when & then
-        assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(loginMember.memberId()))
+        assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME.getDevelopCode());
     }
 
@@ -139,7 +138,7 @@ public class MatchingApplicationServiceTest {
         // given
         mockClock.mockTime(VALID_TIME);
 
-        assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(loginMember.memberId()))
+        assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 

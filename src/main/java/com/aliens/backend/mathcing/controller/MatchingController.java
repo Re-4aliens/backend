@@ -36,18 +36,18 @@ public class MatchingController {
     @GetMapping("/applications")
     public ResponseEntity<?> getMatchingApplication(final @Login LoginMember loginMember) {
         return SuccessResponse.toResponseEntity(MatchingSuccessCode.GET_MATCHING_APPLICATION_STATUS_SUCCESS,
-                matchingApplicationService.findMatchingApplication(loginMember.memberId()));
+                matchingApplicationService.findMatchingApplication(loginMember));
     }
 
     @DeleteMapping("/applications")
     public ResponseEntity<?> cancelMatchingApplication(final @Login LoginMember loginMember) {
-        matchingApplicationService.deleteMatchingApplication(loginMember.memberId());
+        matchingApplicationService.deleteMatchingApplication(loginMember);
         return SuccessResponseWithoutResult.toResponseEntity(MatchingSuccessCode.CANCEL_MATCHING_APPLICATION_SUCCESS);
     }
 
     @GetMapping("/partners")
     public ResponseEntity<?> getMatchingPartners(final @Login LoginMember loginMember) {
         return SuccessResponse.toResponseEntity(MatchingSuccessCode.GET_MATCHING_PARTNERS_SUCCESS,
-                matchingService.findMatchingResult(loginMember.memberId()));
+                matchingService.findMatchingResult(loginMember));
     }
 }

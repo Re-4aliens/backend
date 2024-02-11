@@ -40,22 +40,25 @@ public class MatchingApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public MatchingApplicationResponse findMatchingApplication(final Long memberId) {
+    public MatchingApplicationResponse findMatchingApplication(final LoginMember loginMember) {
         MatchingRound currentRound = getCurrentRound();
-        MatchingApplication matchingApplication =
-                matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, memberId))
-                .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
+        MatchingApplication matchingApplication = getMatchingApplication(currentRound, loginMember);
         return MatchingApplicationResponse.from(matchingApplication);
     }
 
     @Transactional
-    public void deleteMatchingApplication(final Long memberId) {
+    public void deleteMatchingApplication(final LoginMember loginMember) {
         MatchingRound currentRound = getCurrentRound();
         checkReceptionTime(currentRound);
-        MatchingApplication matchingApplication =
-                matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, memberId))
-                        .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
+        MatchingApplication matchingApplication = getMatchingApplication(currentRound, loginMember);
         matchingApplicationRepository.delete(matchingApplication);
+    }
+
+
+    private void checkReceptionTime(MatchingRound matchingRound) {
+        if (!matchingRound.isReceptionTime(LocalDateTime.now(clock))) {
+            throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
+        }
     }
 
     private MatchingRound getCurrentRound() {
@@ -63,9 +66,8 @@ public class MatchingApplicationService {
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 
-    private void checkReceptionTime(MatchingRound matchingRound) {
-        if (!matchingRound.isReceptionTime(LocalDateTime.now(clock))) {
-            throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
-        }
+    private MatchingApplication getMatchingApplication(MatchingRound matchingRound, LoginMember loginMember) {
+        return matchingApplicationRepository.findById(MatchingApplicationId.of(matchingRound, loginMember.memberId()))
+                .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
     }
 }

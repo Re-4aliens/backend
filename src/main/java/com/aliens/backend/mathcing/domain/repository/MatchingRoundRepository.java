@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface MatchingRoundRepository extends JpaRepository<MatchingRound, Long> {
-    @Query("SELECT mr FROM MatchingRound mr ORDER BY mr.round DESC")
+    @Query("SELECT mr FROM MatchingRound mr WHERE mr.round = (SELECT MAX(mr.round) FROM MatchingRound mr)")
     Optional<MatchingRound> findCurrentRound();
 }

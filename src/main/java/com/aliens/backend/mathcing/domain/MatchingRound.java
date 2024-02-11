@@ -47,6 +47,10 @@ public class MatchingRound {
         return validEndTime;
     }
 
+    public DayOfWeek getDayOfWeek() {
+        return requestStartTime.getDayOfWeek();
+    }
+
     private MatchingRound(final LocalDateTime requestStartTime,
                          final LocalDateTime requestEndTime,
                          final LocalDateTime validStartTime,

@@ -20,22 +20,13 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest
-public abstract class BaseTest {
+public abstract class BaseServiceTest {
 
-    @SpyBean
-    protected AwsS3Uploader awsS3Uploader;
+    @SpyBean protected AwsS3Uploader awsS3Uploader;
+    @SpyBean protected JavaMailSender javaMailSender;
+    @SpyBean protected FcmSender fcmSender;
 
-    @SpyBean
-    protected JavaMailSender javaMailSender;
-
-    @SpyBean
-    protected FcmSender fcmSender;
-
-    @Autowired
-    private DatabaseCleanup databaseCleanUp;
-
-    private static final String GIVEN_FILE_NAME = "test";
-    private static final String GIVEN_FILE_URL = "/test";
+    @Autowired private DatabaseCleanup databaseCleanUp;
 
     @BeforeEach
     void setUpSpy() {
@@ -50,7 +41,7 @@ public abstract class BaseTest {
         doNothing().when(fcmSender).listenSingleMessageRequest(any(Message.class));
 
         //AWS
-        S3File tmpFile = new S3File(GIVEN_FILE_NAME, GIVEN_FILE_URL);
+        S3File tmpFile = new S3File(DummyGenerator.GIVEN_FILE_NAME,DummyGenerator.GIVEN_FILE_URL);
         doReturn(tmpFile).when(awsS3Uploader).singleUpload(any(MultipartFile.class));
         doReturn(List.of(tmpFile)).when(awsS3Uploader).multiUpload(any());
     }

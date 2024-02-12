@@ -1,9 +1,9 @@
-package com.aliens.backend.matching.unit.service;
+package com.aliens.backend.matching.service;
 
-import com.aliens.backend.global.error.MatchingError;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
-import com.aliens.backend.matching.util.MockClock;
+import com.aliens.backend.matching.time.MockClock;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
@@ -20,15 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static com.aliens.backend.matching.util.MockTime.INVALID_TIME;
-import static com.aliens.backend.matching.util.MockTime.VALID_TIME;
+import static com.aliens.backend.matching.time.MockTime.INVALID_TIME;
+import static com.aliens.backend.matching.time.MockTime.VALID_TIME;
 import static com.aliens.backend.mathcing.controller.dto.request.MatchingRequest.*;
 import static com.aliens.backend.mathcing.controller.dto.response.MatchingResponse.*;
 import static org.assertj.core.api.Assertions.*;
 
 
 @SpringBootTest
-public class MatchingApplicationServiceTest {
+class MatchingApplicationServiceTest {
     @Autowired MatchingApplicationService matchingApplicationService;
     @Autowired MatchingApplicationRepository matchingApplicationRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;

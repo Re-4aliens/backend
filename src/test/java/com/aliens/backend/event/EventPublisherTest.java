@@ -1,13 +1,12 @@
 package com.aliens.backend.event;
 
-import com.aliens.backend.global.BaseTest;
+import com.aliens.backend.global.BaseServiceTest;
 import com.aliens.backend.notification.FcmSender;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
@@ -16,14 +15,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-@SpringBootTest
-class EventPublisherTest extends BaseTest {
+class EventPublisherTest extends BaseServiceTest {
 
-    @Autowired
-    ApplicationEventPublisher publisher;
-
-    @Autowired
-    FcmSender fcmSender;
+    @Autowired ApplicationEventPublisher publisher;
+    @Autowired FcmSender fcmSender;
 
     String givenType = "normal";
     String giveContent = "content";

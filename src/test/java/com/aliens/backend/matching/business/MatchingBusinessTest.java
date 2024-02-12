@@ -1,17 +1,17 @@
-package com.aliens.backend.matching.unit.business;
+package com.aliens.backend.matching.business;
 
-import com.aliens.backend.global.error.MatchingError;
+import com.aliens.backend.global.DummyGenerator;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
-import com.aliens.backend.matching.util.MockClock;
-import com.aliens.backend.matching.util.MockTime;
+import com.aliens.backend.matching.time.MockClock;
+import com.aliens.backend.matching.time.MockTime;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
 import com.aliens.backend.mathcing.domain.MatchingResult;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
-import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.MatchingService;
 import com.aliens.backend.mathcing.service.model.Participant;
 import org.assertj.core.api.Assertions;
@@ -28,13 +28,13 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-public class MatchingBusinessTest {
+class MatchingBusinessTest {
     @Autowired MatchingService matchingService;
     @Autowired MatchingApplicationRepository matchingApplicationRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingResultRepository matchingResultRepository;
     @Autowired MatchingBusiness matchingBusiness;
-    @Autowired MatchingApplicationGenerator matchingApplicationGenerator;
+    @Autowired DummyGenerator dummyGenerator;
     @Autowired MatchingTimeProperties matchingTimeProperties;
     @Autowired MockClock mockClock;
 
@@ -53,7 +53,7 @@ public class MatchingBusinessTest {
     @DisplayName("매칭 로직 실행 테스트")
     void matchingLogicTest() {
         mockClock.mockTime(MockTime.VALID_TIME);
-        matchingApplicationGenerator.applyToMatch(15L);
+        dummyGenerator.generateAppliersToMatch(15L);
 
         List<Participant> result = matchingBusiness.operateMatching(matchingApplicationRepository.findAllByMatchingRound(currentRound));
 
@@ -66,7 +66,7 @@ public class MatchingBusinessTest {
     void operateMatchingTest() {
         // given
         mockClock.mockTime(MockTime.VALID_TIME);
-        matchingApplicationGenerator.applyToMatch(20L);
+        dummyGenerator.generateAppliersToMatch(20L);
 
         // when
         matchingService.operateMatching();

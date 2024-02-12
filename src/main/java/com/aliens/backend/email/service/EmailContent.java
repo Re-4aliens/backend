@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailContent {
 
-    public String getTitle() {
+    public String getAuthenticationMailTitle() {
         return "[FriendShip] Account Verification 회원가입 이메일 인증";
     }
 
-    public String getContent(String token, String domainUrl) {
+    public String getAuthenticationMailContent(String token, String domainUrl) {
         String englishContent = "Thank you for registering with FriendShip App.\n"
                 + "To ensure the security of your account, we need to verify your email address.\n\n"
                 + "Please click the link below to verify your email and activate your account:\n"
@@ -37,5 +37,17 @@ public class EmailContent {
                 + "4Aliens 팀 올림\n";
 
         return englishContent + koreanContent;
+    }
+
+    public String getTemporaryMailTitle() {
+        return "[FriendShip] 임시 비밀번호 발급";
+    }
+
+    public String getTemporaryMailContent(final String tmpPassword) {
+        String englishContent = "The temporary password has been issued. Your temporary password is: " + tmpPassword;
+
+        String koreanContent = "임시 비밀번호가 발급되었습니다. 임시 비밀번호는 다음과 같습니다: " + tmpPassword;
+
+        return englishContent + "\n\n" + koreanContent;
     }
 }

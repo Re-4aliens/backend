@@ -1,31 +1,20 @@
 package com.aliens.backend.uploader;
 
-import io.findify.s3mock.S3Mock;
+import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.uploader.dto.S3File;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Import(AwsS3MockConfig.class)
-@SpringBootTest
-class AwsS3UploaderTest {
-
-    @Autowired
-    private S3Mock s3Mock;
+class AwsS3UploaderTest extends BaseServiceTest {
 
     @Autowired
     private AwsS3Uploader awsS3Uploader;
-
-    @AfterEach
-    public void tearDown() {
-        s3Mock.stop();
-    }
 
     @Test
     @DisplayName("S3 파일 업로드 테스트")
@@ -35,13 +24,13 @@ class AwsS3UploaderTest {
         String contentType = "image/png";
         MockMultipartFile file = new MockMultipartFile("test", path, contentType, "test".getBytes());
 
-        UploadFileRequest request = new UploadFileRequest(List.of(file,file,file));
+        List<MultipartFile> request =  List.of(file,file,file);
 
         // When
-        List<S3File> S3Files = awsS3Uploader.upload(request);
+        List<S3File> S3Files = awsS3Uploader.multiUpload(request);
 
         // Then
-        Assertions.assertThat(S3Files).isNotNull();
+        Assertions.assertThat(S3Files).isNotEmpty();
     }
 
     @Test

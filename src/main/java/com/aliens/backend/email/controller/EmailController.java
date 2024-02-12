@@ -1,11 +1,10 @@
 package com.aliens.backend.email.controller;
 
 import com.aliens.backend.email.service.EmailService;
-import org.springframework.http.ResponseEntity;
+import com.aliens.backend.global.response.SuccessResponse;
+import com.aliens.backend.global.response.success.EmailSuccess;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Map;
 
 @RestController
 public class EmailController {
@@ -16,23 +15,29 @@ public class EmailController {
     }
 
     @GetMapping("/members/exist")
-    public ResponseEntity<Map<String, String>> duplicateCheck(@RequestParam("email") String email) {
-        String result = emailService.duplicateCheck(email);
-        Map<String, String> response = Collections.singletonMap("response", result);
-        return ResponseEntity.ok(response);
+    public SuccessResponse<String> duplicateCheck(@RequestParam("email") String email) {
+
+        return SuccessResponse.of(
+                EmailSuccess.DUPLICATE_CHECK_SUCCESS,
+                emailService.duplicateCheck(email)
+        );
     }
 
     @PostMapping("/emails/verification/send")
-    public ResponseEntity<Map<String, String>> sendAuthenticationEmail(@RequestBody String email) throws Exception {
-        String result = emailService.sendAuthenticationEmail(email);
-        Map<String, String> response = Collections.singletonMap("response", result);
-        return ResponseEntity.ok(response);
+    public SuccessResponse<String> sendAuthenticationEmail(@RequestBody String email) throws Exception {
+
+        return SuccessResponse.of(
+                EmailSuccess.SEND_EMAIL_SUCCESS,
+                emailService.sendAuthenticationEmail(email)
+        );
     }
 
     @GetMapping("/emails/confirm")
-    public ResponseEntity<Map<String, String>> authenticateEmail(@RequestParam("token") String token) throws Exception {
-        String result = emailService.authenticateEmail(token);
-        Map<String, String> response = Collections.singletonMap("response", result);
-        return ResponseEntity.ok(response);
+    public SuccessResponse<String> authenticateEmail(@RequestParam("token") String token) throws Exception {
+
+        return SuccessResponse.of(
+                EmailSuccess.EMAIL_AUTHENTICATE_SUCCESS,
+                emailService.authenticateEmail(token)
+        );
     }
 }

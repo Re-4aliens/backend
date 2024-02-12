@@ -3,7 +3,7 @@ package com.aliens.backend.email.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(schema = "EMAIL_AUTHENTICATION")
+@Table(name = "EMAIL_AUTHENTICATION")
 public class EmailAuthentication {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)

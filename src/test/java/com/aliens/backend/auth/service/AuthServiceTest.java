@@ -2,46 +2,30 @@ package com.aliens.backend.auth.service;
 
 import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
-import com.aliens.backend.auth.domain.Member;
-import com.aliens.backend.auth.domain.repository.MemberRepository;
-import com.aliens.backend.auth.domain.MemberRole;
+import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class AuthServiceTest {
+class AuthServiceTest extends BaseServiceTest {
 
-    @Autowired
-    AuthService authService;
-    @Autowired
-    JWTProperties jwtProperties;
-    @Autowired
-    MemberRepository memberRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    @Autowired AuthService authService;
+    @Autowired JWTProperties jwtProperties;
+    @Autowired DummyGenerator dummyGenerator;
 
-    Member member;
-    String email;
-    String password;
     LoginRequest loginRequest;
 
     @BeforeEach
     void setUp() {
-        email = "tmp@example.com";
-        password = "tmpPassword";
-        member = new Member(email, passwordEncoder.encrypt(password), MemberRole.MEMBER);
-        loginRequest = new LoginRequest(email, password);
-        memberRepository.save(member);
-    }
-
-    @AfterEach
-    void afterDown() {
-        memberRepository.deleteAll();
+        dummyGenerator.generateSingleMember();
+        loginRequest = new LoginRequest(
+                DummyGenerator.GIVEN_EMAIL,
+                DummyGenerator.GIVEN_PASSWORD
+        );
     }
 
     @Test

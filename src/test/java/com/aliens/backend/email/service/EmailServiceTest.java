@@ -3,13 +3,12 @@ package com.aliens.backend.email.service;
 import com.aliens.backend.email.controller.response.EmailResponse;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
-import com.aliens.backend.global.encode.SymmetricKeyEncoder;
+import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class EmailServiceTest {
+class EmailServiceTest extends BaseServiceTest {
 
     @Autowired
     EmailService emailService;
@@ -17,6 +16,7 @@ class EmailServiceTest {
     SymmetricKeyEncoder symmetricKeyEncoder;
     @Autowired
     EmailAuthenticationRepository emailAuthenticationRepository;
+
 
     String givenEmail;
     EmailAuthentication emailEntity;
@@ -26,11 +26,6 @@ class EmailServiceTest {
         givenEmail = "tmp@example.com";
         emailEntity = new EmailAuthentication(givenEmail);
         emailAuthenticationRepository.save(emailEntity);
-    }
-
-    @AfterEach
-    void afterDown() {
-        emailAuthenticationRepository.deleteAll();
     }
 
     @Test

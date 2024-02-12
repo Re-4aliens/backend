@@ -6,8 +6,8 @@ import com.aliens.backend.auth.controller.dto.LoginRequest;
 import com.aliens.backend.auth.domain.*;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.auth.domain.repository.TokenRepository;
-import com.aliens.backend.global.error.MemberError;
-import com.aliens.backend.global.error.TokenError;
+import com.aliens.backend.global.response.error.MemberError;
+import com.aliens.backend.global.response.error.TokenError;
 import com.aliens.backend.global.exception.RestApiException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +40,11 @@ public class AuthService {
     }
 
     private Member getMemberEntityFromEmail(final String email) {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+        if (member.isWithdraw()) {
+            throw new RestApiException(MemberError.WITHDRAW_MEMBER);
+        }
+        return member;
     }
 
     private void passwordCheck(final String password, final Member member) {

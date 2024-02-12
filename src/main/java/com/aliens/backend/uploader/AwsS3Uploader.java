@@ -1,5 +1,7 @@
 package com.aliens.backend.uploader;
 
+import com.aliens.backend.global.property.S3UploadProperties;
+import com.aliens.backend.uploader.dto.S3File;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.http.MediaType;
@@ -24,8 +26,12 @@ public class AwsS3Uploader {
         this.s3UploadProperties = s3UploadProperties;
     }
 
-    public List<S3File> upload(UploadFileRequest request) {
-        return request.files().parallelStream().map(this::uploadToS3).toList();
+    public List<S3File> multiUpload(List<MultipartFile> files) {
+        return files.stream().map(this::uploadToS3).toList();
+    }
+
+    public S3File singleUpload(MultipartFile file) {
+        return uploadToS3(file);
     }
 
     private S3File uploadToS3(MultipartFile multipartFile) {

@@ -1,0 +1,23 @@
+matching:
+  rule:
+    max-matches:
+      partner : 5
+      normal-partner: 4
+    max-tries: 200
+  round:
+    update-date: 0 0 0 * * MON,THU
+    start: 0 0 18 * * MON,THU
+  request:
+    time:
+      hours: 18
+  valid:
+    time:
+      hours: 20
+    day-of-week:
+      if:
+        default:
+          hours: 48
+        monday:
+          hours: 52
+        thursday:
+          hours: 76

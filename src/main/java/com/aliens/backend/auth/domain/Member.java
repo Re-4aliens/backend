@@ -1,6 +1,12 @@
 package com.aliens.backend.auth.domain;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.member.controller.dto.MemberPage;
+import com.aliens.backend.member.domain.Image;
+import com.aliens.backend.member.domain.MemberInfo;
+import com.aliens.backend.member.domain.MemberStatus;
+import com.aliens.backend.member.controller.dto.EncodedSignUp;
+import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -15,36 +21,94 @@ public class Member {
     private Long id;
 
     @Column
+    private String name;
+
+    @Column
     private String email;
 
     @Column
     private String password;
 
+    @Enumerated(value = EnumType.STRING)
     @Column
-    private MemberRole role;
+    private MemberRole role = MemberRole.MEMBER;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    @Column
+    private MemberStatus status = MemberStatus.NOT_APPLIED_NOT_MATCHED;
+
+    @Column
+    private Boolean withdraw = false;
+
+    @OneToMany(mappedBy = "member",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Token> tokens = new ArrayList<>();
+
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinColumn(name = "image_id")
+    private Image image;
+
+    @OneToOne(mappedBy = "member",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    private MemberInfo memberInfo;
 
     protected Member() {
     }
 
-    public Member(final String email, final String password, final MemberRole role) {
-        this.email = email;
+    public static Member of(final EncodedSignUp request, final Image image) {
+        Member member = new Member();
+        member.name = request.name();
+        member.email = request.email();
+        member.password = request.password();
+        member.image = image;
+        return member;
+    }
+
+    public void changePassword(final String password) {
         this.password = password;
-        this.role = role;
+    }
+
+    public void putMemberInfo(final MemberInfo memberInfo) {
+        this.memberInfo = memberInfo;
     }
 
     public boolean isCorrectPassword(String password) {
         return this.password.equals(password);
     }
 
+    public void withdraw() {
+        withdraw = true;
+    }
+
     public LoginMember getLoginMember() {
-        return new LoginMember(id,role);
+        return new LoginMember(id, role);
+    }
+
+    public MemberPage getMemberPage() {
+        return new MemberPage(name, image.getURL());
+    }
+
+    public boolean isWithdraw() {
+        return withdraw;
+    }
+
+    public String getStatus() {
+        return status.getMessage();
+    }
+
+    public String getProfileName() {
+        return image.getName();
+    }
+
+    public void changeProfileImage(final S3File newFile) {
+        image.change(newFile);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override
     public String toString() {
-        return String.format("email:  %s, password : %s, role : %s", this.email, this.password, this.role);
+        return String.format("email:  %s, role : %s", this.email, this.role);
     }
 }

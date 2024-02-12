@@ -1,4 +1,4 @@
-package com.aliens.backend.matching.util;
+package com.aliens.backend.matching.time;
 
 import java.time.LocalDateTime;
 

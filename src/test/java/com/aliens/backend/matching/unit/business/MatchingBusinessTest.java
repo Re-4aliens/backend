@@ -1,5 +1,6 @@
 package com.aliens.backend.matching.unit.business;
 
+import com.aliens.backend.global.BaseTest;
 import com.aliens.backend.global.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
@@ -28,7 +29,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-public class MatchingBusinessTest {
+public class MatchingBusinessTest extends BaseTest {
     @Autowired MatchingService matchingService;
     @Autowired MatchingApplicationRepository matchingApplicationRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;
@@ -49,7 +50,6 @@ public class MatchingBusinessTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("매칭 로직 실행 테스트")
     void matchingLogicTest() {
         mockClock.mockTime(MockTime.VALID_TIME);

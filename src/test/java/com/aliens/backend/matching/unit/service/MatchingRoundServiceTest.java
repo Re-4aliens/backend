@@ -1,5 +1,6 @@
 package com.aliens.backend.matching.unit.service;
 
+import com.aliens.backend.global.BaseTest;
 import com.aliens.backend.global.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
@@ -18,13 +19,12 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-public class MatchingRoundServiceTest {
+public class MatchingRoundServiceTest extends BaseTest {
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
 
     @Test
     @DisplayName("매주 월, 목 매칭 회차 업데이트")
-    @Transactional
     void saveMatchRoundTest() {
         // given
         MatchingRound mondayRound = MatchingRound.of(MockTime.MONDAY.getTime(), matchingTimeProperties);
@@ -40,7 +40,6 @@ public class MatchingRoundServiceTest {
 
     @Test
     @DisplayName("현재 매칭 회차 조회")
-    @Transactional
     void getCurrentRoundTest() {
         // given
         MatchingRound mondayRound = MatchingRound.of(MockTime.MONDAY.getTime(), matchingTimeProperties);

@@ -2,6 +2,7 @@ package com.aliens.backend.matching.integration;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.MemberRole;
+import com.aliens.backend.global.BaseTest;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.model.Language;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-public class MatchingApplicationApiTest {
+public class MatchingApplicationApiTest extends BaseTest {
 
     @Autowired MockMvc mockMvc;
     @SpyBean MatchingApplicationService matchingApplicationService;

@@ -8,7 +8,7 @@ import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class EmailServiceServiceTest extends BaseServiceTest {
+class EmailServiceTest extends BaseServiceTest {
 
     @Autowired
     EmailService emailService;

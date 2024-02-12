@@ -11,7 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class AuthServiceServiceTest extends BaseServiceTest {
+class AuthServiceTest extends BaseServiceTest {
 
     @Autowired AuthService authService;
     @Autowired JWTProperties jwtProperties;

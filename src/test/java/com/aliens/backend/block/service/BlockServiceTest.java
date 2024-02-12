@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-class BlockServiceServiceTest extends BaseServiceTest {
+class BlockServiceTest extends BaseServiceTest {
 
     @Autowired BlockService blockService;
     @Autowired BlockRepository blockRepository;

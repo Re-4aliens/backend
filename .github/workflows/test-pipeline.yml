@@ -23,13 +23,15 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application-secret.yml
-                echo "${{ secrets.APPLICATION_SECRET }}" > ./application-secret.yml
+          echo "${{ secrets.APPLICATION_SECRET }}" > ./application-secret.yml
+          ls -a .
 
       - name: firebase_service_key.json 구성
         run: |
           cd ./src/main/resources
           touch ./firebase_service_key.json
           echo "${{ secrets.FCM_KEY }}" > ./firebase_service_key.json
+          ls -a .
 
       - name: Gradle 권한 허용
         run: chmod +x gradlew

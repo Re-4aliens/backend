@@ -1,4 +1,4 @@
-package com.aliens.backend.global.error;
+package com.aliens.backend.global.response.error;
 
 import org.springframework.http.HttpStatus;
 

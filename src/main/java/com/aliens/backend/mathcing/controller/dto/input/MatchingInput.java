@@ -1,6 +1,6 @@
 package com.aliens.backend.mathcing.controller.dto.input;
 
-import com.aliens.backend.global.error.MatchingError;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.mathcing.service.model.Language;
 

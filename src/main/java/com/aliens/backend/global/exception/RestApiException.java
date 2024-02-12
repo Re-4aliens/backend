@@ -1,12 +1,13 @@
 package com.aliens.backend.global.exception;
 
-import com.aliens.backend.global.error.ErrorCode;
+import com.aliens.backend.global.response.error.ErrorCode;
 
 public class RestApiException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
     public RestApiException(final ErrorCode errorCode) {
+        super(errorCode.getDevelopCode());
         this.errorCode = errorCode;
     }
 

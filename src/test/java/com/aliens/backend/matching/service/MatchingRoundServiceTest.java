@@ -1,6 +1,6 @@
-package com.aliens.backend.matching.unit.service;
+package com.aliens.backend.matching.service;
 
-import com.aliens.backend.global.error.MatchingError;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.mathcing.domain.MatchingRound;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-public class MatchingRoundServiceTest {
+class MatchingRoundServiceTest {
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
 

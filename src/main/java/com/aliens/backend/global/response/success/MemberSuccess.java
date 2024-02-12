@@ -1,9 +1,9 @@
-package com.aliens.backend.global.success;
+package com.aliens.backend.global.response.success;
 
 import org.springframework.http.HttpStatus;
 
-public enum MemberSuccessCode implements SuccessCode {
-    SIGN_UP_SUCCESS(HttpStatus.CREATED, "M001", "회원가입이 완료되었습니다."),
+public enum MemberSuccess implements SuccessCode {
+    SIGN_UP_SUCCESS(HttpStatus.OK, "M001", "회원가입이 완료되었습니다."),
     WITHDRAW_SUCCESS(HttpStatus.OK, "M002", "회원 탈퇴되었습니다."),
     TEMPORARY_PASSWORD_GENERATED_SUCCESS(HttpStatus.OK, "M003", "임시 비밀번호가 발급되었습니다. 이메일을 확인해주세요."),
     PASSWORD_CHANGE_SUCCESS(HttpStatus.OK, "M004", "비밀번호 변경이 완료되었습니다."),
@@ -19,7 +19,7 @@ public enum MemberSuccessCode implements SuccessCode {
     private final String code;
     private final String message;
 
-    MemberSuccessCode(final HttpStatus httpStatus, final String code, final String message) {
+    MemberSuccess(final HttpStatus httpStatus, final String code, final String message) {
         this.httpStatus = httpStatus;
         this.code = code;
         this.message = message;

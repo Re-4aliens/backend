@@ -1,12 +1,11 @@
-package com.aliens.backend.matching.unit.service;
+package com.aliens.backend.matching.service;
 
-import com.aliens.backend.global.error.MatchingError;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-public class MatchingServiceTest {
+class MatchingServiceTest {
 
     @Autowired MatchingService matchingService;
     @Autowired MatchingRoundRepository matchingRoundRepository;

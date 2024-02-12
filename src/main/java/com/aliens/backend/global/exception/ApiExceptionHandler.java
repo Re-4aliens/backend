@@ -1,6 +1,6 @@
 package com.aliens.backend.global.exception;
 
-import com.aliens.backend.global.error.ErrorCode;
+import com.aliens.backend.global.response.error.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -18,11 +18,8 @@ public class ApiExceptionHandler {
     public ResponseEntity<Object> apiException(RestApiException apiException) {
         ErrorCode errorCode = apiException.getErrorCode();
         logger.info(errorCode.getMessage());
-
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(
-                        errorCode.getDevelopCode()
-                );
+                .body(errorCode.getDevelopCode());
     }
 }

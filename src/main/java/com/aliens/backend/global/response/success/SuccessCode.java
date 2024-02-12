@@ -1,4 +1,4 @@
-package com.aliens.backend.global.success;
+package com.aliens.backend.global.response.success;
 
 import org.springframework.http.HttpStatus;
 

@@ -4,7 +4,7 @@ import com.aliens.backend.email.controller.response.EmailResponse;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
 import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
-import com.aliens.backend.global.error.EmailError;
+import com.aliens.backend.global.response.error.EmailError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.member.controller.dto.event.TemporaryPasswordEvent;
 import org.springframework.context.event.EventListener;

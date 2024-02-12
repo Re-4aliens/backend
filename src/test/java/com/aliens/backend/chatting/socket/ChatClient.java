@@ -1,7 +1,9 @@
-package com.aliens.backend.chatting.util;
+package com.aliens.backend.chatting.socket;
 
 import com.aliens.backend.global.property.WebSocketProperties;
+import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -25,9 +27,11 @@ public class ChatClient {
         this.chatClientHandler = new ChatClientHandler();
     }
 
-    public StompSession connect() throws Exception {
+    public StompSession connect(String accessToken) throws Exception {
         String url = "ws://localhost:" + port + endPoint;
-        StompSession session = stompClient.connect(url, chatClientHandler).get();
+        WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
+        headers.add("Authorization", accessToken);
+        StompSession session = stompClient.connectAsync(url, headers, chatClientHandler).get();
         return session;
     }
 

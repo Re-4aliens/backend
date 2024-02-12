@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-class AwsS3UploaderServiceTest extends BaseServiceTest {
+class AwsS3UploaderTest extends BaseServiceTest {
 
     @Autowired
     private AwsS3Uploader awsS3Uploader;

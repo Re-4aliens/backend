@@ -11,7 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-class EmailSenderServiceTest extends BaseServiceTest {
+class EmailSenderTest extends BaseServiceTest {
 
     @Autowired private EmailSender emailSender;
 

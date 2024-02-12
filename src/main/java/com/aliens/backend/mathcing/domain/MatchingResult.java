@@ -24,8 +24,7 @@ public class MatchingResult {
                                     Long matchingMemberId,
                                     Long matchedMemberId,
                                     Relationship relationship) {
-        return new MatchingResult(
-                MatchingResultId.of(matchingRound, matchingMemberId, matchedMemberId), relationship);
+        return new MatchingResult(MatchingResultId.of(matchingRound, matchingMemberId, matchedMemberId), relationship);
     }
     public MatchingRound getMatchingRound() {
         return id.getMatchingRound();

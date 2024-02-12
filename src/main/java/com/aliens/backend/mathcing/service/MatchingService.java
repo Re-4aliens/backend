@@ -59,7 +59,7 @@ public class MatchingService {
         for (Participant participant : participants) {
             for (Partner partner : participant.partners()) {
                 MatchingResult matchingResult =
-                        MatchingResult.of(matchingRound, partner.memberId(), partner.memberId(), partner.relationship());
+                        MatchingResult.of(matchingRound, participant.memberId(), partner.memberId(), partner.relationship());
                 matchingResultRepository.save(matchingResult);
             }
             // TODO : 매칭 완료 알림 이벤트 발송 & 채팅방 개설 이벤트 발송

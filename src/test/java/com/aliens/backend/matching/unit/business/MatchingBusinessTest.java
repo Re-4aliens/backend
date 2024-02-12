@@ -62,7 +62,6 @@ public class MatchingBusinessTest {
 
     @Test
     @DisplayName("매칭 결과 조회")
-    @Transactional
     void operateMatchingTest() {
         // given
         mockClock.mockTime(MockTime.VALID_TIME);

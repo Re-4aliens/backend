@@ -1,7 +1,7 @@
 package com.aliens.backend.global.config;
 
-import com.aliens.backend.global.interceptor.ChatChannelInterceptor;
-import com.aliens.backend.global.interceptor.ChatHandshakeInterceptor;
+import com.aliens.backend.global.config.interceptor.ChatChannelInterceptor;
+import com.aliens.backend.global.config.interceptor.ChatHandshakeInterceptor;
 import com.aliens.backend.global.property.WebSocketProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;

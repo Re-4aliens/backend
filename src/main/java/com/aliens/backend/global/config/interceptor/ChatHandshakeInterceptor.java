@@ -1,4 +1,4 @@
-package com.aliens.backend.global.interceptor;
+package com.aliens.backend.global.config.interceptor;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.service.TokenProvider;

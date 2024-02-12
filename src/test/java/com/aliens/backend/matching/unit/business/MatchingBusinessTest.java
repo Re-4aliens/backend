@@ -55,7 +55,8 @@ public class MatchingBusinessTest {
         mockClock.mockTime(MockTime.VALID_TIME);
         matchingApplicationGenerator.applyToMatch(15L);
 
-        List<Participant> result = matchingBusiness.operateMatching(matchingApplicationRepository.findAllByMatchingRound(currentRound));
+        matchingBusiness.operateMatching(matchingApplicationRepository.findAllByMatchingRound(currentRound));
+        List<Participant> result = matchingBusiness.getParticipants();
 
         result.forEach(participant -> assertThat(participant.partners()).isNotNull());
     }

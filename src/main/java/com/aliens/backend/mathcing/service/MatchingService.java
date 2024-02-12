@@ -42,9 +42,10 @@ public class MatchingService {
     public void operateMatching() {
         MatchingRound currentRound = getCurrentRound();
         List<MatchingApplication> matchingApplications = getMatchingApplications(currentRound);
-        List<Participant> participants = matchingBusiness.operateMatching(matchingApplications);
+        matchingBusiness.operateMatching(matchingApplications);
 
-        saveMatchingResult(currentRound, participants);
+        List<Participant> matchedParticipants = matchingBusiness.getParticipants();
+        saveMatchingResult(currentRound, matchedParticipants);
     }
 
     @Transactional(readOnly = true)

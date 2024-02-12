@@ -6,7 +6,8 @@ import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.global.config.resolver.Login;
-import org.springframework.http.ResponseEntity;
+import com.aliens.backend.global.response.SuccessResponse;
+import com.aliens.backend.global.response.success.ChatSuccess;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -39,17 +38,22 @@ public class ChatController {
     }
 
     @GetMapping("/chat/summaries")
-    public ResponseEntity<Map<String, ChatSummaryResponse>> getChatSummaries(@Login Long memberId) {
-        ChatSummaryResponse chatSummaryResponse = chatService.getChatSummaries(memberId);
-        Map<String, ChatSummaryResponse> response = Collections.singletonMap("response", chatSummaryResponse);
-        return ResponseEntity.ok(response);
+    public SuccessResponse<ChatSummaryResponse> getChatSummaries(@Login Long memberId) {
+
+        return SuccessResponse.of(
+                ChatSuccess.GET_SUMMARIES_SUCCESS,
+                chatService.getChatSummaries(memberId)
+        );
     }
 
     @GetMapping("/chat/room/{roomId}/messages")
-    public ResponseEntity<Map<String, List>> getMessages(@PathVariable("roomId") Long chatRoomId,
-                                                         @RequestParam(value = "lastMessageId", required = false) String lastMessageId) {
-        List<Message> messages = chatService.getMessages(chatRoomId,lastMessageId);
-        Map<String, List> response = Collections.singletonMap("response", messages);
-        return ResponseEntity.ok(response);
+    public SuccessResponse<List<Message>> getMessages(@PathVariable("roomId") Long chatRoomId,
+                                       @RequestParam(value = "lastMessageId", required = false) String messageId) {
+
+        return SuccessResponse.of(
+                ChatSuccess.GET_MESSAGES_SUCCESS,
+                chatService.getMessages(chatRoomId,messageId)
+        );
+
     }
 }

@@ -1,6 +1,6 @@
 package com.aliens.backend.auth.service;
 
-import com.aliens.backend.global.error.MemberError;
+import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.PasswordEncodeProperties;
 import org.springframework.stereotype.Component;

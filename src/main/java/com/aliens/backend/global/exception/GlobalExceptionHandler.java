@@ -1,6 +1,6 @@
 package com.aliens.backend.global.exception;
 
-import com.aliens.backend.global.error.CommonError;
+import com.aliens.backend.global.response.error.CommonError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;

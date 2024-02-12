@@ -1,6 +1,6 @@
 package com.aliens.backend.global.config;
 
-import com.aliens.backend.global.error.CommonError;
+import com.aliens.backend.global.response.error.CommonError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.FCMProperties;
 import com.google.auth.oauth2.GoogleCredentials;

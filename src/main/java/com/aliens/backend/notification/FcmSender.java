@@ -1,6 +1,6 @@
 package com.aliens.backend.notification;
 
-import com.aliens.backend.global.error.CommonError;
+import com.aliens.backend.global.response.error.CommonError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;

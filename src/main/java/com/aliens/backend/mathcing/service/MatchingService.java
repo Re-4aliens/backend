@@ -1,6 +1,6 @@
 package com.aliens.backend.mathcing.service;
 
-import com.aliens.backend.global.error.MatchingError;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
 import com.aliens.backend.mathcing.domain.MatchingResult;

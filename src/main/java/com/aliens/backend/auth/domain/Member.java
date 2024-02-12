@@ -103,6 +103,10 @@ public class Member {
         image.change(newFile);
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return String.format("email:  %s, role : %s", this.email, this.role);

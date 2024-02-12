@@ -1,7 +1,7 @@
 package com.aliens.backend.chat.service;
 
 import com.aliens.backend.chat.domain.ChatRoom;
-import com.aliens.backend.global.error.ChatError;
+import com.aliens.backend.global.response.error.ChatError;
 import com.aliens.backend.global.exception.RestApiException;
 import org.springframework.stereotype.Component;
 

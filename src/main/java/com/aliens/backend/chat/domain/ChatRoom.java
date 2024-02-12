@@ -1,31 +1,41 @@
 package com.aliens.backend.chat.domain;
 
+import com.aliens.backend.auth.domain.Member;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "CHAT_ROOM")
 public class ChatRoom {
+
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column
     private Long id;
+
     private Long roomId;
-    @Column(name = "member_id")
-    private Long memberId;
-    @Column(name = "partner_id")
-    private Long partnerId;
+
     @Column
     private ChatRoomStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "partner_id")
+    private Member partner;
 
     protected ChatRoom() {
     }
 
-    public Long getRoomId() {
-        return roomId;
+    public static ChatRoom of(final Member me, final Member partner) {
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.member = me;
+        chatRoom.partner = partner;
+        return chatRoom;
     }
 
-    public Long getPartnerId() {
-        return partnerId;
+    public Long getRoomId() {
+        return roomId;
     }
 
     public ChatRoomStatus getStatus() {

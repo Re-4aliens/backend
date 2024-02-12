@@ -9,7 +9,7 @@ import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
 import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.service.model.ChatMessageSummary;
-import com.aliens.backend.global.success.ChatSuccessCode;
+import com.aliens.backend.global.response.success.ChatSuccess;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -32,13 +32,13 @@ public class ChatService {
         saveMessage(message);
         publishMessage(message, messageSendRequest.roomId());
         sendNotification(message);
-        return ChatSuccessCode.SEND_MESSAGE_SUCCESS.getMessage();
+        return ChatSuccess.SEND_MESSAGE_SUCCESS.getMessage();
     }
 
     public String readMessages(ReadRequest readRequest) {
         updateReadState(readRequest.roomId(), readRequest.memberId());
         publishReadState(readRequest.roomId(), readRequest.memberId());
-        return ChatSuccessCode.READ_MESSAGES_SUCCESS.getMessage();
+        return ChatSuccess.READ_MESSAGES_SUCCESS.getMessage();
     }
 
     public ChatSummaryResponse getChatSummaries(Long memberId) {

@@ -1,16 +1,14 @@
 package com.aliens.backend.chat.controller;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.chat.controller.dto.request.ChatReportRequest;
 import com.aliens.backend.chat.service.ChatReportService;
 import com.aliens.backend.global.config.resolver.Login;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import com.aliens.backend.global.response.SuccessResponse;
+import com.aliens.backend.global.response.success.ChatSuccess;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collections;
-import java.util.Map;
 
 
 @RestController
@@ -23,9 +21,12 @@ public class ChatReportController {
     }
 
     @PostMapping("/chat/report")
-    public ResponseEntity<Map<String, String>> reportPartner(@Login Long memberId, @RequestBody ChatReportRequest chatReportRequest) {
-        String result = chatReportService.reportPartner(memberId, chatReportRequest);
-        Map<String, String> response = Collections.singletonMap("response", result);
-        return ResponseEntity.ok(response);
+    public SuccessResponse<String> reportPartner(@Login LoginMember loginMember,
+                                         @RequestBody ChatReportRequest chatReportRequest) {
+
+        return SuccessResponse.of(
+                ChatSuccess.REPORT_SUCCESS,
+                chatReportService.reportPartner(loginMember, chatReportRequest)
+        );
     }
 }

@@ -1,19 +1,17 @@
 package com.aliens.backend.uploader;
 
-import com.aliens.backend.global.BaseTest;
+import com.aliens.backend.global.BaseServiceTest;
 import com.aliens.backend.uploader.dto.S3File;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@SpringBootTest
-class AwsS3UploaderTest extends BaseTest {
+class AwsS3UploaderTest extends BaseServiceTest {
 
     @Autowired
     private AwsS3Uploader awsS3Uploader;

@@ -33,6 +33,20 @@ jobs:
           echo "${{ secrets.FCM_KEY }}" > ./firebase_service_key.json
           ls -a .
 
+      - name: firebase_service_key.json 파일 생성
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "firebase_service_key.json"
+          json: ${{ secrets.FCM_KEY }}
+
+
+      - name: JSON 파일 이동 및 로그 확인
+        run: |
+          mv ./firebase_service_key.json ./src/main/resources/firebase_service_key.json
+          cd ./src/main/resources
+          ls -a .
+
       - name: Gradle 권한 허용
         run: chmod +x gradlew
       - name: PR 및 PUSH 전, 테스트 확인

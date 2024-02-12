@@ -2,7 +2,7 @@ package com.aliens.backend.auth.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.MemberRole;
-import com.aliens.backend.global.error.TokenError;
+import com.aliens.backend.global.response.error.TokenError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
 import io.jsonwebtoken.Claims;

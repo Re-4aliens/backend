@@ -2,51 +2,30 @@ package com.aliens.backend.auth.service;
 
 import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
-import com.aliens.backend.auth.domain.Member;
-import com.aliens.backend.auth.domain.repository.MemberRepository;
-import com.aliens.backend.global.BaseTest;
+import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
-import com.aliens.backend.member.controller.dto.EncodedSignUp;
-import com.aliens.backend.member.domain.Image;
-import com.aliens.backend.member.domain.repository.ImageRepository;
-import com.aliens.backend.uploader.dto.S3File;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class AuthServiceTest extends BaseTest {
+class AuthServiceTest extends BaseServiceTest {
 
-    @Autowired
-    AuthService authService;
-    @Autowired
-    JWTProperties jwtProperties;
-    @Autowired
-    MemberRepository memberRepository;
-    @Autowired
-    ImageRepository imageRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    @Autowired AuthService authService;
+    @Autowired JWTProperties jwtProperties;
+    @Autowired DummyGenerator dummyGenerator;
 
-    Member member;
-    String name;
-    String email;
-    String password;
     LoginRequest loginRequest;
 
     @BeforeEach
     void setUp() {
-        name = "김명준";
-        email = "tmp@example.com";
-        password = "tmpPassword";
-        EncodedSignUp encodedSignUp = new EncodedSignUp(name, email, passwordEncoder.encrypt(password));
-        Image image = Image.from(new S3File("tmpFileName", "tmpFileURL"));
-        member = Member.of(encodedSignUp, image);
-        memberRepository.save(member);
-        loginRequest = new LoginRequest(email, password);
+        dummyGenerator.generateSingleMember();
+        loginRequest = new LoginRequest(
+                DummyGenerator.GIVEN_EMAIL,
+                DummyGenerator.GIVEN_PASSWORD
+        );
     }
 
     @Test

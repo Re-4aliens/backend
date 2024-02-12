@@ -1,21 +1,23 @@
 package com.aliens.backend.chat.domain;
 
-import com.aliens.backend.chat.controller.dto.request.ChatReportRequest;
-import com.aliens.backend.global.error.ChatError;
-import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.auth.domain.Member;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "CHAT_REPORT")
 public class ChatReport {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column
     private Long id;
-    @Column(name = "reported_member_id")
-    private Long reportedMemberId;
-    @Column(name = "reporting_member_id")
-    private Long reportingMemberId;
+
+    @ManyToOne
+    @JoinColumn(name = "reporting_member_id")
+    private Member reportingMember;
+
+    @ManyToOne
+    @JoinColumn(name = "reported_member_id")
+    private Member reportedMember;
+
     @Column
     private ChatReportCategory category;
     @Column
@@ -24,13 +26,15 @@ public class ChatReport {
     protected ChatReport() {
     }
 
-    public static ChatReport of(Long reportingMemberId, ChatReportRequest chatReportRequest) {
+    public static ChatReport of(Member reportingMember,
+                                Member reportedMember,
+                                ChatReportCategory category,
+                                String content) {
         ChatReport chatReport = new ChatReport();
-        chatReport.reportedMemberId = chatReportRequest.partnerId();
-        chatReport.reportingMemberId = reportingMemberId;
-        chatReport.category = ChatReportCategory.fromString(chatReportRequest.category())
-                .orElseThrow(() -> new RestApiException(ChatError.INVALID_REPORT_CATEGORY));
-        chatReport.content = chatReportRequest.content();
+        chatReport.reportingMember = reportingMember;
+        chatReport.reportedMember = reportedMember;
+        chatReport.category = category;
+        chatReport.content = content;
         return chatReport;
     }
 }

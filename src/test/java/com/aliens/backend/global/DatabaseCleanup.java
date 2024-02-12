@@ -3,7 +3,6 @@ package com.aliens.backend.global;
 import com.google.common.base.CaseFormat;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.Entity;

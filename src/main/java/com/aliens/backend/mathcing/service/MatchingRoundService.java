@@ -25,7 +25,7 @@ public class MatchingRoundService {
 
     @Scheduled(cron = "${matching.round.update-date}")
     private void saveMatchRound() {
-        MatchingRound matchingRound = MatchingRound.of(LocalDateTime.now(clock), matchingTimeProperties);
+        MatchingRound matchingRound = MatchingRound.from(LocalDateTime.now(clock), matchingTimeProperties);
         matchingRoundRepository.save(matchingRound);
     }
 }

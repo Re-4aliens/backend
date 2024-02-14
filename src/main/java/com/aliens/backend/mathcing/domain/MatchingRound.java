@@ -57,15 +57,15 @@ public class MatchingRound {
         this.validEndTime = validEndTime;
     }
 
-    public static MatchingRound of(final LocalDateTime today, final MatchingTimeProperties matchingTimeProperties) {
+    public static MatchingRound from(final LocalDateTime today, final MatchingTimeProperties matchingTimeProperties) {
         DayOfWeek dayOfWeek = today.getDayOfWeek();
 
-        LocalDateTime matchingRequestStartTime = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime matchingRequestEndTime = matchingRequestStartTime.plusHours(matchingTimeProperties.getMatchingRequestAvailableTime());
-        LocalDateTime matchingValidStartTime = today.withHour(matchingTimeProperties.getMatchingValidBeginHours()).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime matchingValidEndTime = matchingValidStartTime.plusHours(matchingTimeProperties.getMatchingValidHours(dayOfWeek));
+        LocalDateTime requestStartTime = today.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime requestEndTime = requestStartTime.plusHours(matchingTimeProperties.getRequestAvailableTime());
+        LocalDateTime validStartTime = today.withHour(matchingTimeProperties.getValidBeginHours()).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime validEndTime = validStartTime.plusHours(matchingTimeProperties.getMatchingValidHours(dayOfWeek));
 
-        return new MatchingRound(matchingRequestStartTime, matchingRequestEndTime, matchingValidStartTime, matchingValidEndTime);
+        return new MatchingRound(requestStartTime, requestEndTime, validStartTime, validEndTime);
     }
 
     public boolean isReceptionTime(LocalDateTime now) {

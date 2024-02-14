@@ -32,7 +32,7 @@ class MatchingServiceTest {
     void setUp() {
         loginMember = new LoginMember(1L, MemberRole.MEMBER);
         LocalDateTime roundBeginTime = LocalDateTime.of(2024, 1, 29, 0, 0);
-        matchingRoundRepository.save(MatchingRound.of(roundBeginTime, matchingTimeProperties));
+        matchingRoundRepository.save(MatchingRound.from(roundBeginTime, matchingTimeProperties));
         currentRound = getCurrentRound();
     }
 

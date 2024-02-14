@@ -25,7 +25,7 @@ class MatchingRoundServiceTest {
     @Transactional
     void saveMatchRoundTest() {
         LocalDateTime monday = LocalDateTime.of(2024, 1, 29, 0, 0);
-        MatchingRound result = matchingRoundRepository.save(MatchingRound.of(monday, matchingTimeProperties));
+        MatchingRound result = matchingRoundRepository.save(MatchingRound.from(monday, matchingTimeProperties));
 
         assertThat(result.getRound()).isNotNull();
     }
@@ -35,7 +35,7 @@ class MatchingRoundServiceTest {
     @Transactional
     void getCurrentRound() {
         LocalDateTime monday = LocalDateTime.of(2024, 1, 29, 0, 0);
-        matchingRoundRepository.save(MatchingRound.of(monday, matchingTimeProperties));
+        matchingRoundRepository.save(MatchingRound.from(monday, matchingTimeProperties));
 
         MatchingRound result = matchingRoundRepository.findCurrentRound()
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));

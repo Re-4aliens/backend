@@ -1,5 +1,6 @@
 package com.aliens.backend.chat.service;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
@@ -41,10 +42,10 @@ public class ChatService {
         return ChatSuccess.READ_MESSAGES_SUCCESS.getMessage();
     }
 
-    public ChatSummaryResponse getChatSummaries(Long memberId) {
-        List<ChatRoom> chatRooms = chatRoomRepository.findByMemberId(memberId);
+    public ChatSummaryResponse getChatSummaries(LoginMember loginMember) {
+        List<ChatRoom> chatRooms = chatRoomRepository.findByMemberId(loginMember.memberId());
         List<Long> chatRoomIds = chatRooms.stream().map(ChatRoom::getRoomId).toList();
-        List<ChatMessageSummary> chatMessageSummaries = messageRepository.aggregateMessageSummaries(chatRoomIds, memberId);
+        List<ChatMessageSummary> chatMessageSummaries = messageRepository.aggregateMessageSummaries(chatRoomIds, loginMember.memberId());
         ChatSummaryResponse chatSummaryResponse = new ChatSummaryResponse(chatRooms, chatMessageSummaries);
         return chatSummaryResponse;
     }

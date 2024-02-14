@@ -10,8 +10,5 @@ public class MatchingRequest {
             Language firstPreferLanguage,
             Language secondPreferLanguage
     ) {
-        public MatchingApplication toEntity(MatchingRound matchingRound) {
-            return MatchingApplication.of(matchingRound, memberId, firstPreferLanguage, secondPreferLanguage);
-        }
     }
 }

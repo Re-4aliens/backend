@@ -16,8 +16,8 @@ public class MatchingResponse {
             Language secondPreferLanguage) {
         public static MatchingApplicationResponse of(MatchingApplication matchingApplication) {
             return new MatchingApplicationResponse(
-                    matchingApplication.getId().getMatchingRound().getRound(),
-                    matchingApplication.getId().getMemberId(),
+                    matchingApplication.getMatchingRound().getRound(),
+                    matchingApplication.getMemberId(),
                     matchingApplication.getFirstPreferLanguage(),
                     matchingApplication.getSecondPreferLanguage());
         }
@@ -28,7 +28,7 @@ public class MatchingResponse {
             Relationship relationship
     ) {
         public static MatchingResultResponse of(MatchingResult matchingResult) {
-            return new MatchingResultResponse(matchingResult.getId().getMatchedMemberId(), matchingResult.getRelationship());
+            return new MatchingResultResponse(matchingResult.getMatchedMemberId(), matchingResult.getRelationship());
         }
     }
 }

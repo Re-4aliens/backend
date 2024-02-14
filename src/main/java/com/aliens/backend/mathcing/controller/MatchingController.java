@@ -28,36 +28,28 @@ public class MatchingController {
     @PostMapping("/applications")
     public SuccessResponse<String> applyMatch(final @Login LoginMember loginMember,
                                         final @RequestBody MatchingApplicationInput input) {
-
-        return SuccessResponse.of(
-                MatchingSuccess.APPLY_MATCHING_SUCCESS,
+        return SuccessResponse.of(MatchingSuccess.APPLY_MATCHING_SUCCESS,
                 matchingApplicationService.saveParticipant(input.toRequest(loginMember.memberId()))
         );
     }
 
     @GetMapping("/applications")
     public SuccessResponse<MatchingResponse.MatchingApplicationResponse> getMatchingApplication(final @Login LoginMember loginMember) {
-
-        return SuccessResponse.of(
-                MatchingSuccess.GET_MATCHING_APPLICATION_STATUS_SUCCESS,
+        return SuccessResponse.of(MatchingSuccess.GET_MATCHING_APPLICATION_STATUS_SUCCESS,
                 matchingApplicationService.findMatchingApplication(loginMember.memberId())
         );
     }
 
     @DeleteMapping("/applications")
     public SuccessResponse<String> cancelMatchingApplication(final @Login LoginMember loginMember) {
-
-        return SuccessResponse.of(
-                MatchingSuccess.CANCEL_MATCHING_APPLICATION_SUCCESS,
+        return SuccessResponse.of(MatchingSuccess.CANCEL_MATCHING_APPLICATION_SUCCESS,
                 matchingApplicationService.deleteMatchingApplication(loginMember.memberId())
         );
     }
 
     @GetMapping("/partners")
     public SuccessResponse<List<MatchingResponse.MatchingResultResponse>> getMatchingPartners(final @Login LoginMember loginMember) {
-
-        return SuccessResponse.of(
-                MatchingSuccess.GET_MATCHING_PARTNERS_SUCCESS,
+        return SuccessResponse.of(MatchingSuccess.GET_MATCHING_PARTNERS_SUCCESS,
                 matchingService.findMatchingResult(loginMember.memberId())
         );
     }

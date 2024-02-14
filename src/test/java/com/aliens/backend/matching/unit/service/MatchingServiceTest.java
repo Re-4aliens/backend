@@ -1,4 +1,4 @@
-package com.aliens.backend.matching.service;
+package com.aliens.backend.matching.unit.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.MemberRole;

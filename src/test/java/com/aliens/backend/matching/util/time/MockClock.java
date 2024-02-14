@@ -1,4 +1,4 @@
-package com.aliens.backend.matching.time;
+package com.aliens.backend.matching.util.time;
 
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.stereotype.Component;

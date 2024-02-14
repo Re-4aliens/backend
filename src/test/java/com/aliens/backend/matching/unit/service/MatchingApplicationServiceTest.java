@@ -1,11 +1,11 @@
-package com.aliens.backend.matching.service;
+package com.aliens.backend.matching.unit.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.MemberRole;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
-import com.aliens.backend.matching.time.MockClock;
+import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationResponse;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static com.aliens.backend.matching.time.MockTime.INVALID_TIME;
-import static com.aliens.backend.matching.time.MockTime.VALID_TIME;
+import static com.aliens.backend.matching.util.time.MockTime.INVALID_TIME;
+import static com.aliens.backend.matching.util.time.MockTime.VALID_TIME;
 import static org.assertj.core.api.Assertions.*;
 
 

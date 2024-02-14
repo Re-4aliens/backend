@@ -8,9 +8,9 @@ public record MatchingApplicationResponse(
         Long memberId,
         Language firstPreferLanguage,
         Language secondPreferLanguage) {
-    public static MatchingApplicationResponse of(MatchingApplication matchingApplication) {
+    public static MatchingApplicationResponse from(MatchingApplication matchingApplication) {
         return new MatchingApplicationResponse(
-                matchingApplication.getMatchingRound().getRound(),
+                matchingApplication.getRound(),
                 matchingApplication.getMemberId(),
                 matchingApplication.getFirstPreferLanguage(),
                 matchingApplication.getSecondPreferLanguage());

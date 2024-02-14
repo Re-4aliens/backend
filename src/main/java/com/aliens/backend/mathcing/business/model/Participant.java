@@ -1,4 +1,4 @@
-package com.aliens.backend.mathcing.service.model;
+package com.aliens.backend.mathcing.business.model;
 
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;

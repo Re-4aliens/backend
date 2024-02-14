@@ -4,14 +4,15 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.global.config.resolver.Login;
 import com.aliens.backend.global.response.success.MatchingSuccess;
 import com.aliens.backend.global.response.SuccessResponse;
-import com.aliens.backend.mathcing.controller.dto.response.MatchingResponse;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
+import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationResponse;
+import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.MatchingService;
+import com.aliens.backend.mathcing.util.validator.LanguageCheck;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static com.aliens.backend.mathcing.controller.dto.input.MatchingInput.*;
 
 @RestController
 @RequestMapping("/matchings")
@@ -27,30 +28,26 @@ public class MatchingController {
 
     @PostMapping("/applications")
     public SuccessResponse<String> applyMatch(final @Login LoginMember loginMember,
-                                        final @RequestBody MatchingApplicationInput input) {
+                                              final @RequestBody @LanguageCheck MatchingApplicationRequest matchingApplicationRequest) {
         return SuccessResponse.of(MatchingSuccess.APPLY_MATCHING_SUCCESS,
-                matchingApplicationService.saveParticipant(input.toRequest(loginMember.memberId()))
-        );
+                matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest));
     }
 
     @GetMapping("/applications")
-    public SuccessResponse<MatchingResponse.MatchingApplicationResponse> getMatchingApplication(final @Login LoginMember loginMember) {
+    public SuccessResponse<MatchingApplicationResponse> getMatchingApplication(final @Login LoginMember loginMember) {
         return SuccessResponse.of(MatchingSuccess.GET_MATCHING_APPLICATION_STATUS_SUCCESS,
-                matchingApplicationService.findMatchingApplication(loginMember.memberId())
-        );
+                matchingApplicationService.findMatchingApplication(loginMember));
     }
 
     @DeleteMapping("/applications")
     public SuccessResponse<String> cancelMatchingApplication(final @Login LoginMember loginMember) {
         return SuccessResponse.of(MatchingSuccess.CANCEL_MATCHING_APPLICATION_SUCCESS,
-                matchingApplicationService.deleteMatchingApplication(loginMember.memberId())
-        );
+                matchingApplicationService.deleteMatchingApplication(loginMember));
     }
 
     @GetMapping("/partners")
-    public SuccessResponse<List<MatchingResponse.MatchingResultResponse>> getMatchingPartners(final @Login LoginMember loginMember) {
+    public SuccessResponse<List<MatchingResultResponse>> getMatchingPartners(final @Login LoginMember loginMember) {
         return SuccessResponse.of(MatchingSuccess.GET_MATCHING_PARTNERS_SUCCESS,
-                matchingService.findMatchingResult(loginMember.memberId())
-        );
+                matchingService.findMatchingResult(loginMember));
     }
 }

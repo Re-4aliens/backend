@@ -1,11 +1,13 @@
 package com.aliens.backend.global;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.auth.domain.MemberRole;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.auth.service.TokenProvider;
-import com.aliens.backend.mathcing.controller.dto.request.MatchingRequest;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
-import com.aliens.backend.mathcing.service.model.Language;
+import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.member.controller.dto.EncodedMember;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
 import com.aliens.backend.member.domain.Image;
@@ -121,8 +123,9 @@ public class DummyGenerator {
                 secondPreferLanguage = getRandomLanguage(random);
             } while (firstPreferLanguage == secondPreferLanguage);
 
-            MatchingRequest.MatchingApplicationRequest request = new MatchingRequest.MatchingApplicationRequest(i, firstPreferLanguage, secondPreferLanguage);
-            matchingApplicationService.saveParticipant(request);
+            LoginMember loginMember = new LoginMember(i, MemberRole.MEMBER);
+            MatchingApplicationRequest request = new MatchingApplicationRequest(firstPreferLanguage, secondPreferLanguage);
+            matchingApplicationService.saveParticipant(loginMember, request);
         }
     }
 

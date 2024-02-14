@@ -2,10 +2,10 @@ package com.aliens.backend.mathcing.business;
 
 import com.aliens.backend.global.property.MatchingRuleProperties;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
-import com.aliens.backend.mathcing.service.model.Language;
-import com.aliens.backend.mathcing.service.model.Participant;
-import com.aliens.backend.mathcing.service.model.MatchingMode;
-import com.aliens.backend.mathcing.service.model.Relationship;
+import com.aliens.backend.mathcing.business.model.Language;
+import com.aliens.backend.mathcing.business.model.Participant;
+import com.aliens.backend.mathcing.business.model.MatchingMode;
+import com.aliens.backend.mathcing.business.model.Relationship;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

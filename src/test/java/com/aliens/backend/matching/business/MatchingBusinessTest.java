@@ -13,7 +13,7 @@ import com.aliens.backend.mathcing.domain.repository.MatchingApplicationReposito
 import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingService;
-import com.aliens.backend.mathcing.service.model.Participant;
+import com.aliens.backend.mathcing.business.model.Participant;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

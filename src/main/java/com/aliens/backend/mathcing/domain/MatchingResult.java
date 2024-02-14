@@ -1,7 +1,7 @@
 package com.aliens.backend.mathcing.domain;
 
 import com.aliens.backend.mathcing.domain.id.MatchingResultId;
-import com.aliens.backend.mathcing.service.model.Relationship;
+import com.aliens.backend.mathcing.business.model.Relationship;
 import jakarta.persistence.*;
 
 @Entity

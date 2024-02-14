@@ -2,6 +2,7 @@ package com.aliens.backend.matching.unit.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.MemberRole;
+import com.aliens.backend.global.BaseServiceTest;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
@@ -30,7 +31,7 @@ import static org.assertj.core.api.Assertions.*;
 
 
 @SpringBootTest
-class MatchingApplicationServiceTest {
+class MatchingApplicationServiceTest extends BaseServiceTest {
     @Autowired MatchingApplicationService matchingApplicationService;
     @Autowired MatchingApplicationRepository matchingApplicationRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;
@@ -51,7 +52,6 @@ class MatchingApplicationServiceTest {
 
     @Test
     @DisplayName("매칭 신청 단위 테스트")
-    @Transactional
     void applyMatchTest() {
         // given
         mockClock.mockTime(VALID_TIME);
@@ -67,7 +67,6 @@ class MatchingApplicationServiceTest {
 
     @Test
     @DisplayName("지정 시간 외 매칭 신청시, 에러 발생")
-    @Transactional
     void applyMatchIfNotValidTime() {
         // given
         mockClock.mockTime(INVALID_TIME);
@@ -80,7 +79,6 @@ class MatchingApplicationServiceTest {
 
     @Test
     @DisplayName("매칭 신청 조회 단위 테스트")
-    @Transactional
     void getMatchingApplicationTest() {
         // given
         Long expectedResult = loginMember.memberId();
@@ -95,7 +93,6 @@ class MatchingApplicationServiceTest {
 
     @Test
     @DisplayName("매칭 신청하지 않은 사용자 조회 테스트")
-    @Transactional
     void getMatchingApplicationIfNotApplied() {
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(loginMember))
@@ -104,7 +101,6 @@ class MatchingApplicationServiceTest {
 
     @Test
     @DisplayName("매칭 신청 취소 단위 테스트")
-    @Transactional
     void deleteMatchingApplicationTest() {
         // given
         applyToMatch();
@@ -120,7 +116,6 @@ class MatchingApplicationServiceTest {
 
     @Test
     @DisplayName("지정 시간 외 매칭 취소 신청시, 에러 발생")
-    @Transactional
     void deleteMatchIfNotValidTime() {
         // given
         applyToMatch();
@@ -133,7 +128,6 @@ class MatchingApplicationServiceTest {
 
     @Test
     @DisplayName("매칭을 신청하지 않은 사용자 매칭 삭제 요청 테스트")
-    @Transactional
     void deleteMatchIfNotApplied() {
         // given
         mockClock.mockTime(VALID_TIME);

@@ -27,10 +27,10 @@ class MatchingRoundServiceTest {
     @Transactional
     void saveMatchRoundTest() {
         // given
-        MatchingRound monday = MatchingRound.from(MockTime.MONDAY.getTime(), matchingTimeProperties);
+        MatchingRound mondayRound = MatchingRound.from(MockTime.MONDAY.getTime(), matchingTimeProperties);
 
         // when
-        matchingRoundRepository.save(monday);
+        matchingRoundRepository.save(mondayRound);
 
         // then
         MatchingRound currentRound = getCurrentRound();
@@ -42,13 +42,15 @@ class MatchingRoundServiceTest {
     @DisplayName("현재 매칭 회차 조회")
     @Transactional
     void getCurrentRoundTest() {
-        LocalDateTime monday = LocalDateTime.of(2024, 1, 29, 0, 0);
-        matchingRoundRepository.save(MatchingRound.from(monday, matchingTimeProperties));
+        // given
+        MatchingRound mondayRound = MatchingRound.from(MockTime.MONDAY.getTime(), matchingTimeProperties);
+        matchingRoundRepository.save(mondayRound);
 
-        MatchingRound result = matchingRoundRepository.findCurrentRound()
-                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+        // then
+        MatchingRound currentRound = getCurrentRound();
+        DayOfWeek result = currentRound.getDayOfWeek();
 
-        assertThat(result.getRound()).isNotNull();
+        assertThat(result).isEqualTo(DayOfWeek.MONDAY);
     }
 
     private MatchingRound getCurrentRound() {

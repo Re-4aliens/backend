@@ -19,10 +19,13 @@ public class MatchingBusiness {
         this.matchingRuleProperties = matchingRuleProperties;
     }
 
-    public List<Participant> operateMatching(List<MatchingApplication> matchingApplications) {
+    public void operateMatching(List<MatchingApplication> matchingApplications) {
         initialize(matchingApplications);
 
         matchingTypeGroup.getMatchingTypes().forEach(matchingType -> matchingType.doMatch(participantGroup, languageQueue));
+    }
+
+    public List<Participant> getParticipants() {
         return participantGroup.getParticipants();
     }
 

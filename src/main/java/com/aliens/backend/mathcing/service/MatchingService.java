@@ -5,6 +5,7 @@ import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
+import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingResult;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
@@ -12,7 +13,6 @@ import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.business.model.Partner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,6 @@ public class MatchingService {
 
     private MatchingRound currentRound;
 
-    @Autowired
     public MatchingService(final MatchingRoundRepository matchingRoundRepository,
                            final MatchingApplicationRepository matchingApplicationRepository,
                            final MatchingResultRepository matchingResultRepository,
@@ -42,36 +41,48 @@ public class MatchingService {
     @Scheduled(cron = "${matching.round.start}")
     @Transactional
     public void operateMatching() {
-        currentRound = matchingRoundRepository.findCurrentRound()
-                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
-        List<Participant> participants = matchingBusiness.operateMatching(
-                matchingApplicationRepository.findAllByMatchingRound(currentRound));
-        saveMatchingResult(participants);
+        MatchingRound currentRound = getCurrentRound();
+        List<MatchingApplication> matchingApplications = getMatchingApplications(currentRound);
+        List<Participant> participants = matchingBusiness.operateMatching(matchingApplications);
+
+        saveMatchingResult(currentRound, participants);
     }
 
     @Transactional(readOnly = true)
     public List<MatchingResultResponse> findMatchingResult(final LoginMember loginMember) {
-        currentRound = matchingRoundRepository.findCurrentRound()
-                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
-        List<MatchingResult> matchingResults =
-                matchingResultRepository.findAllByMatchingRoundAndMemberId(currentRound, loginMember.memberId());
+        MatchingRound currentRound = getCurrentRound();
+        List<MatchingResult> matchingResults = getMatchingResult(currentRound, loginMember);
         checkHasApplied(matchingResults);
         return matchingResults.stream().map(MatchingResultResponse::from).toList();
     }
 
-    private void saveMatchingResult(final List<Participant> participants) {
+    private void saveMatchingResult(final MatchingRound matchingRound, final List<Participant> participants) {
         for (Participant participant : participants) {
             for (Partner partner : participant.partners()) {
-                matchingResultRepository.save(
-                        MatchingResult.of(currentRound, partner.memberId(), partner.memberId(), partner.relationship()));
+                MatchingResult matchingResult =
+                        MatchingResult.of(matchingRound, participant.memberId(), partner.memberId(), partner.relationship());
+                matchingResultRepository.save(matchingResult);
             }
             // TODO : 매칭 완료 알림 이벤트 발송 & 채팅방 개설 이벤트 발송
         }
     }
 
-    private void checkHasApplied(List<MatchingResult> matchingResults) {
+    private void checkHasApplied(final List<MatchingResult> matchingResults) {
         if (matchingResults.isEmpty()) {
             throw new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO);
         }
+    }
+
+    private MatchingRound getCurrentRound() {
+        return matchingRoundRepository.findCurrentRound()
+                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+    }
+
+    private List<MatchingResult> getMatchingResult(final MatchingRound matchingRound, final LoginMember loginMember) {
+        return matchingResultRepository.findAllByMatchingRoundAndMemberId(matchingRound, loginMember.memberId());
+    }
+
+    private List<MatchingApplication> getMatchingApplications(final MatchingRound matchingRound) {
+        return matchingApplicationRepository.findAllByMatchingRound(matchingRound);
     }
 }

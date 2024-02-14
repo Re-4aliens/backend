@@ -1,5 +1,7 @@
 package com.aliens.backend.matching.service;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.auth.domain.MemberRole;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
@@ -24,19 +26,25 @@ class MatchingServiceTest {
     @Autowired MatchingTimeProperties matchingTimeProperties;
 
     MatchingRound currentRound;
+    LoginMember loginMember;
 
     @BeforeEach
     void setUp() {
+        loginMember = new LoginMember(1L, MemberRole.MEMBER);
         LocalDateTime roundBeginTime = LocalDateTime.of(2024, 1, 29, 0, 0);
         matchingRoundRepository.save(MatchingRound.of(roundBeginTime, matchingTimeProperties));
-        currentRound = matchingRoundRepository.findCurrentRound()
-                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+        currentRound = getCurrentRound();
     }
 
     @Test
     @DisplayName("매칭을 신청한 적이 없는 회원이 매칭 조회")
     void getMatchingResultTest() {
-        assertThatThrownBy(() -> matchingService.findMatchingResult(1L))
+        assertThatThrownBy(() -> matchingService.findMatchingResult(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
+    }
+
+    private MatchingRound getCurrentRound() {
+        return matchingRoundRepository.findCurrentRound()
+                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 }

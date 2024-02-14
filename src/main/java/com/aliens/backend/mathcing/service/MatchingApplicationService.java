@@ -44,9 +44,7 @@ public class MatchingApplicationService {
     @Transactional(readOnly = true)
     public MatchingApplicationResponse findMatchingApplication(final LoginMember loginMember) {
         MatchingRound currentRound = getCurrentRound();
-        MatchingApplication matchingApplication =
-                matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, loginMember.memberId()))
-                .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
+        MatchingApplication matchingApplication = getMatchingApplication(currentRound, loginMember);
         return MatchingApplicationResponse.from(matchingApplication);
     }
 
@@ -54,9 +52,7 @@ public class MatchingApplicationService {
     public String deleteMatchingApplication(final LoginMember loginMember) {
         MatchingRound currentRound = getCurrentRound();
         checkReceptionTime(currentRound);
-        MatchingApplication matchingApplication =
-                matchingApplicationRepository.findById(MatchingApplicationId.of(currentRound, loginMember.memberId()))
-                        .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
+        MatchingApplication matchingApplication = getMatchingApplication(currentRound, loginMember);
         matchingApplicationRepository.delete(matchingApplication);
         return MatchingSuccess.CANCEL_MATCHING_APPLICATION_SUCCESS.getMessage();
     }
@@ -64,6 +60,11 @@ public class MatchingApplicationService {
     private MatchingRound getCurrentRound() {
         return matchingRoundRepository.findCurrentRound()
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+    }
+
+    private MatchingApplication getMatchingApplication(MatchingRound matchingRound, LoginMember loginMember) {
+        return matchingApplicationRepository.findById(MatchingApplicationId.of(matchingRound, loginMember.memberId()))
+                .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
     }
 
     private void checkReceptionTime(MatchingRound matchingRound) {

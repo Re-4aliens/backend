@@ -23,12 +23,6 @@ public class MatchingBusiness {
         this.matchingRuleProperties = matchingRuleProperties;
     }
 
-    private void initialize(final List<MatchingApplication> matchingApplications) {
-        participants = MatchingApplication.toParticipantList(matchingApplications);
-        languageQueueWithParticipants = Language.createQueueWith(participants);
-        relationship = Relationship.NORMAL;
-    }
-
     public List<Participant> operateMatching(final List<MatchingApplication> matchingApplications) {
         initialize(matchingApplications);
 
@@ -38,6 +32,12 @@ public class MatchingBusiness {
         matchParticipantsWith(MatchingMode.SPECIAL);
 
         return participants;
+    }
+
+    private void initialize(final List<MatchingApplication> matchingApplications) {
+        participants = MatchingApplication.toParticipantList(matchingApplications);
+        languageQueueWithParticipants = Language.createQueueWith(participants);
+        relationship = Relationship.NORMAL;
     }
 
     private void matchParticipantsWith(final MatchingMode matchingMode) {

@@ -15,10 +15,10 @@ public class LanguageValidator implements ConstraintValidator<LanguageCheck, Mat
         Language firstPreferLanguage = value.firstPreferLanguage();
         Language secondPreferLanguage = value.secondPreferLanguage();
 
-        if (!firstPreferLanguage.equals(secondPreferLanguage)) {
-            return true;
+        if (firstPreferLanguage.equals(secondPreferLanguage)) {
+            throw new RestApiException(MatchingError.INVALID_LANGUAGE_INPUT);
         }
-        throw new RestApiException(MatchingError.INVALID_LANGUAGE_INPUT);
+        return true;
     }
 
     @Override

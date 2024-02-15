@@ -8,7 +8,7 @@ import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
-import com.aliens.backend.mathcing.service.MatchingService;
+import com.aliens.backend.mathcing.service.MatchingProcessService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,9 +20,10 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-class MatchingServiceTest extends BaseServiceTest {
+class MatchingProcessServiceTest extends BaseServiceTest {
 
-    @Autowired MatchingService matchingService;
+    @Autowired
+    MatchingProcessService matchingProcessService;
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
 
@@ -40,7 +41,7 @@ class MatchingServiceTest extends BaseServiceTest {
     @Test
     @DisplayName("매칭을 신청한 적이 없는 회원이 매칭 조회")
     void getMatchingResultTest() {
-        assertThatThrownBy(() -> matchingService.findMatchingResult(loginMember))
+        assertThatThrownBy(() -> matchingProcessService.findMatchingResult(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 

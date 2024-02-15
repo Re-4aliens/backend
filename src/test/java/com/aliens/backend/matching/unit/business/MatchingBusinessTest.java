@@ -13,7 +13,7 @@ import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
-import com.aliens.backend.mathcing.service.MatchingService;
+import com.aliens.backend.mathcing.service.MatchingProcessService;
 import com.aliens.backend.mathcing.business.model.Participant;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 class MatchingBusinessTest extends BaseServiceTest {
-    @Autowired MatchingService matchingService;
+    @Autowired
+    MatchingProcessService matchingProcessService;
     @Autowired MatchingApplicationRepository matchingApplicationRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingResultRepository matchingResultRepository;
@@ -68,7 +69,7 @@ class MatchingBusinessTest extends BaseServiceTest {
         dummyGenerator.generateAppliersToMatch(20L);
 
         // when
-        matchingService.operateMatching();
+        matchingProcessService.operateMatching();
 
         // then
         List<MatchingResult> result = matchingResultRepository.findAllByMatchingRound(currentRound);

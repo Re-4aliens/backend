@@ -20,16 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class MatchingService {
+public class MatchingProcessService {
     private final MatchingRoundRepository matchingRoundRepository;
     private final MatchingApplicationRepository matchingApplicationRepository;
     private final MatchingResultRepository matchingResultRepository;
     private final MatchingBusiness matchingBusiness;
 
-    public MatchingService(final MatchingRoundRepository matchingRoundRepository,
-                           final MatchingApplicationRepository matchingApplicationRepository,
-                           final MatchingResultRepository matchingResultRepository,
-                           final MatchingBusiness matchingBusiness) {
+    public MatchingProcessService(final MatchingRoundRepository matchingRoundRepository,
+                                  final MatchingApplicationRepository matchingApplicationRepository,
+                                  final MatchingResultRepository matchingResultRepository,
+                                  final MatchingBusiness matchingBusiness) {
         this.matchingRoundRepository = matchingRoundRepository;
         this.matchingApplicationRepository = matchingApplicationRepository;
         this.matchingResultRepository = matchingResultRepository;

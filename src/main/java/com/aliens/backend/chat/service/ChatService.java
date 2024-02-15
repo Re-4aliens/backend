@@ -1,20 +1,28 @@
 package com.aliens.backend.chat.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.chat.controller.dto.event.ChatRoomBlockEvent;
+import com.aliens.backend.chat.controller.dto.event.ChatRoomCreationEvent;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.controller.dto.response.ReadResponse;
+import com.aliens.backend.chat.domain.ChatParticipant;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
 import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.service.model.ChatMessageSummary;
+import com.aliens.backend.chat.service.model.MemberPair;
+import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.global.response.error.ChatError;
 import com.aliens.backend.global.response.success.ChatSuccess;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ChatService {
@@ -99,5 +107,20 @@ public class ChatService {
         ChatParticipant participant1 = ChatParticipant.of(null, pair.first(), pair.second());
         ChatParticipant participant2 = ChatParticipant.of(null, pair.second(), pair.first());
         return new ChatRoom(participant1, participant2);
+    }
+
+    @EventListener
+    public void handleChatRoomBlockEvent(ChatRoomBlockEvent event) {
+        blockChatRoom(event.chatRoomId());
+    }
+
+    private void blockChatRoom(Long chatRoomId) {
+        ChatRoom chatRoom = findChatRoomsById(chatRoomId);
+        chatRoom.block();
+        chatRoomRepository.save(chatRoom);
+    }
+
+    private ChatRoom findChatRoomsById(final Long chatRoomId) {
+        return chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new RestApiException(ChatError.CHAT_ROOM_NOT_FOUND));
     }
 }

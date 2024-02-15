@@ -107,6 +107,18 @@ public class Member {
         return id;
     }
 
+    public void applied() {
+        status = MemberStatus.APPLIED_NOT_MATCHED;
+    }
+
+    public void matched() {
+        status = MemberStatus.APPLIED_MATCHED;
+    }
+
+    public void initStatus() {
+        status = MemberStatus.NOT_APPLIED_NOT_MATCHED;
+    }
+
     @Override
     public String toString() {
         return String.format("email:  %s, role : %s", this.email, this.role);

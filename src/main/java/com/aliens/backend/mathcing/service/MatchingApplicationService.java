@@ -43,7 +43,7 @@ public class MatchingApplicationService {
         checkReceptionTime(currentRound);
         Member member = getMember(loginMember);
         MatchingApplication matchingApplication = MatchingApplication.from(currentRound, member, matchingApplicationRequest);
-        matchingApplicationRepository.save(matchingApplication);
+        applyForMatching(matchingApplication);
         return MatchingSuccess.APPLY_MATCHING_SUCCESS.getMessage();
     }
 
@@ -59,7 +59,7 @@ public class MatchingApplicationService {
         MatchingRound currentRound = getCurrentRound();
         checkReceptionTime(currentRound);
         MatchingApplication matchingApplication = getMatchingApplication(currentRound, loginMember);
-        matchingApplicationRepository.delete(matchingApplication);
+        cancelForMatching(matchingApplication);
         return MatchingSuccess.CANCEL_MATCHING_APPLICATION_SUCCESS.getMessage();
     }
 
@@ -76,6 +76,18 @@ public class MatchingApplicationService {
     private MatchingApplication getMatchingApplication(MatchingRound matchingRound, LoginMember loginMember) {
         return matchingApplicationRepository.findByMatchingRoundAndMemberId(matchingRound, loginMember.memberId())
                 .orElseThrow(()->new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
+    }
+
+    private void applyForMatching(MatchingApplication matchingApplication) {
+        matchingApplicationRepository.save(matchingApplication);
+        Member member = matchingApplication.getMember();
+        member.applied();
+    }
+
+    private void cancelForMatching(MatchingApplication matchingApplication) {
+        matchingApplicationRepository.delete(matchingApplication);
+        Member member = matchingApplication.getMember();
+        member.initStatus();
     }
 
     private void checkReceptionTime(MatchingRound matchingRound) {

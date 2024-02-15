@@ -1,5 +1,6 @@
-package com.aliens.backend.mathcing.util.validator;
+package com.aliens.backend.global.validator;
 
+import com.aliens.backend.mathcing.util.validator.LanguageValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

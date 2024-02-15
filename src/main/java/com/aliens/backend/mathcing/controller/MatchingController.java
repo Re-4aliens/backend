@@ -9,7 +9,7 @@ import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationRe
 import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.service.MatchingService;
-import com.aliens.backend.mathcing.util.validator.LanguageCheck;
+import com.aliens.backend.global.validator.LanguageCheck;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

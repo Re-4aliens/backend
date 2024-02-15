@@ -76,6 +76,10 @@ public class MatchingRound {
         return now.isAfter(this.getRequestStartTime()) && now.isBefore(this.getRequestEndTime());
     }
 
+    public Long getPreviousRound() {
+        return round - 1;
+    }
+
     @Override
     public String toString() {
         return "MatchingRound{" +

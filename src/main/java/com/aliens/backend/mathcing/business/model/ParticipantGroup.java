@@ -44,7 +44,7 @@ public class ParticipantGroup {
 
     public ParticipantGroup getParticipantsLessThan(final int numberOfPartner) {
         List<Participant> filteredParticipants = participants.stream()
-                .filter(participant -> participant.getNumberOfPartners() < numberOfPartner).toList());
+                .filter(participant -> participant.getNumberOfPartners() < numberOfPartner).toList();
         ParticipantGroup participantGroup = toGroup(filteredParticipants);
         return participantGroup;
     }

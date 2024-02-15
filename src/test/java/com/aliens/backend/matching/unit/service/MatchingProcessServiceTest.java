@@ -92,6 +92,12 @@ class MatchingProcessServiceTest extends BaseServiceTest {
     }
 
     @Test
+    @DisplayName("차단된 유저와 매칭이 되지 않는지 테스트")
+    void isBlockedMemberTest() {
+
+    }
+
+    @Test
     @DisplayName("매칭을 신청한 적이 없는 회원이 매칭 조회")
     void getMatchingResultTest() {
         assertThatThrownBy(() -> matchingProcessService.findMatchingResult(loginMember))

@@ -1,8 +1,13 @@
 package com.aliens.backend.mathcing.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.auth.domain.repository.MemberRepository;
+import com.aliens.backend.block.domain.Block;
+import com.aliens.backend.block.domain.repository.BlockRepository;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
@@ -23,19 +28,25 @@ import java.util.List;
 
 @Service
 public class MatchingProcessService {
+    private final MatchingBusiness matchingBusiness;
     private final MatchingRoundRepository matchingRoundRepository;
     private final MatchingApplicationRepository matchingApplicationRepository;
     private final MatchingResultRepository matchingResultRepository;
-    private final MatchingBusiness matchingBusiness;
+    private final MemberRepository memberRepository;
+    private final BlockRepository blockRepository;
 
-    public MatchingProcessService(final MatchingRoundRepository matchingRoundRepository,
+    public MatchingProcessService(final MatchingBusiness matchingBusiness,
+                                  final MatchingRoundRepository matchingRoundRepository,
                                   final MatchingApplicationRepository matchingApplicationRepository,
                                   final MatchingResultRepository matchingResultRepository,
-                                  final MatchingBusiness matchingBusiness) {
+                                  final MemberRepository memberRepository,
+                                  final BlockRepository blockRepository) {
         this.matchingRoundRepository = matchingRoundRepository;
         this.matchingApplicationRepository = matchingApplicationRepository;
         this.matchingResultRepository = matchingResultRepository;
         this.matchingBusiness = matchingBusiness;
+        this.memberRepository = memberRepository;
+        this.blockRepository = blockRepository;
     }
 
     @Scheduled(cron = "${matching.round.start}")
@@ -87,7 +98,7 @@ public class MatchingProcessService {
     private List<MatchingApplication> getMatchingApplications(final MatchingRound matchingRound) {
         return matchingApplicationRepository.findAllByMatchingRound(matchingRound);
     }
-
+    
     private MatchingRound getPreviousMatchingRound(MatchingRound matchingRound) {
         Long previousRound = matchingRound.getPreviousRound();
         return matchingRoundRepository.findMatchingRoundByRound(previousRound)
@@ -102,9 +113,29 @@ public class MatchingProcessService {
         return matchingResultRepository.findAllByMatchingRound(previousMatchingRound);
     }
 
+    private List<Block> getBlockListByMatchingApplications(MatchingRound matchingRound) {
+        List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
+        List<Block> blockHistory = matchingApplications.stream()
+                .map(MatchingApplication::getMemberId)
+                .map(this::getMemberById)
+                .flatMap(member -> getBlockListByBlockingMember(member).stream())
+                .toList();
+        return blockHistory;
+    }
+
+    private List<Block> getBlockListByBlockingMember(Member blockingMember) {
+        return blockRepository.findAllByBlockingMember(blockingMember);
+    }
+
+    private Member getMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+    }
+
     private MatchingOperateRequest createOperateRequest(MatchingRound matchingRound) {
         List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
         List<MatchingResult> previousMatchingResult = getPreviousMatchingResult(matchingRound);
-        return MatchingOperateRequest.of(matchingApplications, previousMatchingResult);
+        List<Block> participantBlockHistory = getBlockListByMatchingApplications(matchingRound);
+        return MatchingOperateRequest.of(matchingApplications, previousMatchingResult, participantBlockHistory);
     }
 }

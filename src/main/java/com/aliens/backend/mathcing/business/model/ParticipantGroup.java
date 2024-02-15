@@ -1,5 +1,6 @@
 package com.aliens.backend.mathcing.business.model;
 
+import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.global.property.MatchingRuleProperties;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
@@ -22,12 +23,14 @@ public class ParticipantGroup {
     public static ParticipantGroup from(final MatchingOperateRequest matchingOperateRequest,
                                         final MatchingRuleProperties matchingRuleProperties) {
         List<MatchingApplication> matchingApplications = matchingOperateRequest.matchingApplications();
-        MatchingResultGroup previousMatchingResultGroup = matchingOperateRequest.previousMatchingResult();
+        MatchingResultGroup previousMatchingResultGroup = matchingOperateRequest.previousMatchingResultGroup();
+        BlockHistoryGroup blockHistoryGroup = matchingOperateRequest.blockHistoryGroup();
 
         List<Participant> participants = matchingApplications.stream()
                 .map(matchingApplication -> {
                     List<MatchingResult> previousMatchingResults = previousMatchingResultGroup.getMatchingResultsWith(matchingApplication);
-                    return Participant.from(matchingApplication, previousMatchingResults);
+                    List<Block> blockHistories = blockHistoryGroup.getBlockHistoriesWith(matchingApplication);
+                    return Participant.from(matchingApplication, previousMatchingResults, blockHistories);
                 }).toList();
         return new ParticipantGroup(participants, matchingRuleProperties);
     }
@@ -98,6 +101,7 @@ public class ParticipantGroup {
         return participant != partner &&
                 !hasMetBetween(participant, partner) &&
                 !isPartnerBetween(participant, partner) &&
+                !hasBlockedBetween(participant, partner) &&
                 !isExceededMaxPartners(relationship, partner);
     }
 
@@ -114,6 +118,10 @@ public class ParticipantGroup {
 
     private boolean isPartnerBetween(final Participant participant, final Participant partner) {
         return participant.isPartnerWith(partner) || partner.isPartnerWith(participant);
+    }
+
+    private boolean hasBlockedBetween(final Participant participant, final Participant partner) {
+        return participant.hasBlocked(partner) || partner.hasBlocked(participant);
     }
 
     private boolean isExceedMaxTries(int tries) {

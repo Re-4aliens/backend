@@ -11,8 +11,8 @@ public class PreviousPartnerGroup {
         this.previousPartners = previousPartners;
     }
 
-    public static PreviousPartnerGroup from(final List<MatchingResult> previousMatchingResult) {
-        List<Long> previousPartners = previousMatchingResult.stream()
+    public static PreviousPartnerGroup from(final List<MatchingResult> previousMatchingResults) {
+        List<Long> previousPartners = previousMatchingResults.stream()
                 .mapToLong(MatchingResult::getMatchedMemberId).boxed().toList();
         return new PreviousPartnerGroup(previousPartners);
     }

@@ -24,8 +24,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
-import static com.aliens.backend.matching.util.time.MockTime.INVALID_TIME;
-import static com.aliens.backend.matching.util.time.MockTime.VALID_TIME;
+import static com.aliens.backend.matching.util.time.MockTime.INVALID_RECEPTION_TIME;
+import static com.aliens.backend.matching.util.time.MockTime.VALID_RECEPTION_TIME;
 import static org.assertj.core.api.Assertions.*;
 
 
@@ -53,7 +53,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     @DisplayName("매칭 신청 단위 테스트")
     void applyMatchTest() {
         // given
-        mockClock.mockTime(VALID_TIME);
+        mockClock.mockTime(VALID_RECEPTION_TIME);
         Long expectedResult = loginMember.memberId();
 
         // when
@@ -68,7 +68,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     @DisplayName("지정 시간 외 매칭 신청시, 에러 발생")
     void applyMatchIfNotValidTime() {
         // given
-        mockClock.mockTime(INVALID_TIME);
+        mockClock.mockTime(INVALID_RECEPTION_TIME);
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest))
@@ -103,7 +103,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     void deleteMatchingApplicationTest() {
         // given
         applyToMatch();
-        mockClock.mockTime(VALID_TIME);
+        mockClock.mockTime(VALID_RECEPTION_TIME);
 
         // when
         matchingApplicationService.cancelMatchingApplication(loginMember);
@@ -118,7 +118,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     void deleteMatchIfNotValidTime() {
         // given
         applyToMatch();
-        mockClock.mockTime(INVALID_TIME);
+        mockClock.mockTime(INVALID_RECEPTION_TIME);
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.cancelMatchingApplication(loginMember))
@@ -129,14 +129,14 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     @DisplayName("매칭을 신청하지 않은 사용자 매칭 삭제 요청 테스트")
     void deleteMatchIfNotApplied() {
         // given
-        mockClock.mockTime(VALID_TIME);
+        mockClock.mockTime(VALID_RECEPTION_TIME);
 
         assertThatThrownBy(() -> matchingApplicationService.cancelMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 
     private void applyToMatch() {
-        mockClock.mockTime(VALID_TIME);
+        mockClock.mockTime(VALID_RECEPTION_TIME);
         matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
     }
 

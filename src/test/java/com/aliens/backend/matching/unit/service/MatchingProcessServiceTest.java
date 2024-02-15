@@ -50,7 +50,7 @@ class MatchingProcessServiceTest extends BaseServiceTest {
     @DisplayName("매칭 결과 조회")
     void operateMatchingTest() {
         // given
-        mockClock.mockTime(MockTime.VALID_TIME);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME);
         dummyGenerator.generateAppliersToMatch(20L);
 
         // when

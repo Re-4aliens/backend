@@ -30,8 +30,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 class MatchingBusinessTest extends BaseServiceTest {
-    @Autowired
-    MatchingProcessService matchingProcessService;
+    @Autowired MatchingProcessService matchingProcessService;
     @Autowired MatchingApplicationRepository matchingApplicationRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingResultRepository matchingResultRepository;
@@ -53,7 +52,7 @@ class MatchingBusinessTest extends BaseServiceTest {
     @Test
     @DisplayName("매칭 로직 실행 테스트")
     void matchingLogicTest() {
-        mockClock.mockTime(MockTime.VALID_TIME);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME);
         dummyGenerator.generateAppliersToMatch(20L);
         matchingOperateRequest = createOperateRequest(currentRound);
 
@@ -66,15 +65,11 @@ class MatchingBusinessTest extends BaseServiceTest {
     @Test
     @DisplayName("직전 회차에 매칭된 사용자와 매칭되지 않는 기능 테스트")
     void isDuplicateMatchingTest() {
-        mockClock.mockTime(MockTime.VALID_TIME);
-        dummyGenerator.generateAppliersToMatch(20L);
-        matchingOperateRequest = createOperateRequest(currentRound);
-
-        // when
-        matchingBusiness.operateMatching(matchingOperateRequest);
+        // given & when
+        operateMatchingTwice();
 
         // then
-
+        System.out.println();
     }
 
     private MatchingRound getCurrentRound() {
@@ -87,7 +82,7 @@ class MatchingBusinessTest extends BaseServiceTest {
     }
 
     private MatchingRound getPreviousMatchingRound(MatchingRound matchingRound) {
-        Long previousRound = matchingRound.getRound() - 1;
+        Long previousRound = matchingRound.getPreviousRound();
         return matchingRoundRepository.findMatchingRoundByRound(previousRound)
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
@@ -101,5 +96,17 @@ class MatchingBusinessTest extends BaseServiceTest {
         List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
         List<MatchingResult> previousMatchingResult = getPreviousMatchingResult(matchingRound);
         return MatchingOperateRequest.of(matchingApplications, previousMatchingResult);
+    }
+
+    private void operateMatchingTwice() {
+        mockClock.mockTime(MockTime.MONDAY);
+        dummyGenerator.generateAppliersToMatch(20L);
+        matchingOperateRequest = createOperateRequest(currentRound);
+        matchingBusiness.operateMatching(matchingOperateRequest);
+
+        mockClock.mockTime(MockTime.THURSDAY);
+        dummyGenerator.generateAppliersToMatch(20L);
+        matchingOperateRequest = createOperateRequest(currentRound);
+        matchingBusiness.operateMatching(matchingOperateRequest);
     }
 }

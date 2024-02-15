@@ -42,7 +42,7 @@ public class MatchingController {
     @DeleteMapping("/applications")
     public SuccessResponse<String> cancelMatchingApplication(final @Login LoginMember loginMember) {
         return SuccessResponse.of(MatchingSuccess.CANCEL_MATCHING_APPLICATION_SUCCESS,
-                matchingApplicationService.deleteMatchingApplication(loginMember));
+                matchingApplicationService.cancelMatchingApplication(loginMember));
     }
 
     @GetMapping("/partners")

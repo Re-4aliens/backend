@@ -49,7 +49,7 @@ public class MatchingApplicationService {
     }
 
     @Transactional
-    public String deleteMatchingApplication(final LoginMember loginMember) {
+    public String cancelMatchingApplication(final LoginMember loginMember) {
         MatchingRound currentRound = getCurrentRound();
         checkReceptionTime(currentRound);
         MatchingApplication matchingApplication = getMatchingApplication(currentRound, loginMember);

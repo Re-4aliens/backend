@@ -21,7 +21,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -107,7 +106,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
         mockClock.mockTime(VALID_TIME);
 
         // when
-        matchingApplicationService.deleteMatchingApplication(loginMember);
+        matchingApplicationService.cancelMatchingApplication(loginMember);
 
         // then
         assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(loginMember))
@@ -122,7 +121,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
         mockClock.mockTime(INVALID_TIME);
 
         // when & then
-        assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(loginMember))
+        assertThatThrownBy(() -> matchingApplicationService.cancelMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME.getDevelopCode());
     }
 
@@ -132,7 +131,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
         // given
         mockClock.mockTime(VALID_TIME);
 
-        assertThatThrownBy(() -> matchingApplicationService.deleteMatchingApplication(loginMember))
+        assertThatThrownBy(() -> matchingApplicationService.cancelMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 

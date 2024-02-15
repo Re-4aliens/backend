@@ -25,7 +25,7 @@ public class MatchingBusiness {
         matchingTypeGroup.matchParticipants(participantGroup, languageQueue);
     }
 
-    public List<Participant> getParticipants() {
+    public List<Participant> getMatchedParticipants() {
         return participantGroup.getParticipants();
     }
 

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,7 +55,7 @@ class MatchingBusinessTest extends BaseServiceTest {
         dummyGenerator.generateAppliersToMatch(15L);
 
         matchingBusiness.operateMatching(matchingApplicationRepository.findAllByMatchingRound(currentRound));
-        List<Participant> result = matchingBusiness.getParticipants();
+        List<Participant> result = matchingBusiness.getMatchedParticipants();
 
         result.forEach(participant -> assertThat(participant.partners()).isNotNull());
     }

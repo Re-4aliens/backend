@@ -45,7 +45,7 @@ public class MatchingService {
         List<MatchingApplication> matchingApplications = getMatchingApplications(currentRound);
         matchingBusiness.operateMatching(matchingApplications);
 
-        List<Participant> matchedParticipants = matchingBusiness.getParticipants();
+        List<Participant> matchedParticipants = matchingBusiness.getMatchedParticipants();
         saveMatchingResult(currentRound, matchedParticipants);
     }
 

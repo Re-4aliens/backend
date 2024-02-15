@@ -76,6 +76,10 @@ public class MatchingRound {
         return now.isAfter(this.getRequestStartTime()) && now.isBefore(this.getRequestEndTime());
     }
 
+    public boolean isFirstRound() {
+        return round == 1;
+    }
+
     public Long getPreviousRound() {
         return round - 1;
     }

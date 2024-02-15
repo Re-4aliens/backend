@@ -18,7 +18,7 @@ public class MatchingResultGroup {
 
     public List<MatchingResult> getMatchingResultsWith(MatchingApplication matchingApplication) {
         List<MatchingResult> filteredMatchingResult = matchingResults.stream()
-                .filter(matchingResult -> matchingApplication.getMemberId().equals(matchingResult.getMatchedMemberId()))
+                .filter(matchingResult -> matchingApplication.getMemberId().equals(matchingResult.getMatchingMemberId()))
                 .toList();
         return filteredMatchingResult;
     }

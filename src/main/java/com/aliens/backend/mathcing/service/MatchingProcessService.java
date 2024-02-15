@@ -18,6 +18,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -94,6 +95,9 @@ public class MatchingProcessService {
     }
 
     private List<MatchingResult> getPreviousMatchingResult(MatchingRound matchingRound) {
+        if (matchingRound.isFirstRound()) {
+            return new ArrayList<>();
+        }
         MatchingRound previousMatchingRound = getPreviousMatchingRound(matchingRound);
         return matchingResultRepository.findAllByMatchingRound(previousMatchingRound);
     }

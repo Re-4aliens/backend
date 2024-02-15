@@ -7,6 +7,7 @@ import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.matching.util.time.MockClock;
+import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationResponse;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
@@ -25,7 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 
 import static com.aliens.backend.matching.util.time.MockTime.INVALID_RECEPTION_TIME;
-import static com.aliens.backend.matching.util.time.MockTime.VALID_RECEPTION_TIME;
+import static com.aliens.backend.matching.util.time.MockTime.VALID_RECEPTION_TIME_ON_MONDAY;
 import static org.assertj.core.api.Assertions.*;
 
 
@@ -39,21 +40,19 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
 
     LoginMember loginMember;
     MatchingApplicationRequest matchingApplicationRequest;
-    MatchingRound currentRound;
 
     @BeforeEach
     void setUp() {
-        createNewMatchingRound();
+        saveMatchRound(MockTime.MONDAY);
         loginMember = new LoginMember(1L, MemberRole.MEMBER);
         matchingApplicationRequest = new MatchingApplicationRequest(Language.KOREAN, Language.ENGLISH);
-        currentRound = getCurrentRound();
     }
 
     @Test
     @DisplayName("매칭 신청 단위 테스트")
     void applyMatchTest() {
         // given
-        mockClock.mockTime(VALID_RECEPTION_TIME);
+        mockClock.mockTime(VALID_RECEPTION_TIME_ON_MONDAY);
         Long expectedResult = loginMember.memberId();
 
         // when
@@ -103,7 +102,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     void deleteMatchingApplicationTest() {
         // given
         applyToMatch();
-        mockClock.mockTime(VALID_RECEPTION_TIME);
+        mockClock.mockTime(VALID_RECEPTION_TIME_ON_MONDAY);
 
         // when
         matchingApplicationService.cancelMatchingApplication(loginMember);
@@ -129,20 +128,21 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     @DisplayName("매칭을 신청하지 않은 사용자 매칭 삭제 요청 테스트")
     void deleteMatchIfNotApplied() {
         // given
-        mockClock.mockTime(VALID_RECEPTION_TIME);
+        mockClock.mockTime(VALID_RECEPTION_TIME_ON_MONDAY);
 
         assertThatThrownBy(() -> matchingApplicationService.cancelMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
 
     private void applyToMatch() {
-        mockClock.mockTime(VALID_RECEPTION_TIME);
+        mockClock.mockTime(VALID_RECEPTION_TIME_ON_MONDAY);
         matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
     }
 
-    private void createNewMatchingRound() {
-        LocalDateTime roundBeginTime = LocalDateTime.of(2024, 1, 29, 0, 0);
-        matchingRoundRepository.save(MatchingRound.from(roundBeginTime, matchingTimeProperties));
+    private void saveMatchRound(MockTime mockTime) {
+        mockClock.mockTime(mockTime);
+        MatchingRound matchingRound = MatchingRound.from(mockTime.getTime(), matchingTimeProperties);
+        matchingRoundRepository.save(matchingRound);
     }
 
     private MatchingRound getCurrentRound() {
@@ -152,7 +152,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
 
     private MatchingApplication findMatchingApplication(LoginMember loginMember) {
         return matchingApplicationRepository
-                .findById(MatchingApplicationId.of(currentRound, loginMember.memberId()))
+                .findById(MatchingApplicationId.of(getCurrentRound(), loginMember.memberId()))
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
     }
 }

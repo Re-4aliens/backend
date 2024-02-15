@@ -72,5 +72,4 @@ public class MatchingApplicationService {
             throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
         }
     }
-
 }

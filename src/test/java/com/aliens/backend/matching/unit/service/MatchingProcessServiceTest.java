@@ -21,10 +21,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class MatchingProcessServiceTest extends BaseServiceTest {
@@ -35,30 +37,58 @@ class MatchingProcessServiceTest extends BaseServiceTest {
     @Autowired MockClock mockClock;
     @Autowired DummyGenerator dummyGenerator;
 
-    MatchingRound currentRound;
     LoginMember loginMember;
 
     @BeforeEach
     void setUp() {
         loginMember = new LoginMember(1L, MemberRole.MEMBER);
-        LocalDateTime roundBeginTime = LocalDateTime.of(2024, 1, 29, 0, 0);
-        matchingRoundRepository.save(MatchingRound.from(roundBeginTime, matchingTimeProperties));
-        currentRound = getCurrentRound();
+        saveMatchRound(MockTime.MONDAY);
     }
 
     @Test
     @DisplayName("매칭 결과 조회")
     void operateMatchingTest() {
         // given
-        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
         dummyGenerator.generateAppliersToMatch(20L);
 
         // when
         matchingProcessService.operateMatching();
 
         // then
-        List<MatchingResult> result = matchingResultRepository.findAllByMatchingRound(currentRound);
+        List<MatchingResult> result = matchingResultRepository.findAllByMatchingRound(getCurrentRound());
         Assertions.assertThat(result).isNotNull();
+    }
+
+    @Test
+    @DisplayName("연속 매칭 테스트")
+    void operateMatchingTwice() {
+        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
+        saveMatchRound(MockTime.THURSDAY);
+        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_THURSDAY);
+    }
+
+    @Test
+    @DisplayName("직전 회차에 매칭된 사용자와 매칭되지 않는 기능 테스트")
+    void isDuplicateMatchingTest() {
+        // given & when
+        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
+        List<MatchingResult> firstRoundResult = getMatchingResultByMatchingRound(getCurrentRound());
+        saveMatchRound(MockTime.THURSDAY);
+        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_THURSDAY);
+        List<MatchingResult> secondRoundResult = getMatchingResultByMatchingRound(getCurrentRound());
+
+        Map<Long, Set<Long>> matchedMembersInSecondRound = secondRoundResult.stream()
+                .collect(Collectors.groupingBy(
+                        MatchingResult::getMatchingMemberId,
+                        Collectors.mapping(MatchingResult::getMatchedMemberId, Collectors.toSet())
+                ));
+
+        // then
+        firstRoundResult.forEach(first -> {
+            Set<Long> matchedMemberIds = matchedMembersInSecondRound.get(first.getMatchingMemberId());
+            assertThat(matchedMemberIds).doesNotContain(first.getMatchedMemberId());
+        });
     }
 
     @Test
@@ -71,5 +101,21 @@ class MatchingProcessServiceTest extends BaseServiceTest {
     private MatchingRound getCurrentRound() {
         return matchingRoundRepository.findCurrentRound()
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+    }
+
+    private void saveMatchRound(MockTime mockTime) {
+        mockClock.mockTime(mockTime);
+        MatchingRound matchingRound = MatchingRound.from(mockTime.getTime(), matchingTimeProperties);
+        matchingRoundRepository.save(matchingRound);
+    }
+
+    private void operateMatching(MockTime mockTime) {
+        mockClock.mockTime(mockTime);
+        dummyGenerator.generateAppliersToMatch(20L);
+        matchingProcessService.operateMatching();
+    }
+
+    private List<MatchingResult> getMatchingResultByMatchingRound(MatchingRound matchingRound) {
+        return matchingResultRepository.findAllByMatchingRound(matchingRound);
     }
 }

@@ -8,6 +8,7 @@ import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
+import com.aliens.backend.mathcing.business.model.Partner;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingResult;
@@ -17,16 +18,18 @@ import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingProcessService;
 import com.aliens.backend.mathcing.business.model.Participant;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MatchingBusinessTest extends BaseServiceTest {
@@ -39,37 +42,20 @@ class MatchingBusinessTest extends BaseServiceTest {
     @Autowired MatchingTimeProperties matchingTimeProperties;
     @Autowired MockClock mockClock;
 
-    MatchingRound currentRound;
     MatchingOperateRequest matchingOperateRequest;
 
     @BeforeEach
     void setUp() {
-        LocalDateTime roundBeginTime = LocalDateTime.of(2024, 1, 29, 0, 0);
-        matchingRoundRepository.save(MatchingRound.from(roundBeginTime, matchingTimeProperties));
-        currentRound = getCurrentRound();
+        saveMatchRound(MockTime.MONDAY);
     }
 
     @Test
     @DisplayName("매칭 로직 실행 테스트")
     void matchingLogicTest() {
-        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME);
-        dummyGenerator.generateAppliersToMatch(20L);
-        matchingOperateRequest = createOperateRequest(currentRound);
-
-        matchingBusiness.operateMatching(matchingOperateRequest);
+        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
 
         List<Participant> result = matchingBusiness.getMatchedParticipants();
         result.forEach(participant -> assertThat(participant.partners()).isNotNull());
-    }
-
-    @Test
-    @DisplayName("직전 회차에 매칭된 사용자와 매칭되지 않는 기능 테스트")
-    void isDuplicateMatchingTest() {
-        // given & when
-        operateMatchingTwice();
-
-        // then
-        System.out.println();
     }
 
     private MatchingRound getCurrentRound() {
@@ -88,6 +74,9 @@ class MatchingBusinessTest extends BaseServiceTest {
     }
 
     private List<MatchingResult> getPreviousMatchingResult(MatchingRound matchingRound) {
+        if (matchingRound.isFirstRound()) {
+            return new ArrayList<>();
+        }
         MatchingRound previousMatchingRound = getPreviousMatchingRound(matchingRound);
         return matchingResultRepository.findAllByMatchingRound(previousMatchingRound);
     }
@@ -98,15 +87,16 @@ class MatchingBusinessTest extends BaseServiceTest {
         return MatchingOperateRequest.of(matchingApplications, previousMatchingResult);
     }
 
-    private void operateMatchingTwice() {
-        mockClock.mockTime(MockTime.MONDAY);
-        dummyGenerator.generateAppliersToMatch(20L);
-        matchingOperateRequest = createOperateRequest(currentRound);
-        matchingBusiness.operateMatching(matchingOperateRequest);
+    private void saveMatchRound(MockTime mockTime) {
+        mockClock.mockTime(mockTime);
+        MatchingRound matchingRound = MatchingRound.from(mockTime.getTime(), matchingTimeProperties);
+        matchingRoundRepository.save(matchingRound);
+    }
 
-        mockClock.mockTime(MockTime.THURSDAY);
+    private void operateMatching(MockTime mockTime) {
+        mockClock.mockTime(mockTime);
         dummyGenerator.generateAppliersToMatch(20L);
-        matchingOperateRequest = createOperateRequest(currentRound);
+        matchingOperateRequest = createOperateRequest(getCurrentRound());
         matchingBusiness.operateMatching(matchingOperateRequest);
     }
 }

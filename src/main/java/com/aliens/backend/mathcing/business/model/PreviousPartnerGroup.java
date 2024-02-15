@@ -20,4 +20,11 @@ public class PreviousPartnerGroup {
     public boolean contains(Participant participant) {
         return previousPartners.contains(participant.memberId());
     }
+
+    @Override
+    public String toString() {
+        return "PreviousPartnerGroup{" +
+                "previousPartners=" + previousPartners +
+                '}';
+    }
 }

@@ -7,7 +7,7 @@ import java.util.Queue;
 public class CandidateGroup {
     private final Queue<Participant> candidateQueue;
 
-    public CandidateGroup(final Queue<Participant> candidateQueue) {
+    private CandidateGroup(final Queue<Participant> candidateQueue) {
         this.candidateQueue = candidateQueue;
     }
 

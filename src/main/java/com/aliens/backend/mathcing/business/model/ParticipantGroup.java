@@ -43,9 +43,10 @@ public class ParticipantGroup {
     }
 
     public ParticipantGroup getParticipantsLessThan(final int numberOfPartner) {
-        return toGroup(participants.stream()
-                .filter(participant -> participant.getNumberOfPartners() < numberOfPartner)
-                .collect(Collectors.toList()));
+        List<Participant> filteredParticipants = participants.stream()
+                .filter(participant -> participant.getNumberOfPartners() < numberOfPartner).toList());
+        ParticipantGroup participantGroup = toGroup(filteredParticipants);
+        return participantGroup;
     }
 
     public List<Participant> getParticipantsByLanguage(Language language) {

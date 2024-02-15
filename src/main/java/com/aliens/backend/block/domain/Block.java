@@ -27,4 +27,12 @@ public class Block {
         block.blockedMember = blockedMember;
         return block;
     }
+
+    public Member getBlockingMember() {
+        return blockingMember;
+    }
+
+    public Member getBlockedMember() {
+        return blockedMember;
+    }
 }

@@ -14,8 +14,8 @@ public class RandomType implements MatchingType {
 
     @Override
     public void doMatch(final ParticipantGroup participantGroup, final LanguageQueue languageQueue) {
-        ParticipantGroup participants = participantGroup.getParticipantsLessThan(matchingRuleProperties.getMaxNormalPartners());
-        participants.updateToSpecialRelationshipMode();
-        participants.matchAllWith(CandidateGroup.of(participants));
+        ParticipantGroup remainedParticipants = participantGroup.getParticipantsLessThan(matchingRuleProperties.getMaxNormalPartners());
+        remainedParticipants.updateToSpecialRelationshipMode();
+        remainedParticipants.matchAllWith(CandidateGroup.of(remainedParticipants));
     }
 }

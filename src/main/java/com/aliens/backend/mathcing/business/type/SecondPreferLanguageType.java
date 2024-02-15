@@ -14,7 +14,7 @@ public class SecondPreferLanguageType implements MatchingType {
 
     @Override
     public void doMatch(final ParticipantGroup participantGroup, final LanguageQueue languageQueue) {
-        ParticipantGroup participants = participantGroup.getParticipantsLessThan(matchingRuleProperties.getMaxNormalPartners());
-        participants.matchEachWith(languageQueue, MatchingMode.SECOND_PREFER_LANGUAGE);
+        ParticipantGroup remainedParticipants = participantGroup.getParticipantsLessThan(matchingRuleProperties.getMaxNormalPartners());
+        remainedParticipants.matchEachWith(languageQueue, MatchingMode.SECOND_PREFER_LANGUAGE);
     }
 }

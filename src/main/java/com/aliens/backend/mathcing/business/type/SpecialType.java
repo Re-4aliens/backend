@@ -14,8 +14,8 @@ public class SpecialType implements MatchingType {
 
     @Override
     public void doMatch(final ParticipantGroup participantGroup, final LanguageQueue languageQueue) {
-        ParticipantGroup participants = participantGroup.getParticipantsLessThan(matchingRuleProperties.getMaxPartners());
-        participants.updateToSpecialRelationshipMode();
-        participants.matchAllWith(CandidateGroup.of(participants));
+        ParticipantGroup remainedParticipants = participantGroup.getParticipantsLessThan(matchingRuleProperties.getMaxPartners());
+        remainedParticipants.updateToSpecialRelationshipMode();
+        remainedParticipants.matchAllWith(CandidateGroup.of(remainedParticipants));
     }
 }

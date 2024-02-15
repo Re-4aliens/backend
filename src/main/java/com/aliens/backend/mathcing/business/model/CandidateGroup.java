@@ -10,7 +10,7 @@ public class CandidateGroup {
         this.candidateQueue = candidateQueue;
     }
 
-    public static CandidateGroup init() {
+    public static CandidateGroup initWithEmpty() {
         return new CandidateGroup(new LinkedList<>());
     }
 

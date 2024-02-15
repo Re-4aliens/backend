@@ -31,7 +31,7 @@ public class MatchingBusiness {
 
     private void initialize(final List<MatchingApplication> matchingApplications) {
         participantGroup = ParticipantGroup.from(matchingApplications, matchingRuleProperties);
-        languageQueue = LanguageQueue.from(participantGroup);
+        languageQueue = LanguageQueue.classifyByLanguage(participantGroup);
         matchingTypeGroup = MatchingTypeGroup.init(matchingRuleProperties);
     }
 }

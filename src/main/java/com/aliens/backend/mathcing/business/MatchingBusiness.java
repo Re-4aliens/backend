@@ -22,7 +22,7 @@ public class MatchingBusiness {
     public void operateMatching(List<MatchingApplication> matchingApplications) {
         initialize(matchingApplications);
 
-        matchingTypeGroup.getMatchingTypes().forEach(matchingType -> matchingType.doMatch(participantGroup, languageQueue));
+        matchingTypeGroup.matchParticipants(participantGroup, languageQueue);
     }
 
     public List<Participant> getParticipants() {

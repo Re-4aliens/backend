@@ -6,7 +6,7 @@ import com.aliens.backend.mathcing.business.type.*;
 import java.util.List;
 
 public class MatchingTypeGroup {
-    private List<MatchingType> matchingTypes;
+    private final List<MatchingType> matchingTypes;
 
     private MatchingTypeGroup(final List<MatchingType> matchingTypes) {
         this.matchingTypes = matchingTypes;
@@ -20,7 +20,7 @@ public class MatchingTypeGroup {
                         new SpecialType(matchingRuleProperties)));
     }
 
-    public List<MatchingType> getMatchingTypes() {
-        return matchingTypes;
+    public void matchParticipants(ParticipantGroup participantGroup, LanguageQueue languageQueue) {
+        matchingTypes.forEach(types -> types.doMatch(participantGroup, languageQueue));
     }
 }

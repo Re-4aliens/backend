@@ -1,9 +1,12 @@
 package com.aliens.backend.mathcing.business.model;
 
 import com.aliens.backend.global.property.MatchingRuleProperties;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
+import com.aliens.backend.mathcing.domain.MatchingResult;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ParticipantGroup {
@@ -18,9 +21,20 @@ public class ParticipantGroup {
         this.relationship = Relationship.NORMAL;
     }
 
-    public static ParticipantGroup from(final List<MatchingApplication> matchingApplications,
+    public static ParticipantGroup from(final MatchingOperateRequest matchingOperateRequest,
                                         final MatchingRuleProperties matchingRuleProperties) {
-        List<Participant> participants = matchingApplications.stream().map(Participant::of).collect(Collectors.toList());
+        List<MatchingApplication> matchingApplications = matchingOperateRequest.matchingApplications();
+        List<MatchingResult> previousMatchingResults = matchingOperateRequest.previousMatchingResults();
+
+        List<Participant> participants = matchingApplications.stream()
+                .map(matchingApplication -> {
+                    Set<Long> previousPartners = previousMatchingResults.stream()
+                            .filter(matchingResult -> matchingResult.getMatchingMemberId().equals(matchingApplication.getMemberId()))
+                            .map(MatchingResult::getMatchedMemberId)
+                            .collect(Collectors.toSet());
+                    return Participant.from(matchingApplication, previousPartners);
+                }).collect(Collectors.toList());
+
         return new ParticipantGroup(participants, matchingRuleProperties);
     }
 

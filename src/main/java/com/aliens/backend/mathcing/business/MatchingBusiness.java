@@ -2,7 +2,7 @@ package com.aliens.backend.mathcing.business;
 
 import com.aliens.backend.global.property.MatchingRuleProperties;
 import com.aliens.backend.mathcing.business.model.*;
-import com.aliens.backend.mathcing.domain.MatchingApplication;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -19,8 +19,8 @@ public class MatchingBusiness {
         this.matchingRuleProperties = matchingRuleProperties;
     }
 
-    public void operateMatching(List<MatchingApplication> matchingApplications) {
-        initialize(matchingApplications);
+    public void operateMatching(final MatchingOperateRequest matchingOperateRequest) {
+        initialize(matchingOperateRequest);
 
         matchingTypeGroup.getMatchingTypes().forEach(matchingType -> matchingType.doMatch(participantGroup, languageQueue));
     }
@@ -29,8 +29,8 @@ public class MatchingBusiness {
         return participantGroup.getParticipants();
     }
 
-    private void initialize(final List<MatchingApplication> matchingApplications) {
-        participantGroup = ParticipantGroup.from(matchingApplications, matchingRuleProperties);
+    private void initialize(final MatchingOperateRequest matchingOperateRequest) {
+        participantGroup = ParticipantGroup.from(matchingOperateRequest, matchingRuleProperties); // TODO : 이전 매칭 기록, 차단 목록 주고 만들도록 시킴
         languageQueue = LanguageQueue.from(participantGroup);
         matchingTypeGroup = MatchingTypeGroup.init(matchingRuleProperties);
     }

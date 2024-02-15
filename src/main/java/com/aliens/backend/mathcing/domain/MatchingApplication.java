@@ -58,12 +58,6 @@ public class MatchingApplication {
                 matchingApplicationRequest.secondPreferLanguage());
     }
 
-    public static List<Participant> toParticipantList(final List<MatchingApplication> matchingApplications) {
-        return matchingApplications.stream()
-                .map(Participant::of)
-                .collect(Collectors.toList());
-    }
-
     public Long getMemberId() {
         return id.getMemberId();
     }

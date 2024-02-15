@@ -4,6 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingResult;
@@ -26,8 +27,6 @@ public class MatchingService {
     private final MatchingResultRepository matchingResultRepository;
     private final MatchingBusiness matchingBusiness;
 
-    private MatchingRound currentRound;
-
     public MatchingService(final MatchingRoundRepository matchingRoundRepository,
                            final MatchingApplicationRepository matchingApplicationRepository,
                            final MatchingResultRepository matchingResultRepository,
@@ -42,8 +41,9 @@ public class MatchingService {
     @Transactional
     public void operateMatching() {
         MatchingRound currentRound = getCurrentRound();
-        List<MatchingApplication> matchingApplications = getMatchingApplications(currentRound);
-        matchingBusiness.operateMatching(matchingApplications);
+        MatchingOperateRequest matchingOperateRequest = createOperateRequest(currentRound);
+
+        matchingBusiness.operateMatching(matchingOperateRequest); // TODO : 이전 매칭 기록, 차단 유저 목록 제공해서 본인이 리스트들 갖고 있게 하기
 
         List<Participant> matchedParticipants = matchingBusiness.getParticipants();
         saveMatchingResult(currentRound, matchedParticipants);
@@ -85,5 +85,22 @@ public class MatchingService {
 
     private List<MatchingApplication> getMatchingApplications(final MatchingRound matchingRound) {
         return matchingApplicationRepository.findAllByMatchingRound(matchingRound);
+    }
+
+    private MatchingRound getPreviousMatchingRound(MatchingRound matchingRound) {
+        Long previousRound = matchingRound.getRound() - 1;
+        return matchingRoundRepository.findMatchingRoundByRound(previousRound)
+                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+    }
+
+    private List<MatchingResult> getPreviousMatchingResult(MatchingRound matchingRound) {
+        MatchingRound previousMatchingRound = getPreviousMatchingRound(matchingRound);
+        return matchingResultRepository.findAllByMatchingRound(previousMatchingRound);
+    }
+
+    private MatchingOperateRequest createOperateRequest(MatchingRound matchingRound) {
+        List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
+        List<MatchingResult> previousMatchingResult = getPreviousMatchingResult(matchingRound);
+        return MatchingOperateRequest.of(matchingApplications, previousMatchingResult);
     }
 }

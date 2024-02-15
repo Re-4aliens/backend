@@ -1,6 +1,7 @@
 package com.aliens.backend.event;
 
 import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.chat.controller.dto.event.ChatRoomBlockEvent;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomCreationEvent;
 import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.chat.service.model.MemberPair;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
@@ -33,6 +35,7 @@ class EventPublisherTest extends BaseServiceTest {
     String givenType = "normal";
     String giveContent = "content";
     String givenToken = "token";
+    Long givenChatRoomId = 1L;
 
     @Test
     @DisplayName("단일 메시지 이벤트 발행 및 전송 ")
@@ -74,6 +77,20 @@ class EventPublisherTest extends BaseServiceTest {
 
         // Then
         verify(chatService, times(1)).handleChatRoomCreationEvent(event);
+    }
+
+    @Test
+    @DisplayName("채팅방 차단 이벤트 발행 및 처리")
+    void handleChatRoomBlockEventTest() {
+        // Given
+        ChatRoomBlockEvent event = new ChatRoomBlockEvent(givenChatRoomId);
+        doNothing().when(chatService).handleChatRoomBlockEvent(event);
+
+        // When
+        publisher.publishEvent(event);
+
+        // Then
+        verify(chatService, times(1)).handleChatRoomBlockEvent(event);
     }
 
     private Set<MemberPair> generateMultiMemberPair(Integer memberCount) {

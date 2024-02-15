@@ -1,10 +1,11 @@
 package com.aliens.backend.mathcing.business.model;
 
 import com.aliens.backend.global.property.MatchingRuleProperties;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
+import com.aliens.backend.mathcing.domain.MatchingResult;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ParticipantGroup {
     private final List<Participant> participants;
@@ -18,9 +19,16 @@ public class ParticipantGroup {
         this.relationship = Relationship.NORMAL;
     }
 
-    public static ParticipantGroup from(final List<MatchingApplication> matchingApplications,
+    public static ParticipantGroup from(final MatchingOperateRequest matchingOperateRequest,
                                         final MatchingRuleProperties matchingRuleProperties) {
-        List<Participant> participants = matchingApplications.stream().map(Participant::of).collect(Collectors.toList());
+        List<MatchingApplication> matchingApplications = matchingOperateRequest.matchingApplications();
+        MatchingResultGroup previousMatchingResultGroup = matchingOperateRequest.previousMatchingResult();
+
+        List<Participant> participants = matchingApplications.stream()
+                .map(matchingApplication -> {
+                    List<MatchingResult> previousMatchingResults = previousMatchingResultGroup.getMatchingResultsWith(matchingApplication);
+                    return Participant.from(matchingApplication, previousMatchingResults);
+                }).toList();
         return new ParticipantGroup(participants, matchingRuleProperties);
     }
 
@@ -45,8 +53,7 @@ public class ParticipantGroup {
     public ParticipantGroup getParticipantsLessThan(final int numberOfPartner) {
         List<Participant> filteredParticipants = participants.stream()
                 .filter(participant -> participant.getNumberOfPartners() < numberOfPartner).toList();
-        ParticipantGroup participantGroup = toGroup(filteredParticipants);
-        return participantGroup;
+        return new ParticipantGroup(filteredParticipants, matchingRuleProperties);
     }
 
     public List<Participant> getParticipantsByLanguage(Language language) {
@@ -89,8 +96,8 @@ public class ParticipantGroup {
                                     final Participant participant,
                                     final Participant partner) {
         return participant != partner &&
-                !participant.isPartnerWith(partner) &&
-                !partner.isPartnerWith(participant) &&
+                !hasMetBetween(participant, partner) &&
+                !isPartnerBetween(participant, partner) &&
                 !isExceededMaxPartners(relationship, partner);
     }
 
@@ -101,11 +108,15 @@ public class ParticipantGroup {
         return participant.getNumberOfPartners() >= matchingRuleProperties.getMaxPartners(); // 5
     }
 
-    private boolean isExceedMaxTries(int tries) {
-        return tries > matchingRuleProperties.getMaxTries();
+    private boolean hasMetBetween(final Participant participant, final Participant partner) {
+        return participant.hasMetPreviousRound(partner) || partner.hasMetPreviousRound(participant);
     }
 
-    private ParticipantGroup toGroup(List<Participant> participants) {
-        return new ParticipantGroup(participants, matchingRuleProperties);
+    private boolean isPartnerBetween(final Participant participant, final Participant partner) {
+        return participant.isPartnerWith(partner) || partner.isPartnerWith(participant);
+    }
+
+    private boolean isExceedMaxTries(int tries) {
+        return tries > matchingRuleProperties.getMaxTries();
     }
 }

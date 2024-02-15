@@ -44,7 +44,7 @@ public class ChatService {
 
     public ChatSummaryResponse getChatSummaries(LoginMember loginMember) {
         List<ChatRoom> chatRooms = chatRoomRepository.findByMemberId(loginMember.memberId());
-        List<Long> chatRoomIds = chatRooms.stream().map(ChatRoom::getRoomId).toList();
+        List<Long> chatRoomIds = chatRooms.stream().map(ChatRoom::getId).toList();
         List<ChatMessageSummary> chatMessageSummaries = messageRepository.aggregateMessageSummaries(chatRoomIds, loginMember.memberId());
         ChatSummaryResponse chatSummaryResponse = new ChatSummaryResponse(chatRooms, chatMessageSummaries);
         return chatSummaryResponse;

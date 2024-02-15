@@ -28,11 +28,11 @@ public class Block {
         return block;
     }
 
-    public Member getBlockingMember() {
-        return blockingMember;
+    public Long getBlockingMemberId() {
+        return blockingMember.getId();
     }
 
-    public Member getBlockedMember() {
-        return blockedMember;
+    public Long getBlockedMember() {
+        return blockedMember.getId();
     }
 }

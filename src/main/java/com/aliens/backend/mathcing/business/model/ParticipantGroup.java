@@ -33,7 +33,7 @@ public class ParticipantGroup {
     public void matchEachWith(LanguageQueue languageQueue, MatchingMode matchingMode) {
         for (Participant participant : participants) {
             Language preferLanguage = participant.getPreferLanguage(matchingMode);
-            CandidateGroup candidateGroup = languageQueue.get(preferLanguage);
+            CandidateGroup candidateGroup = languageQueue.getCandidateGroupByLanguage(preferLanguage);
             tryMatchBetween(participant, candidateGroup);
         }
     }

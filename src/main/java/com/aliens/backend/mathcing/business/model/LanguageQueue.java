@@ -18,7 +18,7 @@ public class LanguageQueue {
         return new LanguageQueue(languageQueue);
     }
 
-    public CandidateGroup get(final Language language) {
+    public CandidateGroup getCandidateGroupByLanguage(final Language language) {
         return languageQueue.get(language);
     }
 

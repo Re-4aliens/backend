@@ -1,7 +1,8 @@
 package com.aliens.backend.chat.domain;
 
-import com.aliens.backend.auth.domain.Member;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class ChatRoom {
@@ -10,32 +11,23 @@ public class ChatRoom {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column
     private Long id;
-
-    private Long roomId;
-
     @Column
     private ChatRoomStatus status;
-
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
-
-    @ManyToOne
-    @JoinColumn(name = "partner_id")
-    private Member partner;
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    private List<ChatParticipant> participants;
 
     protected ChatRoom() {
     }
 
-    public static ChatRoom of(final Member me, final Member partner) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.member = me;
-        chatRoom.partner = partner;
-        return chatRoom;
+    public ChatRoom(final ChatParticipant participant1, final ChatParticipant participant2) {
+        this.status = ChatRoomStatus.WAITING;
+        this.participants = List.of(participant1, participant2);
+        participant1.setChatRoom(this);
+        participant2.setChatRoom(this);
     }
 
-    public Long getRoomId() {
-        return roomId;
+    public Long getId() {
+        return id;
     }
 
     public ChatRoomStatus getStatus() {

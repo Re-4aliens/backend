@@ -1,6 +1,7 @@
 package com.aliens.backend.mathcing.business.model;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class CandidateGroup {
@@ -20,6 +21,10 @@ public class CandidateGroup {
 
     public void add(Participant participant) {
         candidateQueue.add(participant);
+    }
+
+    public void addAll(List<Participant> participants) {
+        candidateQueue.addAll(participants);
     }
 
     public Participant poll() {

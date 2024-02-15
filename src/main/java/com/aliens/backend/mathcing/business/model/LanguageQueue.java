@@ -31,11 +31,10 @@ public class LanguageQueue {
 
     private static void classifyParticipantsByLanguage(final Map<Language, CandidateGroup> languageQueue,
                                                        final ParticipantGroup participantGroup) {
-        participantGroup.getParticipants()
-                .forEach(participant -> {
-                    Language language = participant.getPreferLanguage(MatchingMode.FIRST_PREFER_LANGUAGE);
-                    CandidateGroup candidateGroup = languageQueue.get(language);
-                    candidateGroup.add(participant);
-                });
+        for (Language language : Language.values()) {
+            List<Participant> participants = participantGroup.getParticipantsByLanguage(language);
+            CandidateGroup candidateGroup = languageQueue.get(language);
+            candidateGroup.addAll(participants);
+        }
     }
 }

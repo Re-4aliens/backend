@@ -48,6 +48,10 @@ public class ParticipantGroup {
                 .collect(Collectors.toList()));
     }
 
+    public List<Participant> getParticipantsByLanguage(Language language) {
+        return participants.stream().filter(participant -> participant.firstPreferLanguage().equals(language)).toList();
+    }
+
     public List<Participant> getParticipants() {
         return participants;
     }

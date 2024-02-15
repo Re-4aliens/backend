@@ -82,4 +82,22 @@ public class ChatService {
     private List<Message> findMessages(Long chatRoomId, String lastMessageId) {
         return messageRepository.findMessages(chatRoomId,lastMessageId);
     }
+
+    @EventListener
+    public void handleChatRoomCreationEvent(ChatRoomCreationEvent event) {
+        createChatRooms(event.matchedPairs());
+    }
+
+    private void createChatRooms(Set<MemberPair> matchedPairs) {
+        List<ChatRoom> chatRooms = matchedPairs.stream()
+                .map(this::createChatRoom)
+                .toList();
+        chatRoomRepository.saveAll(chatRooms);
+    }
+
+    private ChatRoom createChatRoom(MemberPair pair) {
+        ChatParticipant participant1 = ChatParticipant.of(null, pair.first(), pair.second());
+        ChatParticipant participant2 = ChatParticipant.of(null, pair.second(), pair.first());
+        return new ChatRoom(participant1, participant2);
+    }
 }

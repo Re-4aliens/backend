@@ -6,23 +6,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class MatchingRuleProperties {
     @Value("${matching.rule.max-matches.partner}")
-    private String maxPartners;
+    private Integer maxPartners;
 
     @Value("${matching.rule.max-matches.normal-partner}")
-    private String maxNormalPartners;
+    private Integer maxNormalPartners;
 
     @Value("${matching.rule.max-tries}")
-    private String maxTries;
+    private Integer maxTries;
 
     public Integer getMaxNormalPartners() {
-        return Integer.parseInt(maxNormalPartners);
+        return maxNormalPartners;
     }
 
     public Integer getMaxTries() {
-        return Integer.parseInt(maxTries);
+        return maxTries;
     }
 
     public Integer getMaxPartners() {
-        return Integer.parseInt(maxPartners);
+        return maxPartners;
     }
 }

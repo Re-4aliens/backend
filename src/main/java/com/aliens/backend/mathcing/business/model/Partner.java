@@ -1,4 +1,4 @@
-package com.aliens.backend.mathcing.service.model;
+package com.aliens.backend.mathcing.business.model;
 
 public record Partner(
         Relationship relationship,

@@ -27,4 +27,12 @@ public class Block {
         block.blockedMember = blockedMember;
         return block;
     }
+
+    public Long getBlockingMemberId() {
+        return blockingMember.getId();
+    }
+
+    public Long getBlockedMemberId() {
+        return blockedMember.getId();
+    }
 }

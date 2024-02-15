@@ -1,7 +1,7 @@
 package com.aliens.backend.mathcing.domain;
 
 import com.aliens.backend.mathcing.domain.id.MatchingResultId;
-import com.aliens.backend.mathcing.service.model.Relationship;
+import com.aliens.backend.mathcing.business.model.Relationship;
 import jakarta.persistence.*;
 
 @Entity
@@ -24,12 +24,19 @@ public class MatchingResult {
                                     Long matchingMemberId,
                                     Long matchedMemberId,
                                     Relationship relationship) {
-        return new MatchingResult(
-                MatchingResultId.of(matchingRound, matchingMemberId, matchedMemberId), relationship);
+        return new MatchingResult(MatchingResultId.of(matchingRound, matchingMemberId, matchedMemberId), relationship);
     }
 
-    public MatchingResultId getId() {
-        return id;
+    public MatchingRound getMatchingRound() {
+        return id.getMatchingRound();
+    }
+
+    public Long getMatchingMemberId() {
+        return id.getMatchingMemberId();
+    }
+
+    public Long getMatchedMemberId() {
+        return id.getMatchedMemberId();
     }
 
     public Relationship getRelationship() {

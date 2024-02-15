@@ -1,8 +1,10 @@
-package com.aliens.backend.mathcing.service.model;
+package com.aliens.backend.mathcing.business.model;
 
+import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
+import com.aliens.backend.mathcing.domain.MatchingResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,9 @@ public record Participant(
         Long memberId,
         Language firstPreferLanguage,
         Language secondPreferLanguage,
-        List<Partner> partners
+        List<Partner> partners,
+        PreviousPartnerGroup previousPartnerGroup,
+        BlockedPartnerGroup blockedPartnerGroup
 ) {
     public Language getPreferLanguage(MatchingMode matchingMode) {
         if (matchingMode.equals(MatchingMode.FIRST_PREFER_LANGUAGE)) {
@@ -23,14 +27,20 @@ public record Participant(
         throw new RestApiException(MatchingError.NOT_FOUND_PREFER_LANGUAGE);
     }
 
-    public static Participant of(final MatchingApplication matchingApplication) {
+    public static Participant from(final MatchingApplication matchingApplication,
+                                   final List<MatchingResult> previousMatchingResults,
+                                   final List<Block> blockHistories) {
+        PreviousPartnerGroup previousPartnerGroup = PreviousPartnerGroup.from(previousMatchingResults);
+        BlockedPartnerGroup blockedPartnerGroup = BlockedPartnerGroup.from(blockHistories);
+
         return new Participant(
-                matchingApplication.getId().getMemberId(),
+                matchingApplication.getMemberId(),
                 matchingApplication.getFirstPreferLanguage(),
                 matchingApplication.getSecondPreferLanguage(),
-                new ArrayList<>()
+                new ArrayList<>(), previousPartnerGroup, blockedPartnerGroup
         );
     }
+
     public int getNumberOfPartners() {
         return partners.size();
     }
@@ -46,5 +56,13 @@ public record Participant(
             }
         }
         return false;
+    }
+
+    public boolean hasMetPreviousRound(Participant participant) {
+        return previousPartnerGroup.contains(participant);
+    }
+
+    public boolean hasBlocked(Participant participant) {
+        return blockedPartnerGroup.contains(participant);
     }
 }

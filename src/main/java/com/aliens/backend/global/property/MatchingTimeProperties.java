@@ -8,35 +8,35 @@ import java.time.DayOfWeek;
 @Component
 public class MatchingTimeProperties {
     @Value("${matching.request.time.hours}")
-    private String matchingRequestAvailableTime;
+    private Long requestAvailableTime;
 
     @Value("${matching.valid.time.hours}")
-    private String matchingValidBeginHours;
+    private Integer validBeginHours;
 
     @Value("${matching.valid.day-of-week.if.monday.hours}")
-    private String mondayMatchingValidHours;
+    private Long mondayMatchingValidHours;
 
     @Value("${matching.valid.day-of-week.if.thursday.hours}")
-    private String thursdayMatchingValidHours;
+    private Long thursdayMatchingValidHours;
 
     @Value("${matching.valid.day-of-week.if.default.hours}")
-    private String defaultMatchingValidHours;
+    private Long defaultMatchingValidHours;
 
-    public Long getMatchingRequestAvailableTime() {
-        return Long.parseLong(matchingRequestAvailableTime);
+    public Long getRequestAvailableTime() {
+        return requestAvailableTime;
     }
 
-    public Integer getMatchingValidBeginHours() {
-        return Integer.parseInt(matchingValidBeginHours);
+    public Integer getValidBeginHours() {
+        return validBeginHours;
     }
 
     public Long getMatchingValidHours(final DayOfWeek dayOfWeek) {
         if (dayOfWeek.equals(DayOfWeek.MONDAY)) {
-            return Long.parseLong(mondayMatchingValidHours);
+            return mondayMatchingValidHours;
         }
         if (dayOfWeek.equals(DayOfWeek.THURSDAY)) {
-            return Long.parseLong(thursdayMatchingValidHours);
+            return thursdayMatchingValidHours;
         }
-        return Long.parseLong(defaultMatchingValidHours);
+        return defaultMatchingValidHours;
     }
 }

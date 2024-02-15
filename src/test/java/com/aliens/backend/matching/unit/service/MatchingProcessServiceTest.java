@@ -1,7 +1,10 @@
 package com.aliens.backend.matching.unit.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
-import com.aliens.backend.auth.domain.MemberRole;
+import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.block.controller.dto.BlockRequest;
+import com.aliens.backend.block.domain.Block;
+import com.aliens.backend.block.domain.repository.BlockRepository;
 import com.aliens.backend.global.BaseServiceTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.response.error.MatchingError;
@@ -25,8 +28,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class MatchingProcessServiceTest extends BaseServiceTest {
@@ -34,26 +35,23 @@ class MatchingProcessServiceTest extends BaseServiceTest {
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
     @Autowired MatchingResultRepository matchingResultRepository;
+    @Autowired BlockRepository blockRepository;
     @Autowired MockClock mockClock;
     @Autowired DummyGenerator dummyGenerator;
 
-    LoginMember loginMember;
+    List<Member> members;
 
     @BeforeEach
     void setUp() {
-        loginMember = new LoginMember(1L, MemberRole.MEMBER);
+        members = dummyGenerator.generateMultiMember(20);
         saveMatchRound(MockTime.MONDAY);
     }
 
     @Test
     @DisplayName("매칭 결과 조회")
     void operateMatchingTest() {
-        // given
-        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
-        dummyGenerator.generateAppliersToMatch(20L);
-
-        // when
-        matchingProcessService.operateMatching();
+        // given & when
+        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
 
         // then
         List<MatchingResult> result = matchingResultRepository.findAllByMatchingRound(getCurrentRound());
@@ -94,12 +92,26 @@ class MatchingProcessServiceTest extends BaseServiceTest {
     @Test
     @DisplayName("차단된 유저와 매칭이 되지 않는지 테스트")
     void isBlockedMemberTest() {
+        // given
+        Member blockingMember = members.get(0);
+        makeThisMemberBlockAllPartner(blockingMember);
 
+        // when
+        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
+
+        // then
+        List<MatchingResult> matchingResults = getMatchingResultByMatchingRound(getCurrentRound());
+        List<MatchingResult> matchingResultsOfBlockingMember = matchingResults.stream()
+                .filter(matchingResult -> matchingResult.getMatchingMemberId().equals(blockingMember.getId())).toList();
+        assertThat(matchingResultsOfBlockingMember).isEmpty();
     }
 
     @Test
     @DisplayName("매칭을 신청한 적이 없는 회원이 매칭 조회")
     void getMatchingResultTest() {
+        Member member = members.get(0);
+        LoginMember loginMember = member.getLoginMember();
+
         assertThatThrownBy(() -> matchingProcessService.findMatchingResult(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
@@ -123,5 +135,13 @@ class MatchingProcessServiceTest extends BaseServiceTest {
 
     private List<MatchingResult> getMatchingResultByMatchingRound(MatchingRound matchingRound) {
         return matchingResultRepository.findAllByMatchingRound(matchingRound);
+    }
+
+    private void makeThisMemberBlockAllPartner(Member blockingMember) {
+        for (int i = 1; i < members.size(); i++) {
+            Member blockedMember = members.get(i);
+            Block blockRequest = Block.of(blockingMember, blockedMember);
+            blockRepository.save(blockRequest);
+        }
     }
 }

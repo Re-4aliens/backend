@@ -32,7 +32,7 @@ public class Block {
         return blockingMember.getId();
     }
 
-    public Long getBlockedMember() {
+    public Long getBlockedMemberId() {
         return blockedMember.getId();
     }
 }

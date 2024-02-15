@@ -3,8 +3,6 @@ package com.aliens.backend.chatting.service;
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.chat.controller.dto.request.ChatReportRequest;
-import com.aliens.backend.chat.domain.ChatRoom;
-import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
 import com.aliens.backend.chat.service.ChatReportService;
 import com.aliens.backend.global.BaseServiceTest;
 import com.aliens.backend.global.DummyGenerator;
@@ -22,12 +20,11 @@ import java.util.List;
 class ChatReportServiceTest extends BaseServiceTest {
 
     @Autowired ChatReportService chatReportService;
-    @Autowired ChatRoomRepository chatRoomRepository;
     @Autowired DummyGenerator dummyGenerator;
 
     LoginMember loginMember;
     Member givenPartner;
-    ChatRoom givenChatRoom;
+    Long givenChatRoomId = 1L;
     String givenContent = "신고 사유";
 
     @BeforeEach
@@ -35,10 +32,7 @@ class ChatReportServiceTest extends BaseServiceTest {
         List<Member> members = dummyGenerator.generateMultiMember(2);
         Member givenMember = members.get(0);
         givenPartner = members.get(1);
-        givenChatRoom = ChatRoom.of(givenMember, givenPartner);
-        chatRoomRepository.save(givenChatRoom);
         loginMember = givenMember.getLoginMember();
-
     }
 
     @Test
@@ -72,7 +66,7 @@ class ChatReportServiceTest extends BaseServiceTest {
 
     private ChatReportRequest createChatReportRequestWith(String category) {
         return new ChatReportRequest(givenPartner.getId(),
-                givenChatRoom.getRoomId(),
+                givenChatRoomId,
                 category,
                 givenContent
         );

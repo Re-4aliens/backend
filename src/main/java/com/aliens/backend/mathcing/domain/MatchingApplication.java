@@ -1,17 +1,13 @@
 package com.aliens.backend.mathcing.domain;
 
-import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
 import com.aliens.backend.mathcing.business.model.Language;
-import com.aliens.backend.mathcing.business.model.Participant;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 public class MatchingApplication {
@@ -44,18 +40,22 @@ public class MatchingApplication {
     }
 
     public static MatchingApplication of(final MatchingRound matchingRound,
-                                         final Long memberId,
+                                         final Member member,
                                          final Language firstPreferLanguage,
                                          final Language secondPreferLanguage) {
-        return new MatchingApplication(MatchingApplicationId.of(matchingRound, memberId), firstPreferLanguage, secondPreferLanguage);
+        return new MatchingApplication(MatchingApplicationId.of(matchingRound, member), firstPreferLanguage, secondPreferLanguage);
     }
 
     public static MatchingApplication from(final MatchingRound matchingRound,
-                                           final LoginMember loginMember,
+                                           final Member member,
                                            final MatchingApplicationRequest matchingApplicationRequest) {
-        return MatchingApplication.of(matchingRound, loginMember.memberId(),
+        return MatchingApplication.of(matchingRound, member,
                 matchingApplicationRequest.firstPreferLanguage(),
                 matchingApplicationRequest.secondPreferLanguage());
+    }
+
+    public Member getMember() {
+        return id.getMember();
     }
 
     public Long getMemberId() {

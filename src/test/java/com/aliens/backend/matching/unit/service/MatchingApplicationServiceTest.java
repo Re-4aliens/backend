@@ -1,8 +1,9 @@
 package com.aliens.backend.matching.unit.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
-import com.aliens.backend.auth.domain.MemberRole;
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
@@ -12,7 +13,6 @@ import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationReq
 import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationResponse;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingRound;
-import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
@@ -22,8 +22,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDateTime;
 
 import static com.aliens.backend.matching.util.time.MockTime.INVALID_RECEPTION_TIME;
 import static com.aliens.backend.matching.util.time.MockTime.VALID_RECEPTION_TIME_ON_MONDAY;
@@ -36,6 +34,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     @Autowired MatchingApplicationRepository matchingApplicationRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
+    @Autowired DummyGenerator dummyGenerator;
     @Autowired MockClock mockClock;
 
     LoginMember loginMember;
@@ -44,7 +43,8 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     @BeforeEach
     void setUp() {
         saveMatchRound(MockTime.MONDAY);
-        loginMember = new LoginMember(1L, MemberRole.MEMBER);
+        Member member = dummyGenerator.generateSingleMember();
+        loginMember = member.getLoginMember();
         matchingApplicationRequest = new MatchingApplicationRequest(Language.KOREAN, Language.ENGLISH);
     }
 
@@ -151,8 +151,7 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
     }
 
     private MatchingApplication findMatchingApplication(LoginMember loginMember) {
-        return matchingApplicationRepository
-                .findById(MatchingApplicationId.of(getCurrentRound(), loginMember.memberId()))
+        return matchingApplicationRepository.findByMatchingRoundAndMemberId(getCurrentRound(), loginMember.memberId())
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
     }
 }

@@ -32,20 +32,17 @@ public class MatchingProcessService {
     private final MatchingRoundRepository matchingRoundRepository;
     private final MatchingApplicationRepository matchingApplicationRepository;
     private final MatchingResultRepository matchingResultRepository;
-    private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
 
     public MatchingProcessService(final MatchingBusiness matchingBusiness,
                                   final MatchingRoundRepository matchingRoundRepository,
                                   final MatchingApplicationRepository matchingApplicationRepository,
                                   final MatchingResultRepository matchingResultRepository,
-                                  final MemberRepository memberRepository,
                                   final BlockRepository blockRepository) {
         this.matchingRoundRepository = matchingRoundRepository;
         this.matchingApplicationRepository = matchingApplicationRepository;
         this.matchingResultRepository = matchingResultRepository;
         this.matchingBusiness = matchingBusiness;
-        this.memberRepository = memberRepository;
         this.blockRepository = blockRepository;
     }
 

@@ -116,8 +116,7 @@ public class MatchingProcessService {
     private List<Block> getBlockListByMatchingApplications(MatchingRound matchingRound) {
         List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
         List<Block> blockHistory = matchingApplications.stream()
-                .map(MatchingApplication::getMemberId)
-                .map(this::getMemberById)
+                .map(MatchingApplication::getMember)
                 .flatMap(member -> getBlockListByBlockingMember(member).stream())
                 .toList();
         return blockHistory;
@@ -125,11 +124,6 @@ public class MatchingProcessService {
 
     private List<Block> getBlockListByBlockingMember(Member blockingMember) {
         return blockRepository.findAllByBlockingMember(blockingMember);
-    }
-
-    private Member getMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
     private MatchingOperateRequest createOperateRequest(MatchingRound matchingRound) {

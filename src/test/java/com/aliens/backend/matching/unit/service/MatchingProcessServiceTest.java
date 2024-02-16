@@ -64,6 +64,9 @@ class MatchingProcessServiceTest extends BaseServiceTest {
         operateMatching(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
         saveMatchRound(MockTime.THURSDAY);
         operateMatching(MockTime.VALID_RECEPTION_TIME_ON_THURSDAY);
+
+        List<MatchingResult> result = matchingResultRepository.findAll();
+        Assertions.assertThat(result).isNotNull();
     }
 
     @Test

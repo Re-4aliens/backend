@@ -108,15 +108,15 @@ public class Member {
     }
 
     public void toApplied() {
+        if (status.equals(MatchingStatus.NOT_APPLIED_MATCHED)) {
+            status = MatchingStatus.APPLIED_MATCHED;
+            return;
+        }
         status = MatchingStatus.APPLIED_NOT_MATCHED;
     }
 
     public void toMatched() {
         status = MatchingStatus.NOT_APPLIED_MATCHED;
-    }
-
-    public void toAppliedMatched() {
-        status = MatchingStatus.APPLIED_MATCHED;
     }
 
     public void toPrevious() {

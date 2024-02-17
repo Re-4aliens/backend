@@ -109,7 +109,7 @@ class MatchingProcessServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("매칭을 신청한 적이 없는 회원이 매칭 조회")
+    @DisplayName("매칭을 신청한 적이 없는 회원이 매칭 결과 조회")
     void getMatchingResultTest() {
         Member member = members.get(0);
         LoginMember loginMember = member.getLoginMember();

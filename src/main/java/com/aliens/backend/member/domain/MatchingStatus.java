@@ -1,6 +1,6 @@
 package com.aliens.backend.member.domain;
 
-public enum MemberStatus {
+public enum MatchingStatus {
 
     APPLIED_MATCHED("AppliedAndMatched"),
     NOT_APPLIED_MATCHED("NotAppliedAndMatched"),
@@ -9,7 +9,7 @@ public enum MemberStatus {
 
     private final String message;
 
-    MemberStatus(final String message) {
+    MatchingStatus(final String message) {
         this.message = message;
     }
 

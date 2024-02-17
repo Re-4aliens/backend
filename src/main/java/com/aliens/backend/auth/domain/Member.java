@@ -4,7 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.member.controller.dto.MemberPage;
 import com.aliens.backend.member.domain.Image;
 import com.aliens.backend.member.domain.MemberInfo;
-import com.aliens.backend.member.domain.MemberStatus;
+import com.aliens.backend.member.domain.MatchingStatus;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
 import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
@@ -34,7 +34,7 @@ public class Member {
     private MemberRole role = MemberRole.MEMBER;
 
     @Column
-    private MemberStatus status = MemberStatus.NOT_APPLIED_NOT_MATCHED;
+    private MatchingStatus status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
 
     @Column
     private Boolean withdraw = false;
@@ -107,16 +107,24 @@ public class Member {
         return id;
     }
 
-    public void applied() {
-        status = MemberStatus.APPLIED_NOT_MATCHED;
+    public void toApplied() {
+        status = MatchingStatus.APPLIED_NOT_MATCHED;
     }
 
-    public void matched() {
-        status = MemberStatus.APPLIED_MATCHED;
+    public void toMatched() {
+        status = MatchingStatus.NOT_APPLIED_MATCHED;
     }
 
-    public void initStatus() {
-        status = MemberStatus.NOT_APPLIED_NOT_MATCHED;
+    public void toAppliedMatched() {
+        status = MatchingStatus.APPLIED_MATCHED;
+    }
+
+    public void toPrevious() {
+        if (status.equals(MatchingStatus.APPLIED_MATCHED)) {
+            toMatched();
+            return;
+        }
+        status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
     }
 
     @Override

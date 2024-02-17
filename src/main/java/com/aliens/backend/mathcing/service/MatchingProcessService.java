@@ -2,12 +2,10 @@ package com.aliens.backend.mathcing.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
-import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
-import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
@@ -23,7 +21,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,9 +58,16 @@ public class MatchingProcessService {
     @Transactional(readOnly = true)
     public List<MatchingResultResponse> findMatchingResult(final LoginMember loginMember) {
         MatchingRound currentRound = getCurrentRound();
-        List<MatchingResult> matchingResults = getMatchingResult(currentRound, loginMember);
+        List<MatchingResult> matchingResults = getMatchingResults(currentRound, loginMember);
         checkHasApplied(matchingResults);
         return matchingResults.stream().map(MatchingResultResponse::from).toList();
+    }
+
+    @Scheduled(cron = "${matching.round.end}")
+    @Transactional
+    public void expireMatching() {
+        List<MatchingResult> previousMatchingResults = getPreviousMatchingResults();
+        previousMatchingResults.forEach(this::resetMatch); // TODO : 채팅방 폐쇄
     }
 
     private void saveMatchingResult(final MatchingRound matchingRound, final List<Participant> participants) {
@@ -72,8 +76,9 @@ public class MatchingProcessService {
                 MatchingResult matchingResult = MatchingResult.from(matchingRound, participant, partner);
                 matchBetween(matchingResult);
             }
-            // TODO : 매칭 완료 알림 이벤트 발송 & 채팅방 개설 이벤트 발송
+            // TODO : 채팅방 개설 이벤트 발송
         }
+        // TODO : 매칭 완료 이벤트 발송
     }
 
     private void checkHasApplied(final List<MatchingResult> matchingResults) {
@@ -87,7 +92,7 @@ public class MatchingProcessService {
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 
-    private List<MatchingResult> getMatchingResult(final MatchingRound matchingRound, final LoginMember loginMember) {
+    private List<MatchingResult> getMatchingResults(final MatchingRound matchingRound, final LoginMember loginMember) {
         return matchingResultRepository.findAllByMatchingRoundAndMemberId(matchingRound, loginMember.memberId());
     }
 
@@ -95,40 +100,52 @@ public class MatchingProcessService {
         return matchingApplicationRepository.findAllByMatchingRound(matchingRound);
     }
     
-    private MatchingRound getPreviousMatchingRound(MatchingRound matchingRound) {
-        Long previousRound = matchingRound.getPreviousRound();
+    private MatchingRound getPreviousMatchingRound() {
+        MatchingRound currentRound = getCurrentRound();
+        if (currentRound.isFirstRound()) {
+            return MatchingRound.zero();
+        }
+        Long previousRound = currentRound.getPreviousRound();
         return matchingRoundRepository.findMatchingRoundByRound(previousRound)
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 
-    private List<MatchingResult> getPreviousMatchingResult(MatchingRound matchingRound) {
-        if (matchingRound.isFirstRound()) {
-            return new ArrayList<>();
-        }
-        MatchingRound previousMatchingRound = getPreviousMatchingRound(matchingRound);
+    private List<MatchingResult> getPreviousMatchingResults() {
+        MatchingRound previousMatchingRound = getPreviousMatchingRound();
         return matchingResultRepository.findAllByMatchingRound(previousMatchingRound);
     }
 
-    private List<Block> getBlockListByMatchingApplications(MatchingRound matchingRound) {
+    private List<Block> getBlockListByMatchingApplications(final MatchingRound matchingRound) {
         List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
         List<Block> blockHistory = matchingApplications.stream()
                 .map(MatchingApplication::getMember)
-                .flatMap(member -> getBlockListByBlockingMember(member).stream())
+                .flatMap(member -> getBlockListByBlockingMembers(member).stream())
                 .toList();
         return blockHistory;
     }
 
-    private List<Block> getBlockListByBlockingMember(Member blockingMember) {
+    private List<Block> getBlockListByBlockingMembers(final Member blockingMember) {
         return blockRepository.findAllByBlockingMember(blockingMember);
     }
 
-    private void matchBetween(MatchingResult matchingResult) {
+    private void matchBetween(final MatchingResult matchingResult) {
         matchingResultRepository.save(matchingResult);
+        Member matchingMember = matchingResult.getMatchingMember();
+        Member matchedMember = matchingResult.getMatchedMember();
+        matchingMember.toMatched();
+        matchedMember.toMatched();
     }
 
-    private MatchingOperateRequest createOperateRequest(MatchingRound matchingRound) {
+    private void resetMatch(MatchingResult matchingResult) {
+        Member matchingMember = matchingResult.getMatchingMember();
+        Member matchedMember = matchingResult.getMatchedMember();
+        matchingMember.toPrevious();
+        matchedMember.toPrevious();
+    }
+
+    private MatchingOperateRequest createOperateRequest(final MatchingRound matchingRound) {
         List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
-        List<MatchingResult> previousMatchingResult = getPreviousMatchingResult(matchingRound);
+        List<MatchingResult> previousMatchingResult = getPreviousMatchingResults();
         List<Block> participantBlockHistory = getBlockListByMatchingApplications(matchingRound);
         return MatchingOperateRequest.of(matchingApplications, previousMatchingResult, participantBlockHistory);
     }

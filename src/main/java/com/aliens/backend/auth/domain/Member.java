@@ -121,7 +121,7 @@ public class Member {
 
     public void toPrevious() {
         if (status.equals(MatchingStatus.APPLIED_MATCHED)) {
-            toMatched();
+            toApplied();
             return;
         }
         status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;

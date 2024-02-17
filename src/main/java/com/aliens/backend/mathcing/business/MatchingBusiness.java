@@ -30,7 +30,7 @@ public class MatchingBusiness {
     }
 
     private void initialize(final MatchingOperateRequest matchingOperateRequest) {
-        participantGroup = ParticipantGroup.from(matchingOperateRequest, matchingRuleProperties); // TODO : 이전 매칭 기록, 차단 목록 주고 만들도록 시킴
+        participantGroup = ParticipantGroup.from(matchingOperateRequest, matchingRuleProperties);
         languageQueue = LanguageQueue.classifyByLanguage(participantGroup);
         matchingTypeGroup = MatchingTypeGroup.init(matchingRuleProperties);
     }

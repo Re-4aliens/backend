@@ -69,9 +69,8 @@ public class MatchingProcessService {
     private void saveMatchingResult(final MatchingRound matchingRound, final List<Participant> participants) {
         for (Participant participant : participants) {
             for (Partner partner : participant.partners()) {
-                MatchingResult matchingResult =
-                        MatchingResult.of(matchingRound, participant.memberId(), partner.memberId(), partner.relationship());
-                matchingResultRepository.save(matchingResult);
+                MatchingResult matchingResult = MatchingResult.from(matchingRound, participant, partner);
+                matchBetween(matchingResult);
             }
             // TODO : 매칭 완료 알림 이벤트 발송 & 채팅방 개설 이벤트 발송
         }
@@ -121,6 +120,10 @@ public class MatchingProcessService {
 
     private List<Block> getBlockListByBlockingMember(Member blockingMember) {
         return blockRepository.findAllByBlockingMember(blockingMember);
+    }
+
+    private void matchBetween(MatchingResult matchingResult) {
+        matchingResultRepository.save(matchingResult);
     }
 
     private MatchingOperateRequest createOperateRequest(MatchingRound matchingRound) {

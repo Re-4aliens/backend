@@ -1,10 +1,12 @@
 package com.aliens.backend.mathcing.business.model;
 
+import com.aliens.backend.auth.domain.Member;
+
 public record Partner(
         Relationship relationship,
-        Long memberId
+        Member member
 ) {
-    public static Partner of(Relationship relationship, Long memberId) {
-        return new Partner(relationship, memberId);
+    public static Partner of(final Relationship relationship, final Member member) {
+        return new Partner(relationship, member);
     }
 }

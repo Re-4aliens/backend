@@ -2,7 +2,6 @@ package com.aliens.backend.matching.unit.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
-import com.aliens.backend.block.controller.dto.BlockRequest;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
 import com.aliens.backend.global.BaseServiceTest;
@@ -64,6 +63,9 @@ class MatchingProcessServiceTest extends BaseServiceTest {
         operateMatching(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
         saveMatchRound(MockTime.THURSDAY);
         operateMatching(MockTime.VALID_RECEPTION_TIME_ON_THURSDAY);
+
+        List<MatchingResult> result = matchingResultRepository.findAll();
+        Assertions.assertThat(result).isNotNull();
     }
 
     @Test
@@ -140,7 +142,7 @@ class MatchingProcessServiceTest extends BaseServiceTest {
     private void makeThisMemberBlockAllPartner(Member blockingMember) {
         for (int i = 1; i < members.size(); i++) {
             Member blockedMember = members.get(i);
-            Block blockRequest = Block.of(blockingMember, blockedMember);
+            Block blockRequest = Block.of(blockedMember, blockingMember);
             blockRepository.save(blockRequest);
         }
     }

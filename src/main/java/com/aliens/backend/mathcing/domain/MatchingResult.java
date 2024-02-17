@@ -1,5 +1,8 @@
 package com.aliens.backend.mathcing.domain;
 
+import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.mathcing.business.model.Participant;
+import com.aliens.backend.mathcing.business.model.Partner;
 import com.aliens.backend.mathcing.domain.id.MatchingResultId;
 import com.aliens.backend.mathcing.business.model.Relationship;
 import jakarta.persistence.*;
@@ -20,15 +23,22 @@ public class MatchingResult {
         this.relationship = relationship;
     }
 
-    public static MatchingResult of(MatchingRound matchingRound,
-                                    Long matchingMemberId,
-                                    Long matchedMemberId,
-                                    Relationship relationship) {
-        return new MatchingResult(MatchingResultId.of(matchingRound, matchingMemberId, matchedMemberId), relationship);
+    public static MatchingResult from(final MatchingRound matchingRound,
+                                      final Participant participant,
+                                      final Partner partner) {
+        return new MatchingResult(MatchingResultId.of(matchingRound, participant.member(), partner.member()), partner.relationship());
     }
 
     public MatchingRound getMatchingRound() {
         return id.getMatchingRound();
+    }
+
+    public Member getMatchingMember() {
+        return id.getMatchingMember();
+    }
+
+    public Member getMatchedMember() {
+        return id.getMatchedMember();
     }
 
     public Long getMatchingMemberId() {

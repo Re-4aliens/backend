@@ -48,13 +48,13 @@ class MatchingBusinessTest extends BaseServiceTest {
 
     @BeforeEach
     void setUp() {
-        saveMatchRound(MockTime.MONDAY);
+        saveMatchRound(MockTime.TUESDAY);
     }
 
     @Test
     @DisplayName("매칭 로직 실행 테스트")
     void matchingLogicTest() {
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
+        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
 
         List<Participant> result = matchingBusiness.getMatchedParticipants();
         result.forEach(participant -> assertThat(participant.partners()).isNotNull());

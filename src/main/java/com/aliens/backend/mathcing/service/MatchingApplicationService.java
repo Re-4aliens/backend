@@ -81,13 +81,13 @@ public class MatchingApplicationService {
     private void applyForMatching(MatchingApplication matchingApplication) {
         matchingApplicationRepository.save(matchingApplication);
         Member member = matchingApplication.getMember();
-        member.toApplied();
+        member.applyMatch();
     }
 
     private void cancelForMatching(MatchingApplication matchingApplication) {
         matchingApplicationRepository.delete(matchingApplication);
         Member member = matchingApplication.getMember();
-        member.toPrevious();
+        member.cancelApplication();
     }
 
     private void checkReceptionTime(MatchingRound matchingRound) {

@@ -122,15 +122,15 @@ public class MatchingProcessService {
         matchingResultRepository.save(matchingResult);
         Member matchingMember = matchingResult.getMatchingMember();
         Member matchedMember = matchingResult.getMatchedMember();
-        matchingMember.toMatched();
-        matchedMember.toMatched();
+        matchingMember.matched();
+        matchedMember.matched();
     }
 
     private void resetMatch(MatchingResult matchingResult) {
         Member matchingMember = matchingResult.getMatchingMember();
         Member matchedMember = matchingResult.getMatchedMember();
-        matchingMember.toPrevious();
-        matchedMember.toPrevious();
+        matchingMember.expireMatch();
+        matchedMember.expireMatch();
     }
 
     private MatchingOperateRequest createOperateRequest(final MatchingRound matchingRound) {

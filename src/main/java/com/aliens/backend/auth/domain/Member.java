@@ -107,24 +107,35 @@ public class Member {
         return id;
     }
 
-    public void toApplied() {
+    public void applyMatch() {
         if (status.equals(MatchingStatus.NOT_APPLIED_MATCHED)) {
             status = MatchingStatus.APPLIED_MATCHED;
-            return;
         }
-        status = MatchingStatus.APPLIED_NOT_MATCHED;
+        if (status.equals(MatchingStatus.NOT_APPLIED_NOT_MATCHED)) {
+            status = MatchingStatus.APPLIED_NOT_MATCHED;
+        }
     }
 
-    public void toMatched() {
+    public void matched() {
         status = MatchingStatus.NOT_APPLIED_MATCHED;
     }
 
-    public void toPrevious() {
+    public void expireMatch() {
         if (status.equals(MatchingStatus.APPLIED_MATCHED)) {
-            toApplied();
-            return;
+            status = MatchingStatus.APPLIED_NOT_MATCHED;
         }
-        status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
+        if (status.equals(MatchingStatus.NOT_APPLIED_MATCHED)) {
+            status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
+        }
+    }
+
+    public void cancelApplication() {
+        if (status.equals(MatchingStatus.APPLIED_MATCHED)) {
+            status = MatchingStatus.NOT_APPLIED_MATCHED;
+        }
+        if (status.equals(MatchingStatus.APPLIED_NOT_MATCHED)) {
+            status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
+        }
     }
 
     @Override

@@ -9,7 +9,6 @@ import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
-import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
@@ -28,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -71,22 +69,13 @@ class MatchingBusinessTest extends BaseServiceTest {
         return matchingApplicationRepository.findAllByMatchingRound(matchingRound);
     }
 
-    private MatchingRound getPreviousMatchingRound(MatchingRound matchingRound) {
-        Long previousRound = matchingRound.getPreviousRound();
-        return matchingRoundRepository.findMatchingRoundByRound(previousRound)
-                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+    private List<MatchingResult> getPreviousMatchingResults() {
+        MatchingRound currentRound = getCurrentRound();
+        Long previousRound = currentRound.getPreviousRound();
+        return matchingResultRepository.findAllByRound(previousRound);
     }
 
-    private List<MatchingResult> getPreviousMatchingResult(MatchingRound matchingRound) {
-        if (matchingRound.isFirstRound()) {
-            return new ArrayList<>();
-        }
-        MatchingRound previousMatchingRound = getPreviousMatchingRound(matchingRound);
-        return matchingResultRepository.findAllByMatchingRound(previousMatchingRound);
-    }
-
-    private List<Block> getBlockListByMatchingApplications(MatchingRound matchingRound) {
-        List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
+    private List<Block> getBlockListByMatchingApplications(List<MatchingApplication> matchingApplications) {
         List<Block> blockHistory = matchingApplications.stream()
                 .map(MatchingApplication::getMember)
                 .flatMap(member -> getBlockListByBlockingMember(member).stream())
@@ -100,8 +89,8 @@ class MatchingBusinessTest extends BaseServiceTest {
 
     private MatchingOperateRequest createOperateRequest(MatchingRound matchingRound) {
         List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
-        List<MatchingResult> previousMatchingResult = getPreviousMatchingResult(matchingRound);
-        List<Block> participantBlockHistory = getBlockListByMatchingApplications(matchingRound);
+        List<MatchingResult> previousMatchingResult = getPreviousMatchingResults();
+        List<Block> participantBlockHistory = getBlockListByMatchingApplications(matchingApplications);
         return MatchingOperateRequest.of(matchingApplications, previousMatchingResult, participantBlockHistory);
     }
 

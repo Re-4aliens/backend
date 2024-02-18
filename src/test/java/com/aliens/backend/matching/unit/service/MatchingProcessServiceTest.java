@@ -53,7 +53,7 @@ class MatchingProcessServiceTest extends BaseServiceTest {
         operateMatching(MockTime.VALID_RECEPTION_TIME_ON_MONDAY);
 
         // then
-        List<MatchingResult> result = matchingResultRepository.findAllByMatchingRound(getCurrentRound());
+        List<MatchingResult> result = getMatchingResultByMatchingRound(getCurrentRound());
         Assertions.assertThat(result).isNotNull();
     }
 
@@ -136,7 +136,8 @@ class MatchingProcessServiceTest extends BaseServiceTest {
     }
 
     private List<MatchingResult> getMatchingResultByMatchingRound(MatchingRound matchingRound) {
-        return matchingResultRepository.findAllByMatchingRound(matchingRound);
+        Long round = matchingRound.getRound();
+        return matchingResultRepository.findAllByRound(round);
     }
 
     private void makeThisMemberBlockAllPartner(Member blockingMember) {

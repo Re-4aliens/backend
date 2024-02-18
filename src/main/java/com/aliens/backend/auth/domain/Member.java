@@ -33,6 +33,7 @@ public class Member {
     @Column
     private MemberRole role = MemberRole.MEMBER;
 
+    @Enumerated(value = EnumType.STRING)
     @Column
     private MatchingStatus status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
 

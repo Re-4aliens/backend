@@ -1,5 +1,7 @@
 package com.aliens.backend.chatting.service;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
@@ -9,6 +11,7 @@ import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.chat.service.model.ChatMessageSummary;
 import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.response.success.ChatSuccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +29,7 @@ import static org.mockito.Mockito.*;
 class ChatServiceTest extends BaseServiceTest {
 
     @Autowired ChatService chatService;
+    @Autowired DummyGenerator dummyGenerator;
     @SpyBean MessageRepository messageRepository;
 
     @BeforeEach
@@ -74,10 +78,11 @@ class ChatServiceTest extends BaseServiceTest {
     @DisplayName("채팅 요약 정보 조회")
     void getChatSummary() {
         //Given
-        Long memberId = 1L;
+        Member member = dummyGenerator.generateSingleMember();
+        LoginMember loginMember = member.getLoginMember();
 
         //When
-        ChatSummaryResponse result = chatService.getChatSummaries(memberId);
+        ChatSummaryResponse result = chatService.getChatSummaries(loginMember);
 
         //Then
         Assertions.assertNotNull(result);

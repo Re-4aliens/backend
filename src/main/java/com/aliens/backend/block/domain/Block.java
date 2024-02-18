@@ -21,11 +21,13 @@ public class Block {
     protected Block() {
     }
 
+    private Block(Member blockingMember, Member blockedMember) {
+        this.blockingMember = blockingMember;
+        this.blockedMember = blockedMember;
+    }
+
     public static Block of(Member blockedMember, Member blockingMember) {
-        Block block = new Block();
-        block.blockingMember = blockingMember;
-        block.blockedMember = blockedMember;
-        return block;
+        return new Block(blockingMember, blockedMember);
     }
 
     public Member getBlockingMember() {

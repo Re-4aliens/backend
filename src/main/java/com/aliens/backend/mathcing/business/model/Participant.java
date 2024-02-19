@@ -46,6 +46,10 @@ public record Participant(
         return partners.size();
     }
 
+    public String getFcmToken() {
+        return member().getFcmToken();
+    }
+
     public void addPartner(Relationship relationship, Participant participant) {
         partners.add(Partner.of(relationship, participant.member));
     }
@@ -65,5 +69,9 @@ public record Participant(
 
     public boolean hasBlocked(Participant participant) {
         return blockedPartnerGroup.contains(participant);
+    }
+
+    public boolean hasPartner() {
+        return !partners.isEmpty();
     }
 }

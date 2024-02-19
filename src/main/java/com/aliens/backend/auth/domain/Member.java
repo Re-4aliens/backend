@@ -107,6 +107,10 @@ public class Member {
         return id;
     }
 
+    public String getFcmToken() {
+        return name;
+    }
+
     public void applyMatch() {
         if (status.equals(MatchingStatus.NOT_APPLIED_MATCHED)) {
             status = MatchingStatus.APPLIED_MATCHED;

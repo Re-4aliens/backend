@@ -5,6 +5,7 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
+import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.global.BaseServiceTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.response.error.MatchingError;
@@ -24,15 +25,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @SpringBootTest
 class MatchingProcessServiceTest extends BaseServiceTest {
     @Autowired MatchingProcessService matchingProcessService;
+    @SpyBean ChatService chatService;
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
     @Autowired MatchingResultRepository matchingResultRepository;
@@ -58,6 +64,16 @@ class MatchingProcessServiceTest extends BaseServiceTest {
         // then
         List<MatchingResult> result = getMatchingResultByMatchingRound(getCurrentRound());
         Assertions.assertThat(result).isNotNull();
+    }
+
+    @Test
+    @DisplayName("매칭 결과 기반으로 채팅방 개설 이벤트 발송")
+    void createChatRoomEventTest() {
+        // given & when
+        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
+
+        // then
+        verify(chatService, times(1)).handleChatRoomCreationEvent(any());
     }
 
     @Test

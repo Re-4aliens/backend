@@ -17,6 +17,7 @@ import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.business.model.Partner;
+import com.aliens.backend.mathcing.service.event.MatchingEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,17 +31,20 @@ public class MatchingProcessService {
     private final MatchingApplicationRepository matchingApplicationRepository;
     private final MatchingResultRepository matchingResultRepository;
     private final BlockRepository blockRepository;
+    private final MatchingEventPublisher eventPublisher;
 
     public MatchingProcessService(final MatchingBusiness matchingBusiness,
                                   final MatchingRoundRepository matchingRoundRepository,
                                   final MatchingApplicationRepository matchingApplicationRepository,
                                   final MatchingResultRepository matchingResultRepository,
-                                  final BlockRepository blockRepository) {
+                                  final BlockRepository blockRepository,
+                                  final MatchingEventPublisher eventPublisher) {
         this.matchingRoundRepository = matchingRoundRepository;
         this.matchingApplicationRepository = matchingApplicationRepository;
         this.matchingResultRepository = matchingResultRepository;
         this.matchingBusiness = matchingBusiness;
         this.blockRepository = blockRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Scheduled(cron = "${matching.round.start}")
@@ -71,13 +75,11 @@ public class MatchingProcessService {
     }
 
     private void saveMatchingResult(final MatchingRound matchingRound, final List<Participant> participants) {
-        for (Participant participant : participants) {
-            for (Partner partner : participant.partners()) {
-                MatchingResult matchingResult = MatchingResult.from(matchingRound, participant, partner);
-                matchBetween(matchingResult);
-            }
-            // TODO : 채팅방 개설 이벤트 발송
-        }
+        participants.stream()
+                .flatMap(participant -> participant.partners().stream()
+                        .map(partner -> MatchingResult.from(matchingRound, participant, partner)))
+                .forEach(this::matchBetween);
+        eventPublisher.createChatRoom(participants);
         // TODO : 매칭 완료 이벤트 발송
     }
 

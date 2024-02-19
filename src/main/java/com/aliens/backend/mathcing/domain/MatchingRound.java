@@ -72,7 +72,8 @@ public class MatchingRound {
     }
 
     public boolean isReceptionTime(LocalDateTime now) {
-        return now.isAfter(this.getRequestStartTime()) && now.isBefore(this.getRequestEndTime());
+        return now.isAfter(requestStartTime) || now.isEqual(requestStartTime)
+                && now.isBefore(requestEndTime);
     }
 
     public Long getPreviousRound() {

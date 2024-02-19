@@ -1,0 +1,18 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== Matching APIs
+
+[[resources-post-create]]
+=== 매칭 신청
+
+==== HTTP request
+
+include::{snippets}/matching-application-post/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-application-post/http-response.adoc[]

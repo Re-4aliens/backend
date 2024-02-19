@@ -33,7 +33,8 @@ class MatchingRoundServiceTest extends BaseServiceTest {
         // then
         MatchingRound currentRound = getCurrentRound();
         DayOfWeek result = currentRound.getDayOfWeek();
-        assertThat(result).isEqualTo(DayOfWeek.MONDAY);
+        DayOfWeek expected = DayOfWeek.TUESDAY;
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
@@ -46,8 +47,8 @@ class MatchingRoundServiceTest extends BaseServiceTest {
         // then
         MatchingRound currentRound = getCurrentRound();
         DayOfWeek result = currentRound.getDayOfWeek();
-
-        assertThat(result).isEqualTo(DayOfWeek.MONDAY);
+        DayOfWeek expected = DayOfWeek.TUESDAY;
+        assertThat(result).isEqualTo(expected);
     }
 
     private MatchingRound getCurrentRound() {

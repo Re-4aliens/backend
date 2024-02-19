@@ -5,7 +5,12 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.MemberRole;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.auth.service.TokenProvider;
+import com.aliens.backend.global.property.MatchingTimeProperties;
+import com.aliens.backend.matching.util.time.MockClock;
+import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
+import com.aliens.backend.mathcing.domain.MatchingRound;
+import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.member.controller.dto.EncodedMember;
@@ -26,20 +31,14 @@ import java.util.Random;
 
 @Component
 public class DummyGenerator {
-    @Autowired
-    MatchingApplicationService matchingApplicationService;
-
-    @Autowired
-    MemberInfoRepository memberInfoRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    SymmetricKeyEncoder encoder;
-
-    @Autowired
-    TokenProvider tokenProvider;
+    @Autowired MatchingApplicationService matchingApplicationService;
+    @Autowired MemberInfoRepository memberInfoRepository;
+    @Autowired MatchingRoundRepository matchingRoundRepository;
+    @Autowired MatchingTimeProperties matchingTimeProperties;
+    @Autowired PasswordEncoder passwordEncoder;
+    @Autowired SymmetricKeyEncoder encoder;
+    @Autowired TokenProvider tokenProvider;
+    @Autowired MockClock mockClock;
 
     public static final String GIVEN_EMAIL = "tmp@example.com";
     public static final String GIVEN_PASSWORD = "tmpPassword";
@@ -51,6 +50,7 @@ public class DummyGenerator {
     public static final String GIVEN_ABOUT_ME = "nice to meet you";
     public static final String GIVEN_FILE_NAME = "test";
     public static final String GIVEN_FILE_URL = "/test";
+    private MockTime mockedTime = MockTime.TUESDAY;
 
     // 다수 멤버 생성 메서드
     public List<Member> generateMultiMember(Integer memberCounts) {
@@ -74,6 +74,16 @@ public class DummyGenerator {
         Member member = makeMember(tmpEmail, image);
         saveAsMemberInfo(member);
         return member;
+    }
+
+    public MatchingRound generateMatchingRound() {
+        if (mockedTime.equals(MockTime.TUESDAY)) {
+            mockedTime = MockTime.FRIDAY;
+        }
+        mockClock.mockTime(mockedTime);
+        MatchingRound matchingRound = MatchingRound.from(mockedTime.getTime(), matchingTimeProperties);
+        matchingRoundRepository.save(matchingRound);
+        return matchingRound;
     }
 
     private Image makeImage() {

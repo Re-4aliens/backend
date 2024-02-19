@@ -71,7 +71,8 @@ public class MatchingProcessService {
     @Transactional
     public void expireMatching() {
         List<MatchingResult> previousMatchingResults = getPreviousMatchingResults();
-        previousMatchingResults.forEach(this::resetMatch); // TODO : 채팅방 폐쇄
+        previousMatchingResults.forEach(this::resetMatch);
+        eventPublisher.expireChatRoom(previousMatchingResults);
     }
 
     private void saveMatchingResult(final MatchingRound matchingRound, final List<Participant> participants) {

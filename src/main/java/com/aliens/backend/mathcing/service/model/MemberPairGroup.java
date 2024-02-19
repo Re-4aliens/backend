@@ -2,6 +2,7 @@ package com.aliens.backend.mathcing.service.model;
 
 import com.aliens.backend.chat.service.model.MemberPair;
 import com.aliens.backend.mathcing.business.model.Participant;
+import com.aliens.backend.mathcing.domain.MatchingResult;
 
 import java.util.List;
 import java.util.Set;
@@ -14,11 +15,18 @@ public class MemberPairGroup {
         this.memberPairs = memberPairs;
     }
 
-    public static MemberPairGroup from(List<Participant> participants) {
+    public static MemberPairGroup fromParticipants(List<Participant> participants) {
         Set<MemberPair> memberPairs = participants.stream()
                 .flatMap(participant -> participant.partners().stream()
                         .map(partner -> new MemberPair(participant.member(), partner.member()))
                 ).collect(Collectors.toSet());
+        return new MemberPairGroup(memberPairs);
+    }
+
+    public static MemberPairGroup fromMatchingResults(List<MatchingResult> matchingResults) {
+        Set<MemberPair> memberPairs = matchingResults.stream()
+                .map(matchingResult -> new MemberPair(matchingResult.getMatchingMember(), matchingResult.getMatchedMember()))
+                .collect(Collectors.toSet());
         return new MemberPairGroup(memberPairs);
     }
 

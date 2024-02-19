@@ -1,8 +1,10 @@
 package com.aliens.backend.mathcing.service.event;
 
 import com.aliens.backend.chat.controller.dto.event.ChatRoomCreationEvent;
+import com.aliens.backend.chat.controller.dto.event.ChatRoomExpireEvent;
 import com.aliens.backend.chat.service.model.MemberPair;
 import com.aliens.backend.mathcing.business.model.Participant;
+import com.aliens.backend.mathcing.domain.MatchingResult;
 import com.aliens.backend.mathcing.service.model.MemberPairGroup;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -19,8 +21,14 @@ public class MatchingEventPublisher {
     }
 
     public void createChatRoom(List<Participant> participants) {
-        MemberPairGroup memberPairGroup = MemberPairGroup.from(participants);
-        Set<MemberPair> memberPairs = memberPairGroup.getMemberPairs();
-        eventPublisher.publishEvent(new ChatRoomCreationEvent(memberPairs));
+        MemberPairGroup matchedMemberPairGroup = MemberPairGroup.fromParticipants(participants);
+        Set<MemberPair> matchedMemberPairs = matchedMemberPairGroup.getMemberPairs();
+        eventPublisher.publishEvent(new ChatRoomCreationEvent(matchedMemberPairs));
+    }
+
+    public void expireChatRoom(List<MatchingResult> matchingResults) {
+        MemberPairGroup expiredMemberPairGroup = MemberPairGroup.fromMatchingResults(matchingResults);
+        Set<MemberPair> expiredMemberPairs = expiredMemberPairGroup.getMemberPairs();
+        eventPublisher.publishEvent(new ChatRoomExpireEvent(expiredMemberPairs));
     }
 }

@@ -81,7 +81,7 @@ public class MatchingProcessService {
                         .map(partner -> MatchingResult.from(matchingRound, participant, partner)))
                 .forEach(this::matchBetween);
         eventPublisher.createChatRoom(participants);
-        // TODO : 매칭 완료 이벤트 발송
+        eventPublisher.sendNotification(participants);
     }
 
     private void checkHasApplied(final List<MatchingResult> matchingResults) {

@@ -5,7 +5,9 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.MemberRole;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.auth.service.TokenProvider;
+import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
@@ -84,6 +86,11 @@ public class DummyGenerator {
         MatchingRound matchingRound = MatchingRound.from(mockedTime.getTime(), matchingTimeProperties);
         matchingRoundRepository.save(matchingRound);
         return matchingRound;
+    }
+
+    public MatchingRound getCurrentRound() {
+        return matchingRoundRepository.findCurrentRound()
+                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 
     private Image makeImage() {

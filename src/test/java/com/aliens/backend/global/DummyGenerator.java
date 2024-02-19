@@ -15,6 +15,7 @@ import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import com.aliens.backend.mathcing.business.model.Language;
+import com.aliens.backend.mathcing.service.MatchingProcessService;
 import com.aliens.backend.member.controller.dto.EncodedMember;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
 import com.aliens.backend.member.domain.Image;
@@ -37,6 +38,7 @@ public class DummyGenerator {
     @Autowired MemberInfoRepository memberInfoRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
+    @Autowired MatchingProcessService matchingProcessService;
     @Autowired PasswordEncoder passwordEncoder;
     @Autowired SymmetricKeyEncoder encoder;
     @Autowired TokenProvider tokenProvider;
@@ -77,6 +79,7 @@ public class DummyGenerator {
         return member;
     }
 
+    // 매칭 회차 생성 메서드 : 매칭 신청 전, 해당 메서드 호출로 회차 저장 필요 ... 매개변수 : TUESDAY 권장
     public MatchingRound generateMatchingRound(MockTime mockTime) {
         mockClock.mockTime(mockTime);
         MatchingRound matchingRound = MatchingRound.from(mockTime.getTime(), matchingTimeProperties);
@@ -87,6 +90,13 @@ public class DummyGenerator {
     public MatchingRound getCurrentRound() {
         return matchingRoundRepository.findCurrentRound()
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+    }
+
+    // 매칭 동작 메서드 : 매칭 동작 전, generateAppliersToMatch 메서드 선행 동작 필요 ... 매개변수 : TUESDAY 권장
+    public void operateMatching(MockTime mockTime) {
+        mockClock.mockTime(mockTime);
+        matchingProcessService.expireMatching();
+        matchingProcessService.operateMatching();
     }
 
     private Image makeImage() {
@@ -117,7 +127,6 @@ public class DummyGenerator {
         byte[] content = fileName.getBytes();
         return new MockMultipartFile(fileName, path, contentType, content);
     }
-
 
     //AccessToken 생성 메서드
     public String generateAccessToken(Member member) {

@@ -36,3 +36,13 @@ include::{snippets}/matching-application-cancel/http-request.adoc[]
 ==== HTTP response
 
 include::{snippets}/matching-application-cancel/http-response.adoc[]
+
+=== 내 매칭 파트너 조회
+
+==== HTTP request
+
+include::{snippets}/matching-process-get-partners/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-process-get-partners/http-response.adoc[]

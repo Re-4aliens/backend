@@ -124,7 +124,6 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
                 .hasMessage(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME.getDevelopCode());
     }
 
-
     @Test
     @DisplayName("매칭 신청 조회 단위 테스트")
     void getMatchingApplicationTest() {

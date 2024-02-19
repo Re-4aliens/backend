@@ -99,6 +99,7 @@ class MatchingDocTest extends BaseServiceTest {
     @DisplayName("API - 매칭 신청 취소")
     void cancelMatchingApplicationTest() throws Exception {
         // given
+        createSingleMember();
         LoginMember loginMember = member.getLoginMember();
         matchingApplicationService.saveParticipant(loginMember, request);
 

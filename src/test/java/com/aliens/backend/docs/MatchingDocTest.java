@@ -4,6 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.global.BaseServiceTest;
 import com.aliens.backend.global.DummyGenerator;
+import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.mathcing.controller.MatchingApplicationController;
 import com.aliens.backend.mathcing.controller.MatchingProcessController;
@@ -23,8 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -45,7 +45,7 @@ class MatchingDocTest extends BaseServiceTest {
 
     @BeforeEach
     void setUp() {
-        dummyGenerator.generateMatchingRound();
+        dummyGenerator.generateMatchingRound(MockTime.TUESDAY);
         member = dummyGenerator.generateSingleMember();
         GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(member);
         request = new MatchingApplicationRequest(Language.KOREAN, Language.ENGLISH);
@@ -53,7 +53,7 @@ class MatchingDocTest extends BaseServiceTest {
 
     @Test
     @DisplayName("API - 매칭 신청")
-    void applyMatchApiTest() throws Exception {
+    void applyMatchTest() throws Exception {
         mockMvc.perform(post(baseUrl + "/applications")
                         .header("Authorization", GIVEN_ACCESS_TOKEN)
                         .content(objectMapper.writeValueAsString(request))
@@ -69,7 +69,7 @@ class MatchingDocTest extends BaseServiceTest {
 
     @Test
     @DisplayName("API - 매칭 신청 내역 조회")
-    void getMatchingApplication() throws Exception {
+    void getMatchingApplicationTest() throws Exception {
         // given
         LoginMember loginMember = member.getLoginMember();
 
@@ -88,6 +88,24 @@ class MatchingDocTest extends BaseServiceTest {
                                 fieldWithPath("result.memberId").description("회원 ID"),
                                 fieldWithPath("result.firstPreferLanguage").description("첫 번째 선호 언어"),
                                 fieldWithPath("result.secondPreferLanguage").description("두 번째 선호 언어")
+                        )));
+    }
+
+    @Test
+    @DisplayName("API - 매칭 신청 취소")
+    void cancelMatchingApplicationTest() throws Exception {
+        // given
+        LoginMember loginMember = member.getLoginMember();
+        matchingApplicationService.saveParticipant(loginMember, request);
+
+        // when & then
+        mockMvc.perform(delete(baseUrl + "/applications")
+                        .header("Authorization", GIVEN_ACCESS_TOKEN))
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("matching-application-cancel",
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result").description("매칭 신청 취소 결과")
                         )));
     }
 }

@@ -52,7 +52,6 @@ public class DummyGenerator {
     public static final String GIVEN_ABOUT_ME = "nice to meet you";
     public static final String GIVEN_FILE_NAME = "test";
     public static final String GIVEN_FILE_URL = "/test";
-    private MockTime mockedTime = MockTime.TUESDAY;
 
     // 다수 멤버 생성 메서드
     public List<Member> generateMultiMember(Integer memberCounts) {
@@ -78,12 +77,9 @@ public class DummyGenerator {
         return member;
     }
 
-    public MatchingRound generateMatchingRound() {
-        if (mockedTime.equals(MockTime.TUESDAY)) {
-            mockedTime = MockTime.FRIDAY;
-        }
-        mockClock.mockTime(mockedTime);
-        MatchingRound matchingRound = MatchingRound.from(mockedTime.getTime(), matchingTimeProperties);
+    public MatchingRound generateMatchingRound(MockTime mockTime) {
+        mockClock.mockTime(mockTime);
+        MatchingRound matchingRound = MatchingRound.from(mockTime.getTime(), matchingTimeProperties);
         matchingRoundRepository.save(matchingRound);
         return matchingRound;
     }

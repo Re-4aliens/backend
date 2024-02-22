@@ -1,7 +1,7 @@
 package com.aliens.backend.chat.service.model;
 
 import com.aliens.backend.auth.domain.Member;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class MemberPairTest extends BaseServiceTest {
+class MemberPairTest extends BaseIntegrationTest {
 
     @Autowired
     private DummyGenerator dummyGenerator;

@@ -3,6 +3,7 @@ package com.aliens.backend.auth.provider;
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.MemberRole;
 import com.aliens.backend.auth.service.TokenProvider;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
 import org.junit.jupiter.api.Assertions;
@@ -10,10 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class TokenProviderTest {
+class TokenProviderTest extends BaseIntegrationTest {
 
     @Autowired
     private TokenProvider tokenProvider;

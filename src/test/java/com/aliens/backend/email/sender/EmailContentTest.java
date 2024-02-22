@@ -1,14 +1,14 @@
 package com.aliens.backend.email.sender;
 
 import com.aliens.backend.email.service.EmailContent;
+import com.aliens.backend.global.BaseIntegrationTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class EmailContentTest {
+
+class EmailContentTest extends BaseIntegrationTest {
 
     @Autowired
     EmailContent emailContent;

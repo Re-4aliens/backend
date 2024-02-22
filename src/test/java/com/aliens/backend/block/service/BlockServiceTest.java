@@ -5,8 +5,7 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.block.controller.dto.BlockRequest;
 import com.aliens.backend.block.domain.repository.BlockRepository;
 import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
-import com.aliens.backend.chat.service.ChatService;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.response.success.ChatSuccess;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
@@ -22,14 +20,13 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
-class BlockServiceTest extends BaseServiceTest {
+class BlockServiceTest extends BaseIntegrationTest {
 
     @Autowired BlockService blockService;
     @Autowired BlockRepository blockRepository;
     @Autowired ChatRoomRepository chatRoomRepository;
     @Autowired DummyGenerator dummyGenerator;
     @Autowired ApplicationEventPublisher publisher;
-    @SpyBean ChatService chatService;
 
     LoginMember myLoginMember;
     Member member;

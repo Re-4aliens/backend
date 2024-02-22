@@ -3,12 +3,12 @@ package com.aliens.backend.email.service;
 import com.aliens.backend.email.controller.response.EmailResponse;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class EmailServiceTest extends BaseServiceTest {
+class EmailServiceTest extends BaseIntegrationTest {
 
     @Autowired
     EmailService emailService;

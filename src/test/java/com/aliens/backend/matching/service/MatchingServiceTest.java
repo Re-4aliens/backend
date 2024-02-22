@@ -1,5 +1,6 @@
 package com.aliens.backend.matching.service;
 
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
@@ -10,14 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
-class MatchingServiceTest {
+class MatchingServiceTest extends BaseIntegrationTest {
 
     @Autowired MatchingService matchingService;
     @Autowired MatchingRoundRepository matchingRoundRepository;

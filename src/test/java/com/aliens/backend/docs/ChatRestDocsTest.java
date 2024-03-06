@@ -1,8 +1,7 @@
-package com.aliens.backend.chatting.controller;
+package com.aliens.backend.docs;
 
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.domain.Message;
-import com.aliens.backend.docs.BaseRestDocsTest;
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.ChatSuccess;
 import org.junit.jupiter.api.DisplayName;

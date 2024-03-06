@@ -5,9 +5,6 @@ import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.EmailSuccess;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 import java.util.Collections;
@@ -22,9 +19,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@SpringBootTest
 class EmailRestDocsTest extends BaseRestDocsTest {
 
     @Test

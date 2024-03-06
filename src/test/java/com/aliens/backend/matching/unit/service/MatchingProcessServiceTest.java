@@ -5,12 +5,11 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
-import com.aliens.backend.chat.service.ChatService;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
-import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.domain.MatchingResult;
@@ -24,21 +23,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-@SpringBootTest
-class MatchingProcessServiceTest extends BaseServiceTest {
+class MatchingProcessServiceTest extends BaseIntegrationTest {
     @Autowired MatchingProcessService matchingProcessService;
-    @SpyBean ChatService chatService;
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
     @Autowired MatchingResultRepository matchingResultRepository;

@@ -1,16 +1,12 @@
-package com.aliens.backend.block.controller;
+package com.aliens.backend.docs;
 
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.block.controller.dto.BlockRequest;
-import com.aliens.backend.docs.BaseRestDocsTest;
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.ChatSuccess;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -20,9 +16,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@SpringBootTest
+
 class BlockRestDocsTest extends BaseRestDocsTest {
 
     @BeforeEach

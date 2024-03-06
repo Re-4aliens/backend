@@ -7,7 +7,6 @@ import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.controller.ChatReportController;
 import com.aliens.backend.email.controller.EmailController;
 import com.aliens.backend.global.DummyGenerator;
-import com.aliens.backend.mathcing.controller.MatchingController;
 import com.aliens.backend.member.controller.MemberController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +32,6 @@ public abstract class BaseRestDocsTest {
     protected ChatReportController chatReportController;
     @SpyBean
     protected MemberController memberController;
-    @SpyBean
-    protected MatchingController matchingController;
     @SpyBean
     protected EmailController emailController;
     @SpyBean

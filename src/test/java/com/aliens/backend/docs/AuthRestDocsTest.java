@@ -1,9 +1,8 @@
-package com.aliens.backend.auth.controller;
+package com.aliens.backend.docs;
 
 import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
 import com.aliens.backend.auth.service.AuthService;
-import com.aliens.backend.docs.BaseRestDocsTest;
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.AuthSuccess;
 import org.junit.jupiter.api.DisplayName;

@@ -1,20 +1,15 @@
-package com.aliens.backend.member.controller;
+package com.aliens.backend.docs;
 
-
-import com.aliens.backend.docs.BaseRestDocsTest;
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.MemberSuccess;
 import com.aliens.backend.member.controller.dto.request.SignUpRequest;
 import com.aliens.backend.member.controller.dto.request.TemporaryPasswordRequest;
 import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
 import com.aliens.backend.member.controller.dto.response.MemberResponse;
-import com.aliens.backend.member.domain.MemberStatus;
+import com.aliens.backend.member.domain.MatchingStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,9 +26,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.partWith
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@SpringBootTest
+
 class MemberRestDocsTest extends BaseRestDocsTest {
 
     @Test
@@ -168,7 +161,7 @@ class MemberRestDocsTest extends BaseRestDocsTest {
     @Test
     @DisplayName("API - 상태 요청")
     void getStatus() throws Exception {
-        String message = MemberStatus.NOT_APPLIED_NOT_MATCHED.getMessage();
+        String message = MatchingStatus.NOT_APPLIED_NOT_MATCHED.getMessage();
         SuccessResponse<String> response = SuccessResponse.of(MemberSuccess.GET_MEMBER_MATCHING_STATUS_SUCCESS, message);
         doReturn(response).when(memberController).getStatus(any());
 

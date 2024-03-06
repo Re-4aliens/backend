@@ -1,5 +1,6 @@
 package com.aliens.backend.mathcing.business.model;
 
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record Participant(
-        Long memberId,
+        Member member,
         Language firstPreferLanguage,
         Language secondPreferLanguage,
         List<Partner> partners,
@@ -34,7 +35,7 @@ public record Participant(
         BlockedPartnerGroup blockedPartnerGroup = BlockedPartnerGroup.from(blockHistories);
 
         return new Participant(
-                matchingApplication.getMemberId(),
+                matchingApplication.getMember(),
                 matchingApplication.getFirstPreferLanguage(),
                 matchingApplication.getSecondPreferLanguage(),
                 new ArrayList<>(), previousPartnerGroup, blockedPartnerGroup
@@ -45,13 +46,17 @@ public record Participant(
         return partners.size();
     }
 
-    public void addPartner(Relationship relationship, Long memberId) {
-        partners.add(Partner.of(relationship, memberId));
+    public String getFcmToken() {
+        return member().getFcmToken();
+    }
+
+    public void addPartner(Relationship relationship, Participant participant) {
+        partners.add(Partner.of(relationship, participant.member));
     }
 
     public boolean isPartnerWith(Participant participant) {
         for (Partner partner : partners) {
-            if (partner.memberId().equals(participant.memberId())) {
+            if (partner.member().equals(participant.member())) {
                 return true;
             }
         }
@@ -64,5 +69,9 @@ public record Participant(
 
     public boolean hasBlocked(Participant participant) {
         return blockedPartnerGroup.contains(participant);
+    }
+
+    public boolean hasPartner() {
+        return !partners.isEmpty();
     }
 }

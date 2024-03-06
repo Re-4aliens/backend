@@ -4,7 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.member.controller.dto.MemberPage;
 import com.aliens.backend.member.domain.Image;
 import com.aliens.backend.member.domain.MemberInfo;
-import com.aliens.backend.member.domain.MemberStatus;
+import com.aliens.backend.member.domain.MatchingStatus;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
 import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
@@ -34,7 +34,7 @@ public class Member {
     private MemberRole role = MemberRole.MEMBER;
 
     @Column
-    private MemberStatus status = MemberStatus.NOT_APPLIED_NOT_MATCHED;
+    private MatchingStatus status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
 
     @Column
     private Boolean withdraw = false;
@@ -105,6 +105,41 @@ public class Member {
 
     public Long getId() {
         return id;
+    }
+
+    public String getFcmToken() {
+        return name;
+    }
+
+    public void applyMatch() {
+        if (status.equals(MatchingStatus.NOT_APPLIED_MATCHED)) {
+            status = MatchingStatus.APPLIED_MATCHED;
+        }
+        if (status.equals(MatchingStatus.NOT_APPLIED_NOT_MATCHED)) {
+            status = MatchingStatus.APPLIED_NOT_MATCHED;
+        }
+    }
+
+    public void matched() {
+        status = MatchingStatus.NOT_APPLIED_MATCHED;
+    }
+
+    public void expireMatch() {
+        if (status.equals(MatchingStatus.APPLIED_MATCHED)) {
+            status = MatchingStatus.APPLIED_NOT_MATCHED;
+        }
+        if (status.equals(MatchingStatus.NOT_APPLIED_MATCHED)) {
+            status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
+        }
+    }
+
+    public void cancelApplication() {
+        if (status.equals(MatchingStatus.APPLIED_MATCHED)) {
+            status = MatchingStatus.NOT_APPLIED_MATCHED;
+        }
+        if (status.equals(MatchingStatus.APPLIED_NOT_MATCHED)) {
+            status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
+        }
     }
 
     @Override

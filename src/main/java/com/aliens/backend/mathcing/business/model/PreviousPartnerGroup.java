@@ -1,24 +1,25 @@
 package com.aliens.backend.mathcing.business.model;
 
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.mathcing.domain.MatchingResult;
 
 import java.util.List;
 
 public class PreviousPartnerGroup {
-    private final List<Long> previousPartners;
+    private final List<Member> previousPartners;
 
-    private PreviousPartnerGroup(final List<Long> previousPartners) {
+    private PreviousPartnerGroup(final List<Member> previousPartners) {
         this.previousPartners = previousPartners;
     }
 
     public static PreviousPartnerGroup from(final List<MatchingResult> previousMatchingResults) {
-        List<Long> previousPartners = previousMatchingResults.stream()
-                .mapToLong(MatchingResult::getMatchedMemberId).boxed().toList();
+        List<Member> previousPartners = previousMatchingResults.stream()
+                .map(MatchingResult::getMatchedMember).toList();
         return new PreviousPartnerGroup(previousPartners);
     }
 
     public boolean contains(Participant participant) {
-        return previousPartners.contains(participant.memberId());
+        return previousPartners.contains(participant.member());
     }
 
     @Override

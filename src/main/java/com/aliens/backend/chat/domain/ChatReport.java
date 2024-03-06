@@ -26,15 +26,20 @@ public class ChatReport {
     protected ChatReport() {
     }
 
+    private ChatReport(Member reportingMember,
+                       Member reportedMember,
+                       ChatReportCategory category,
+                       String content) {
+        this.reportingMember = reportingMember;
+        this.reportedMember = reportedMember;
+        this.category = category;
+        this.content = content;
+    }
+
     public static ChatReport of(Member reportingMember,
                                 Member reportedMember,
                                 ChatReportCategory category,
                                 String content) {
-        ChatReport chatReport = new ChatReport();
-        chatReport.reportingMember = reportingMember;
-        chatReport.reportedMember = reportedMember;
-        chatReport.category = category;
-        chatReport.content = content;
-        return chatReport;
+        return new ChatReport(reportingMember, reportedMember, category, content);
     }
 }

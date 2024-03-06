@@ -91,8 +91,8 @@ public class ParticipantGroup {
     }
 
     private void addMatching(final Participant participant, final Participant partner) {
-        participant.addPartner(relationship, partner.memberId());
-        partner.addPartner(relationship, participant.memberId());
+        participant.addPartner(relationship, partner);
+        partner.addPartner(relationship, participant);
     }
 
     private boolean isValidMatching(final Relationship relationship,

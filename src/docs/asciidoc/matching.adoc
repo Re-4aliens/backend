@@ -1,0 +1,48 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== Matching APIs
+
+[[resources-post-create]]
+=== 매칭 신청
+
+==== HTTP request
+
+include::{snippets}/matching-application-post/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-application-post/http-response.adoc[]
+
+=== 매칭 신청 내역 조회
+
+==== HTTP request
+
+include::{snippets}/matching-application-get/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-application-get/http-response.adoc[]
+
+=== 매칭 신청 취소
+
+==== HTTP request
+
+include::{snippets}/matching-application-cancel/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-application-cancel/http-response.adoc[]
+
+=== 내 매칭 파트너 조회
+
+==== HTTP request
+
+include::{snippets}/matching-process-get-partners/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-process-get-partners/http-response.adoc[]

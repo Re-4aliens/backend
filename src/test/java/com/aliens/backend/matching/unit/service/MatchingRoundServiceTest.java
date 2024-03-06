@@ -11,10 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,7 +25,7 @@ class MatchingRoundServiceTest extends BaseServiceTest {
     @DisplayName("매주 월, 목 매칭 회차 업데이트")
     void saveMatchRoundTest() {
         // given
-        MatchingRound mondayRound = MatchingRound.from(MockTime.MONDAY.getTime(), matchingTimeProperties);
+        MatchingRound mondayRound = MatchingRound.from(MockTime.TUESDAY.getTime(), matchingTimeProperties);
 
         // when
         matchingRoundRepository.save(mondayRound);
@@ -35,21 +33,22 @@ class MatchingRoundServiceTest extends BaseServiceTest {
         // then
         MatchingRound currentRound = getCurrentRound();
         DayOfWeek result = currentRound.getDayOfWeek();
-        assertThat(result).isEqualTo(DayOfWeek.MONDAY);
+        DayOfWeek expected = DayOfWeek.TUESDAY;
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("현재 매칭 회차 조회")
     void getCurrentRoundTest() {
         // given
-        MatchingRound mondayRound = MatchingRound.from(MockTime.MONDAY.getTime(), matchingTimeProperties);
+        MatchingRound mondayRound = MatchingRound.from(MockTime.TUESDAY.getTime(), matchingTimeProperties);
         matchingRoundRepository.save(mondayRound);
 
         // then
         MatchingRound currentRound = getCurrentRound();
         DayOfWeek result = currentRound.getDayOfWeek();
-
-        assertThat(result).isEqualTo(DayOfWeek.MONDAY);
+        DayOfWeek expected = DayOfWeek.TUESDAY;
+        assertThat(result).isEqualTo(expected);
     }
 
     private MatchingRound getCurrentRound() {

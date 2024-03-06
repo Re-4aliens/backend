@@ -1,5 +1,6 @@
 package com.aliens.backend.chat.controller;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
@@ -38,11 +39,11 @@ public class ChatController {
     }
 
     @GetMapping("/chat/summaries")
-    public SuccessResponse<ChatSummaryResponse> getChatSummaries(@Login Long memberId) {
+    public SuccessResponse<ChatSummaryResponse> getChatSummaries(@Login LoginMember loginMember) {
 
         return SuccessResponse.of(
                 ChatSuccess.GET_SUMMARIES_SUCCESS,
-                chatService.getChatSummaries(memberId)
+                chatService.getChatSummaries(loginMember)
         );
     }
 

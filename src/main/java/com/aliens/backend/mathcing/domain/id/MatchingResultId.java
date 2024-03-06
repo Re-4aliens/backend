@@ -1,5 +1,6 @@
 package com.aliens.backend.mathcing.domain.id;
 
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import jakarta.persistence.*;
 
@@ -11,22 +12,24 @@ public class MatchingResultId implements Serializable {
     @JoinColumn(name = "matching_round")
     private MatchingRound matchingRound;
 
-    @Column(name = "matching_member_id")
-    private Long matchingMemberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "matching_member_id")
+    private Member matchingMember;
 
-    @Column(name = "matched_member_id")
-    private Long matchedMemberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "matched_member_id")
+    private Member matchedMember;
 
     protected MatchingResultId() {
     }
 
-    private MatchingResultId(final MatchingRound matchingRound, final Long matchingMemberId, final Long matchedMemberId) {
+    private MatchingResultId(final MatchingRound matchingRound, final Member matchingMember, final Member matchedMember) {
         this.matchingRound = matchingRound;
-        this.matchingMemberId = matchingMemberId;
-        this.matchedMemberId = matchedMemberId;
+        this.matchingMember = matchingMember;
+        this.matchedMember = matchedMember;
     }
 
-    public static MatchingResultId of(MatchingRound matchingRound, Long matchingMemberId, Long matchedMemberId) {
+    public static MatchingResultId of(final MatchingRound matchingRound,final Member matchingMemberId,final Member matchedMemberId) {
         return new MatchingResultId(matchingRound, matchingMemberId, matchedMemberId);
     }
 
@@ -34,11 +37,19 @@ public class MatchingResultId implements Serializable {
         return matchingRound;
     }
 
+    public Member getMatchingMember() {
+        return matchingMember;
+    }
+
+    public Member getMatchedMember() {
+        return matchedMember;
+    }
+
     public Long getMatchingMemberId() {
-        return matchingMemberId;
+        return matchingMember.getId();
     }
 
     public Long getMatchedMemberId() {
-        return matchedMemberId;
+        return matchedMember.getId();
     }
 }

@@ -7,36 +7,48 @@ import java.time.DayOfWeek;
 
 @Component
 public class MatchingTimeProperties {
-    @Value("${matching.request.time.hours}")
-    private Long requestAvailableTime;
+    @Value("${matching.request.time.tuesday.hours}")
+    private Long tuesdayRequestAvailableHours;
 
-    @Value("${matching.valid.time.hours}")
-    private Integer validBeginHours;
+    @Value("${matching.request.time.friday.hours}")
+    private Long fridayRequestAvailableHours;
 
-    @Value("${matching.valid.day-of-week.if.monday.hours}")
-    private Long mondayMatchingValidHours;
+    @Value("${matching.valid.time.tuesday.hours}")
+    private Long tuesdayMatchingValidHours;
 
-    @Value("${matching.valid.day-of-week.if.thursday.hours}")
-    private Long thursdayMatchingValidHours;
+    @Value("${matching.valid.time.friday.hours}")
+    private Long fridayMatchingValidHours;
 
-    @Value("${matching.valid.day-of-week.if.default.hours}")
+    @Value("${matching.round.restricted}")
+    private Long restrictedTime;
+
+    @Value("${matching.valid.time.default.hours}")
     private Long defaultMatchingValidHours;
 
-    public Long getRequestAvailableTime() {
-        return requestAvailableTime;
-    }
+    @Value("${matching.request.time.default.hours}")
+    private Long defaultRequestAvailableHours;
 
-    public Integer getValidBeginHours() {
-        return validBeginHours;
+    public Long getRequestAvailableTime(DayOfWeek dayOfWeek) {
+        if (dayOfWeek.equals(DayOfWeek.TUESDAY)) {
+            return tuesdayRequestAvailableHours;
+        }
+        if (dayOfWeek.equals(DayOfWeek.FRIDAY)) {
+            return fridayRequestAvailableHours;
+        }
+        return defaultRequestAvailableHours;
     }
 
     public Long getMatchingValidHours(final DayOfWeek dayOfWeek) {
-        if (dayOfWeek.equals(DayOfWeek.MONDAY)) {
-            return mondayMatchingValidHours;
+        if (dayOfWeek.equals(DayOfWeek.TUESDAY)) {
+            return tuesdayMatchingValidHours;
         }
-        if (dayOfWeek.equals(DayOfWeek.THURSDAY)) {
-            return thursdayMatchingValidHours;
+        if (dayOfWeek.equals(DayOfWeek.FRIDAY)) {
+            return fridayMatchingValidHours;
         }
         return defaultMatchingValidHours;
+    }
+
+    public Long getRestrictedTime() {
+        return restrictedTime;
     }
 }

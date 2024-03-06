@@ -4,7 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.chat.controller.dto.request.ChatReportRequest;
 import com.aliens.backend.chat.service.ChatReportService;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.ChatError;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-class ChatReportServiceTest extends BaseServiceTest {
+class ChatReportServiceTest extends BaseIntegrationTest {
 
     @Autowired ChatReportService chatReportService;
     @Autowired DummyGenerator dummyGenerator;

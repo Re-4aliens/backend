@@ -1,5 +1,8 @@
 package com.aliens.backend.global;
 
+import com.aliens.backend.chat.controller.ChatController;
+import com.aliens.backend.chat.domain.repository.MessageRepository;
+import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.notification.FcmSender;
 import com.aliens.backend.uploader.AwsS3Uploader;
 import com.aliens.backend.uploader.dto.S3File;
@@ -11,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,12 +23,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 
-@SpringBootTest
-public abstract class BaseServiceTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ActiveProfiles("test")
+public abstract class BaseIntegrationTest {
 
     @SpyBean protected AwsS3Uploader awsS3Uploader;
     @SpyBean protected JavaMailSender javaMailSender;
     @SpyBean protected FcmSender fcmSender;
+    // 수정 예정
+    @SpyBean protected MessageRepository messageRepository;
+    @SpyBean protected ChatService chatService;
+    @SpyBean protected ChatController chatController;
 
     @Autowired private DatabaseCleanup databaseCleanUp;
 

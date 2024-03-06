@@ -71,7 +71,7 @@ public class MatchingProcessService {
     @Transactional
     public void expireMatching() {
         List<MatchingResult> previousMatchingResults = getPreviousMatchingResults();
-        previousMatchingResults.forEach(this::resetMatch);
+        previousMatchingResults.forEach(MatchingResult::expireMatch);
         eventPublisher.expireChatRoom(previousMatchingResults);
     }
 
@@ -123,17 +123,7 @@ public class MatchingProcessService {
 
     private void matchBetween(final MatchingResult matchingResult) {
         matchingResultRepository.save(matchingResult);
-        Member matchingMember = matchingResult.getMatchingMember();
-        Member matchedMember = matchingResult.getMatchedMember();
-        matchingMember.matched();
-        matchedMember.matched();
-    }
-
-    private void resetMatch(MatchingResult matchingResult) {
-        Member matchingMember = matchingResult.getMatchingMember();
-        Member matchedMember = matchingResult.getMatchedMember();
-        matchingMember.expireMatch();
-        matchedMember.expireMatch();
+        matchingResult.matchEach();
     }
 
     private MatchingOperateRequest createOperateRequest(final MatchingRound matchingRound) {

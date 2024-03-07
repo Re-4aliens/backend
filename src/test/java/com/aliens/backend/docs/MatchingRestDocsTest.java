@@ -2,18 +2,19 @@ package com.aliens.backend.docs;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.mathcing.controller.MatchingApplicationController;
 import com.aliens.backend.mathcing.controller.MatchingProcessController;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
@@ -32,12 +33,12 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
     MatchingProcessController matchingProcessController;
     @Autowired
     MatchingApplicationService matchingApplicationService;
+    @Autowired MockMvc mockMvc;
+    @Autowired DummyGenerator dummyGenerator;
 
-    ObjectMapper objectMapper = new ObjectMapper();
     String baseUrl = "/matchings";
     Member member;
     List<Member> members;
-    String GIVEN_ACCESS_TOKEN;
     MatchingApplicationRequest request;
 
     @BeforeEach

@@ -12,7 +12,7 @@ import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/matchings")
+@RequestMapping("/matchings/applications")
 public class MatchingApplicationController {
     private final MatchingApplicationService matchingApplicationService;
 
@@ -20,26 +20,33 @@ public class MatchingApplicationController {
         this.matchingApplicationService = matchingApplicationService;
     }
 
-    @PostMapping("/applications")
+    @PostMapping
     public SuccessResponse<String> applyMatch(final @Login LoginMember loginMember,
                                               final @RequestBody @LanguageCheck MatchingApplicationRequest matchingApplicationRequest) {
         return SuccessResponse.of(MatchingSuccess.APPLY_MATCHING_SUCCESS,
                 matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest));
     }
 
-    @GetMapping("/applications")
+    @GetMapping
     public SuccessResponse<MatchingApplicationResponse> getMatchingApplication(final @Login LoginMember loginMember) {
         return SuccessResponse.of(MatchingSuccess.GET_MATCHING_APPLICATION_STATUS_SUCCESS,
                 matchingApplicationService.findMatchingApplication(loginMember));
     }
 
-    @GetMapping("/applications/begin-time")
+    @GetMapping("/begin-time")
     public SuccessResponse<MatchingBeginTimeResponse> getMatchingBeginTime() {
         return SuccessResponse.of(MatchingSuccess.GET_MATCHING_BEGIN_TIME_SUCCESS,
                 matchingApplicationService.findMatchingBeginTime());
     }
 
-    @DeleteMapping("/applications")
+    @PutMapping
+    public SuccessResponse<?> modifyMatchingApplication(final @Login LoginMember loginMember,
+                                                        final @RequestBody @LanguageCheck MatchingApplicationRequest matchingApplicationRequest) {
+        matchingApplicationService.modifyMatchingApplication(loginMember, matchingApplicationRequest);
+        return SuccessResponse.of(MatchingSuccess.MODIFY_MATCHING_APPLICATION_INFO_SUCCESS);
+    }
+
+    @DeleteMapping
     public SuccessResponse<String> cancelMatchingApplication(final @Login LoginMember loginMember) {
         return SuccessResponse.of(MatchingSuccess.CANCEL_MATCHING_APPLICATION_SUCCESS,
                 matchingApplicationService.cancelMatchingApplication(loginMember));

@@ -70,6 +70,15 @@ public class MatchingApplicationService {
         return MatchingBeginTimeResponse.from(currentRound);
     }
 
+    @Transactional
+    public void modifyMatchingApplication(final LoginMember loginMember,
+                                          final MatchingApplicationRequest matchingApplicationRequest) {
+        MatchingRound currentRound = getCurrentRound();
+        checkReceptionTime(currentRound);
+        MatchingApplication matchingApplication = getMatchingApplication(currentRound, loginMember);
+        matchingApplication.modifyTo(matchingApplicationRequest);
+    }
+
     private MatchingRound getCurrentRound() {
         return matchingRoundRepository.findCurrentRound()
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));

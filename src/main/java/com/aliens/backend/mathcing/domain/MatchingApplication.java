@@ -54,6 +54,11 @@ public class MatchingApplication {
                 matchingApplicationRequest.secondPreferLanguage());
     }
 
+    public void modifyTo(final MatchingApplicationRequest matchingApplicationRequest) {
+        this.firstPreferLanguage = matchingApplicationRequest.firstPreferLanguage();
+        this.secondPreferLanguage = matchingApplicationRequest.secondPreferLanguage();
+    }
+
     public Member getMember() {
         return id.getMember();
     }

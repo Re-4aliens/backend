@@ -71,6 +71,24 @@ class MatchingApplicationServiceTest extends BaseServiceTest {
         assertThat(result.getMemberId()).isEqualTo(expectedResult);
     }
 
+
+    @Test
+    @DisplayName("매칭 신청 정보 수정 테스트")
+    void modifyMatchingApplicationTest() {
+        // given
+        createMember();
+        mockClock.mockTime(VALID_RECEPTION_TIME_ON_TUESDAY);
+        matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
+        MatchingApplicationRequest modifyRequest = new MatchingApplicationRequest(Language.JAPANESE, Language.ENGLISH);
+
+        // when
+        matchingApplicationService.modifyMatchingApplication(loginMember, modifyRequest);
+
+        // then
+        MatchingApplication result = findMatchingApplication(loginMember);
+        assertThat(result.getFirstPreferLanguage()).isEqualTo(modifyRequest.firstPreferLanguage());
+    }
+
     @Test
     @DisplayName("매칭된 회원들이 다음 매칭 신청")
     void applyNextMatch() {

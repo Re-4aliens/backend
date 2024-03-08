@@ -96,6 +96,20 @@ class MatchingDocTest extends BaseServiceTest {
     }
 
     @Test
+    @DisplayName("API - 매칭 시작 시간 조회")
+    void getMatchingBeginTimeTest() throws Exception {
+        mockMvc.perform(get(baseUrl + "/applications/begin-time"))
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("matching-begin-time-get",
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result").description("매칭 시작 시간 조회 결과"),
+                                fieldWithPath("result.round").description("매칭 회차"),
+                                fieldWithPath("result.matchingBeginTime").description("매칭 시작 시간")
+                        )));
+    }
+
+    @Test
     @DisplayName("API - 매칭 신청 취소")
     void cancelMatchingApplicationTest() throws Exception {
         // given

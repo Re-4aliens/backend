@@ -4,6 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.global.BaseServiceTest;
 import com.aliens.backend.global.DummyGenerator;
+import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.mathcing.controller.MatchingApplicationController;
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @SpringBootTest
 class MatchingDocTest extends BaseServiceTest {
+    @Autowired MockClock mockClock;
     @Autowired MockMvc mockMvc;
     @Autowired MatchingApplicationController matchingApplicationController;
     @Autowired MatchingProcessController matchingProcessController;
@@ -56,6 +58,7 @@ class MatchingDocTest extends BaseServiceTest {
     @DisplayName("API - 매칭 신청")
     void applyMatchTest() throws Exception {
         // given
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
         createSingleMember();
 
         // when & then
@@ -76,6 +79,7 @@ class MatchingDocTest extends BaseServiceTest {
     @DisplayName("API - 매칭 신청 내역 조회")
     void getMatchingApplicationTest() throws Exception {
         // given & when
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
         createSingleMember();
         LoginMember loginMember = member.getLoginMember();
         matchingApplicationService.saveParticipant(loginMember, request);
@@ -113,6 +117,7 @@ class MatchingDocTest extends BaseServiceTest {
     @DisplayName("API - 매칭 신청 취소")
     void cancelMatchingApplicationTest() throws Exception {
         // given
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
         createSingleMember();
         LoginMember loginMember = member.getLoginMember();
         matchingApplicationService.saveParticipant(loginMember, request);
@@ -153,6 +158,7 @@ class MatchingDocTest extends BaseServiceTest {
     @DisplayName("API - 매칭 신청 정보 수정")
     void modifyMatchingApplicationTest() throws Exception {
         // given
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
         createSingleMember();
         LoginMember loginMember = member.getLoginMember();
         matchingApplicationService.saveParticipant(loginMember, request);

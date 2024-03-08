@@ -27,6 +27,16 @@ include::{snippets}/matching-application-get/http-request.adoc[]
 
 include::{snippets}/matching-application-get/http-response.adoc[]
 
+=== 매칭 시작 시간 조회
+
+==== HTTP request
+
+include::{snippets}/matching-begin-time-get/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/matching-begin-time-get/http-response.adoc[]
+
 === 매칭 신청 취소
 
 ==== HTTP request
@@ -46,3 +56,4 @@ include::{snippets}/matching-process-get-partners/http-request.adoc[]
 ==== HTTP response
 
 include::{snippets}/matching-process-get-partners/http-response.adoc[]
+

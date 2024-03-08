@@ -7,6 +7,7 @@ import com.aliens.backend.global.response.success.MatchingSuccess;
 import com.aliens.backend.global.validator.LanguageCheck;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationResponse;
+import com.aliens.backend.mathcing.controller.dto.response.MatchingBeginTimeResponse;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,12 @@ public class MatchingApplicationController {
     public SuccessResponse<MatchingApplicationResponse> getMatchingApplication(final @Login LoginMember loginMember) {
         return SuccessResponse.of(MatchingSuccess.GET_MATCHING_APPLICATION_STATUS_SUCCESS,
                 matchingApplicationService.findMatchingApplication(loginMember));
+    }
+
+    @GetMapping("/applications/begin-time")
+    public SuccessResponse<MatchingBeginTimeResponse> getMatchingBeginTime() {
+        return SuccessResponse.of(MatchingSuccess.GET_MATCHING_BEGIN_TIME_SUCCESS,
+                matchingApplicationService.findMatchingBeginTime());
     }
 
     @DeleteMapping("/applications")

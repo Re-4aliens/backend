@@ -9,6 +9,7 @@ import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.response.success.MatchingSuccess;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationResponse;
+import com.aliens.backend.mathcing.controller.dto.response.MatchingBeginTimeResponse;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
@@ -61,6 +62,12 @@ public class MatchingApplicationService {
         MatchingApplication matchingApplication = getMatchingApplication(currentRound, loginMember);
         cancelForMatching(matchingApplication);
         return MatchingSuccess.CANCEL_MATCHING_APPLICATION_SUCCESS.getMessage();
+    }
+
+    @Transactional(readOnly = true)
+    public MatchingBeginTimeResponse findMatchingBeginTime() {
+        MatchingRound currentRound = getCurrentRound();
+        return MatchingBeginTimeResponse.from(currentRound);
     }
 
     private MatchingRound getCurrentRound() {

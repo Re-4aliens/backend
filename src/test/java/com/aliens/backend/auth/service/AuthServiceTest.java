@@ -2,7 +2,7 @@ package com.aliens.backend.auth.service;
 
 import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.JWTProperties;
@@ -11,7 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class AuthServiceTest extends BaseServiceTest {
+class AuthServiceTest extends BaseIntegrationTest {
 
     @Autowired AuthService authService;
     @Autowired JWTProperties jwtProperties;

@@ -3,9 +3,8 @@ package com.aliens.backend.event;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomBlockEvent;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomCreationEvent;
-import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.chat.service.model.MemberPair;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.notification.FcmSender;
 import com.google.firebase.messaging.Message;
@@ -13,7 +12,6 @@ import com.google.firebase.messaging.MulticastMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.HashSet;
@@ -25,11 +23,10 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-class EventPublisherTest extends BaseServiceTest {
+class EventPublisherTest extends BaseIntegrationTest {
 
     @Autowired ApplicationEventPublisher publisher;
     @Autowired FcmSender fcmSender;
-    @SpyBean ChatService chatService;
     @Autowired DummyGenerator dummyGenerator;
 
     String givenType = "normal";

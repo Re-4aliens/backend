@@ -3,14 +3,15 @@ package com.aliens.backend.matching.unit.service;
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
-import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
+import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingApplicationResponse;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
@@ -19,23 +20,21 @@ import com.aliens.backend.mathcing.domain.repository.MatchingApplicationReposito
 import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
-import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.mathcing.service.MatchingProcessService;
 import com.aliens.backend.member.domain.MatchingStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static com.aliens.backend.matching.util.time.MockTime.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
-@SpringBootTest
-class MatchingApplicationServiceTest extends BaseServiceTest {
+class MatchingApplicationServiceTest extends BaseIntegrationTest {
     @Autowired MatchingApplicationService matchingApplicationService;
     @Autowired MatchingApplicationRepository matchingApplicationRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;

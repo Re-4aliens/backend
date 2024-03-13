@@ -1,23 +1,21 @@
 package com.aliens.backend.matching.unit.service;
 
-import com.aliens.backend.global.BaseServiceTest;
-import com.aliens.backend.global.response.error.MatchingError;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.DayOfWeek;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-class MatchingRoundServiceTest extends BaseServiceTest {
+class MatchingRoundServiceTest extends BaseIntegrationTest {
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
 

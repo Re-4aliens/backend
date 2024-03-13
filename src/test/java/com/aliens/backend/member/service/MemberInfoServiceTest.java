@@ -4,7 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.member.controller.dto.request.SignUpRequest;
 import com.aliens.backend.member.controller.dto.request.TemporaryPasswordRequest;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 
-class MemberInfoServiceTest extends BaseServiceTest {
+class MemberInfoServiceTest extends BaseIntegrationTest {
 
     @Autowired MemberInfoService memberInfoService;
     @Autowired EmailAuthenticationRepository emailRepository;

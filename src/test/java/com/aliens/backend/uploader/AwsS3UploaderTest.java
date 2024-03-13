@@ -1,6 +1,6 @@
 package com.aliens.backend.uploader;
 
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.uploader.dto.S3File;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-class AwsS3UploaderTest extends BaseServiceTest {
+class AwsS3UploaderTest extends BaseIntegrationTest {
 
     @Autowired
     private AwsS3Uploader awsS3Uploader;

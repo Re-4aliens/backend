@@ -4,14 +4,15 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
-import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
+import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingResult;
@@ -20,19 +21,16 @@ import com.aliens.backend.mathcing.domain.repository.MatchingApplicationReposito
 import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingProcessService;
-import com.aliens.backend.mathcing.business.model.Participant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
-class MatchingBusinessTest extends BaseServiceTest {
+class MatchingBusinessTest extends BaseIntegrationTest {
     @Autowired MatchingProcessService matchingProcessService;
     @Autowired MatchingApplicationRepository matchingApplicationRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;

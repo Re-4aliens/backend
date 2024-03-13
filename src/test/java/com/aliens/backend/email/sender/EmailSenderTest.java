@@ -1,7 +1,7 @@
 package com.aliens.backend.email.sender;
 
 import com.aliens.backend.email.service.EmailSender;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.member.controller.dto.event.TemporaryPasswordEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-class EmailSenderTest extends BaseServiceTest {
+class EmailSenderTest extends BaseIntegrationTest {
 
     @Autowired private EmailSender emailSender;
 

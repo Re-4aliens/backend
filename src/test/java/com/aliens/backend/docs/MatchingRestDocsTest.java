@@ -2,7 +2,7 @@ package com.aliens.backend.docs;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
-import com.aliens.backend.global.DummyGenerator;
+import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.mathcing.controller.MatchingApplicationController;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
@@ -26,29 +25,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 class MatchingRestDocsTest extends BaseRestDocsTest {
+    @Autowired MockClock mockClock;
     @Autowired MatchingApplicationController matchingApplicationController;
     @Autowired MatchingProcessController matchingProcessController;
     @Autowired MatchingApplicationService matchingApplicationService;
-    @Autowired MockMvc mockMvc;
-    @Autowired DummyGenerator dummyGenerator;
 
     String baseUrl = "/matchings";
     Member member;
+    String GIVEN_ACCESS_TOKEN;
     List<Member> members;
-    MatchingApplicationRequest request;
+    MatchingApplicationRequest request = new MatchingApplicationRequest(Language.KOREAN, Language.ENGLISH);
 
     @BeforeEach
     void setUp() {
         dummyGenerator.generateMatchingRound(MockTime.TUESDAY);
-        request = new MatchingApplicationRequest(Language.KOREAN, Language.ENGLISH);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
+
+        member = dummyGenerator.generateSingleMember();
+        GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(member);
     }
 
     @Test
     @DisplayName("API - 매칭 신청")
     void applyMatchTest() throws Exception {
-        // given
-        createSingleMember();
-
         // when & then
         mockMvc.perform(post(baseUrl + "/applications")
                         .header("Authorization", GIVEN_ACCESS_TOKEN)
@@ -67,7 +66,6 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
     @DisplayName("API - 매칭 신청 내역 조회")
     void getMatchingApplicationTest() throws Exception {
         // given & when
-        createSingleMember();
         LoginMember loginMember = member.getLoginMember();
         matchingApplicationService.saveParticipant(loginMember, request);
 
@@ -90,7 +88,6 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
     @DisplayName("API - 매칭 신청 취소")
     void cancelMatchingApplicationTest() throws Exception {
         // given
-        createSingleMember();
         LoginMember loginMember = member.getLoginMember();
         matchingApplicationService.saveParticipant(loginMember, request);
 
@@ -110,8 +107,6 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
     void getMyMatchingPartnersTest() throws Exception {
         // given
         operateMatching(MockTime.TUESDAY);
-        Member targetMember = members.get(0);
-        GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(targetMember);
 
         // when & then
         mockMvc.perform(get(baseUrl + "/partners")
@@ -144,7 +139,6 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
     @DisplayName("API - 매칭 신청 정보 수정")
     void modifyMatchingApplicationTest() throws Exception {
         // given
-        createSingleMember();
         LoginMember loginMember = member.getLoginMember();
         matchingApplicationService.saveParticipant(loginMember, request);
         MatchingApplicationRequest modifyRequest = new MatchingApplicationRequest(Language.JAPANESE, Language.ENGLISH);
@@ -161,11 +155,6 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
                                 fieldWithPath("code").description("성공 코드"),
                                 fieldWithPath("result").description("매칭 신청 정보 수정 결과")
                         )));
-    }
-
-    private void createSingleMember() {
-        member = dummyGenerator.generateSingleMember();
-        GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(member);
     }
 
     private void operateMatching(MockTime mockTime) {

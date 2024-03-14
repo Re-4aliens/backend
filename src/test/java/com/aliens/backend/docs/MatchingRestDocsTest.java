@@ -140,6 +140,29 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
                         )));
     }
 
+    @Test
+    @DisplayName("API - 매칭 신청 정보 수정")
+    void modifyMatchingApplicationTest() throws Exception {
+        // given
+        createSingleMember();
+        LoginMember loginMember = member.getLoginMember();
+        matchingApplicationService.saveParticipant(loginMember, request);
+        MatchingApplicationRequest modifyRequest = new MatchingApplicationRequest(Language.JAPANESE, Language.ENGLISH);
+
+        // when & then
+        mockMvc.perform(put(baseUrl + "/applications")
+                        .header("Authorization", GIVEN_ACCESS_TOKEN)
+                        .content(objectMapper.writeValueAsString(modifyRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("matching-application-modify",
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result").description("매칭 신청 정보 수정 결과")
+                        )));
+    }
+
     private void createSingleMember() {
         member = dummyGenerator.generateSingleMember();
         GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(member);

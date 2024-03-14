@@ -29,6 +29,20 @@ public class MatchingResult {
         return new MatchingResult(MatchingResultId.of(matchingRound, participant.member(), partner.member()), partner.relationship());
     }
 
+    public void matchEach() {
+        Member matchingMember = getMatchingMember();
+        Member matchedMember = getMatchedMember();
+        matchingMember.matched();
+        matchedMember.matched();
+    }
+
+    public void expireMatch() {
+        Member matchingMember = getMatchingMember();
+        Member matchedMember = getMatchedMember();
+        matchingMember.expireMatch();
+        matchedMember.expireMatch();
+    }
+
     public MatchingRound getMatchingRound() {
         return id.getMatchingRound();
     }

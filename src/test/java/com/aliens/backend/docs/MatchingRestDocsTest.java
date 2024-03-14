@@ -26,13 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 class MatchingRestDocsTest extends BaseRestDocsTest {
-
-    @Autowired
-    MatchingApplicationController matchingApplicationController;
-    @Autowired
-    MatchingProcessController matchingProcessController;
-    @Autowired
-    MatchingApplicationService matchingApplicationService;
+    @Autowired MatchingApplicationController matchingApplicationController;
+    @Autowired MatchingProcessController matchingProcessController;
+    @Autowired MatchingApplicationService matchingApplicationService;
     @Autowired MockMvc mockMvc;
     @Autowired DummyGenerator dummyGenerator;
 
@@ -127,6 +123,20 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
                                 fieldWithPath("result[]").description("결과 배열"),
                                 fieldWithPath("result[].matchedMemberId").description("매칭된 멤버 ID"),
                                 fieldWithPath("result[].relationship").description("매칭 관계")
+                        )));
+    }
+
+    @Test
+    @DisplayName("API - 매칭 시작 시간 조회")
+    void getMatchingBeginTimeTest() throws Exception {
+        mockMvc.perform(get(baseUrl + "/applications/begin-time"))
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("matching-begin-time-get",
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result").description("매칭 시작 시간 조회 결과"),
+                                fieldWithPath("result.round").description("매칭 회차"),
+                                fieldWithPath("result.matchingBeginTime").description("매칭 시작 시간")
                         )));
     }
 

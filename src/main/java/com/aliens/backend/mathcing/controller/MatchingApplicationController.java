@@ -39,6 +39,13 @@ public class MatchingApplicationController {
                 matchingApplicationService.findMatchingBeginTime());
     }
 
+    @PutMapping
+    public SuccessResponse<?> modifyMatchingApplication(final @Login LoginMember loginMember,
+                                                        final @RequestBody @LanguageCheck MatchingApplicationRequest matchingApplicationRequest) {
+        matchingApplicationService.modifyMatchingApplication(loginMember, matchingApplicationRequest);
+        return SuccessResponse.of(MatchingSuccess.MODIFY_MATCHING_APPLICATION_INFO_SUCCESS);
+    }
+
     @DeleteMapping
     public SuccessResponse<String> cancelMatchingApplication(final @Login LoginMember loginMember) {
         return SuccessResponse.of(MatchingSuccess.CANCEL_MATCHING_APPLICATION_SUCCESS,

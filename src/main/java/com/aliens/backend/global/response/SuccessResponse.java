@@ -4,10 +4,6 @@ import com.aliens.backend.global.response.success.SuccessCode;
 import org.springframework.http.ResponseEntity;
 
 public class SuccessResponse<T> extends ResponseEntity {
-    public SuccessResponse(final SuccessCode successCode) {
-        super(successCode.getHttpStatus());
-    }
-
     public SuccessResponse(final SuccessCode successCode, final T result) {
         super(new CustomResponseDto<>(successCode.getCode(), result),
                 successCode.getHttpStatus()
@@ -19,6 +15,6 @@ public class SuccessResponse<T> extends ResponseEntity {
     }
 
     public static SuccessResponse of(final SuccessCode successCode) {
-        return new SuccessResponse(successCode);
+        return new SuccessResponse(successCode, successCode.getMessage());
     }
 }

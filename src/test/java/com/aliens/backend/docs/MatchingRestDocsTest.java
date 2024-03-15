@@ -159,6 +159,7 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
 
     private void operateMatching(MockTime mockTime) {
         members = dummyGenerator.generateMultiMember(10);
+        GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(members.get(1));
         dummyGenerator.generateAppliersToMatch(10L);
         dummyGenerator.operateMatching(mockTime);
     }

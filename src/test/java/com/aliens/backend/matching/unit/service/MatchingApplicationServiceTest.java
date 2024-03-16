@@ -208,9 +208,4 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     private Member getMemberById(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
-
-    private void createMember() {
-        Member member = dummyGenerator.generateSingleMember();
-        loginMember = member.getLoginMember();
-    }
 }

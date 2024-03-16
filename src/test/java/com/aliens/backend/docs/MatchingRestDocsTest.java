@@ -31,18 +31,12 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
     @Autowired MatchingApplicationService matchingApplicationService;
 
     String baseUrl = "/matchings";
-    Member member;
-    String GIVEN_ACCESS_TOKEN;
-    List<Member> members;
     MatchingApplicationRequest request = new MatchingApplicationRequest(Language.KOREAN, Language.ENGLISH);
 
     @BeforeEach
-    void setUp() {
+    void setUpMatch() {
         dummyGenerator.generateMatchingRound(MockTime.TUESDAY);
         mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
-
-        member = dummyGenerator.generateSingleMember();
-        GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(member);
     }
 
     @Test
@@ -106,7 +100,10 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
     @DisplayName("API - 내 매칭 파트너 조회")
     void getMyMatchingPartnersTest() throws Exception {
         // given
-        operateMatching(MockTime.TUESDAY);
+        dummyGenerator.applySingleMemberToMatch(member, request);
+        List<Member> members = dummyGenerator.generateMultiMember(10);
+        dummyGenerator.generateAppliersToMatch(members);
+        dummyGenerator.operateMatching();
 
         // when & then
         mockMvc.perform(get(baseUrl + "/partners")
@@ -155,12 +152,5 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
                                 fieldWithPath("code").description("성공 코드"),
                                 fieldWithPath("result").description("매칭 신청 정보 수정 결과")
                         )));
-    }
-
-    private void operateMatching(MockTime mockTime) {
-        members = dummyGenerator.generateMultiMember(10);
-        GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(members.get(1));
-        dummyGenerator.generateAppliersToMatch(10L);
-        dummyGenerator.operateMatching(mockTime);
     }
 }

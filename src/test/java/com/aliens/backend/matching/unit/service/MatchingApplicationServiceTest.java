@@ -26,10 +26,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 
-import static com.aliens.backend.matching.util.time.MockTime.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -45,21 +43,23 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     @Autowired DummyGenerator dummyGenerator;
     @Autowired MockClock mockClock;
 
+    Member member;
     LoginMember loginMember;
-    MatchingApplicationRequest matchingApplicationRequest;
+    MatchingApplicationRequest matchingApplicationRequest = new MatchingApplicationRequest(Language.KOREAN, Language.ENGLISH);
 
     @BeforeEach
     void setUp() {
-        saveMatchRound(MockTime.TUESDAY);
-        matchingApplicationRequest = new MatchingApplicationRequest(Language.KOREAN, Language.ENGLISH);
+        member = dummyGenerator.generateSingleMember();
+        loginMember = member.getLoginMember();
+
+        dummyGenerator.generateMatchingRound(MockTime.TUESDAY);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
     }
 
     @Test
     @DisplayName("매칭 신청 단위 테스트")
     void applyMatchTest() {
         // given
-        createMember();
-        mockClock.mockTime(VALID_RECEPTION_TIME_ON_TUESDAY);
         Long expectedResult = loginMember.memberId();
 
         // when
@@ -74,9 +74,7 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     @DisplayName("매칭 신청 정보 수정 테스트")
     void modifyMatchingApplicationTest() {
         // given
-        createMember();
-        mockClock.mockTime(VALID_RECEPTION_TIME_ON_TUESDAY);
-        matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
+        dummyGenerator.applySingleMemberToMatch(member, matchingApplicationRequest);
         MatchingApplicationRequest modifyRequest = new MatchingApplicationRequest(Language.JAPANESE, Language.ENGLISH);
 
         // when
@@ -91,49 +89,52 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     @DisplayName("매칭된 회원들이 다음 매칭 신청")
     void applyNextMatch() {
         // given
-        dummyGenerator.generateMultiMember(20);
-        operateMatching(VALID_RECEPTION_TIME_ON_TUESDAY);
-        saveMatchRound(FRIDAY);
-        mockClock.mockTime(VALID_RECEPTION_TIME_ON_FRIDAY);
+        List<Member> members = dummyGenerator.generateMultiMember(10);
+        Member memberWishingToApplyAgain = members.get(0);
+
+        dummyGenerator.generateAppliersToMatch(members);
+        dummyGenerator.operateMatching();
+
+        dummyGenerator.generateMatchingRound(MockTime.FRIDAY);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_FRIDAY);
 
         // when
-        dummyGenerator.generateAppliersToMatch(20L);
+        dummyGenerator.applySingleMemberToMatch(memberWishingToApplyAgain, matchingApplicationRequest);
 
         // then
-        List<Member> members = getAllMembers();
-        members.forEach(member -> {
-            String result = member.getStatus();
-            assertThat(result).isEqualTo(MatchingStatus.APPLIED_MATCHED.getMessage());
-        });
+        Member appliedMember = getMemberById(memberWishingToApplyAgain.getId());
+        String result = appliedMember.getStatus();
+        assertThat(result).isEqualTo(MatchingStatus.APPLIED_MATCHED.getMessage());
     }
 
     @Test
     @DisplayName("매칭된 회원이 다음 매칭 신청 후, 매칭 취소")
     void applyNextMatchAndCancel() {
         // given
-        dummyGenerator.generateMultiMember(20);
-        operateMatching(VALID_RECEPTION_TIME_ON_TUESDAY);
-        saveMatchRound(FRIDAY);
-        mockClock.mockTime(VALID_RECEPTION_TIME_ON_FRIDAY);
-        dummyGenerator.generateAppliersToMatch(20L);
+        List<Member> members = dummyGenerator.generateMultiMember(10);
+        Member memberWishingToCancel = members.get(0);
+
+        dummyGenerator.generateAppliersToMatch(members);
+        dummyGenerator.operateMatching();
+
+        dummyGenerator.generateMatchingRound(MockTime.FRIDAY);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_FRIDAY);
+        dummyGenerator.applySingleMemberToMatch(memberWishingToCancel, matchingApplicationRequest);
 
         // when
-        Member member = getMemberById(1L);
-        matchingApplicationService.cancelMatchingApplication(member.getLoginMember());
+        matchingApplicationService.cancelMatchingApplication(memberWishingToCancel.getLoginMember());
 
         // then
-        Member resultMember = getMemberById(1L);
-        String result = resultMember.getStatus();
-        String expected = MatchingStatus.NOT_APPLIED_MATCHED.getMessage();
-        assertThat(result).isEqualTo(expected);
+        Member canceledMember = getMemberById(memberWishingToCancel.getId());
+        String result = canceledMember.getStatus();
+        assertThat(result).isEqualTo(MatchingStatus.NOT_APPLIED_MATCHED.getMessage());
     }
 
     @Test
     @DisplayName("지정 시간 외 매칭 신청시, 에러 발생")
     void applyMatchIfNotValidTime() {
         // given
-        createMember();
-        mockClock.mockTime(INVALID_RECEPTION_TIME);
+        mockClock.mockTime(MockTime.INVALID_RECEPTION_TIME);
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest))
@@ -144,22 +145,19 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     @DisplayName("매칭 신청 조회 단위 테스트")
     void getMatchingApplicationTest() {
         // given
-        createMember();
-        Long expectedResult = loginMember.memberId();
-        applyToMatch();
+        matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
 
         //when
-        MatchingApplicationResponse result = matchingApplicationService.findMatchingApplication(loginMember);
+        MatchingApplicationResponse matchingApplicationResponse = matchingApplicationService.findMatchingApplication(loginMember);
 
         // then
-        assertThat(result.memberId()).isEqualTo(expectedResult);
+        Long result = matchingApplicationResponse.memberId();
+        assertThat(result).isEqualTo(loginMember.memberId());
     }
 
     @Test
     @DisplayName("매칭 신청하지 않은 사용자 조회 테스트")
     void getMatchingApplicationIfNotApplied() {
-        createMember();
-        // when & then
         assertThatThrownBy(() -> matchingApplicationService.findMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
     }
@@ -168,9 +166,7 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     @DisplayName("매칭 신청 취소 단위 테스트")
     void deleteMatchingApplicationTest() {
         // given
-        createMember();
-        applyToMatch();
-        mockClock.mockTime(VALID_RECEPTION_TIME_ON_TUESDAY);
+        matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
 
         // when
         matchingApplicationService.cancelMatchingApplication(loginMember);
@@ -184,9 +180,8 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     @DisplayName("지정 시간 외 매칭 취소 신청시, 에러 발생")
     void deleteMatchIfNotValidTime() {
         // given
-        createMember();
-        applyToMatch();
-        mockClock.mockTime(INVALID_RECEPTION_TIME);
+        matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
+        mockClock.mockTime(MockTime.INVALID_RECEPTION_TIME);
 
         // when & then
         assertThatThrownBy(() -> matchingApplicationService.cancelMatchingApplication(loginMember))
@@ -196,23 +191,8 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     @Test
     @DisplayName("매칭을 신청하지 않은 사용자 매칭 삭제 요청 테스트")
     void deleteMatchIfNotApplied() {
-        // given
-        createMember();
-        mockClock.mockTime(VALID_RECEPTION_TIME_ON_TUESDAY);
-
         assertThatThrownBy(() -> matchingApplicationService.cancelMatchingApplication(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
-    }
-
-    private void applyToMatch() {
-        mockClock.mockTime(VALID_RECEPTION_TIME_ON_TUESDAY);
-        matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
-    }
-
-    private void saveMatchRound(MockTime mockTime) {
-        mockClock.mockTime(mockTime);
-        MatchingRound matchingRound = MatchingRound.from(mockTime.getTime(), matchingTimeProperties);
-        matchingRoundRepository.save(matchingRound);
     }
 
     private MatchingRound getCurrentRound() {
@@ -229,18 +209,8 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
         return memberRepository.findById(memberId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
-    private List<Member> getAllMembers() {
-        return memberRepository.findAll();
-    }
-
     private void createMember() {
         Member member = dummyGenerator.generateSingleMember();
         loginMember = member.getLoginMember();
-    }
-
-    private void operateMatching(MockTime mockTime) {
-        mockClock.mockTime(mockTime);
-        dummyGenerator.generateAppliersToMatch(20L);
-        matchingProcessService.operateMatching();
     }
 }

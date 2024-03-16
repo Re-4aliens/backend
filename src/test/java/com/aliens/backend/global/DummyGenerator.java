@@ -2,7 +2,6 @@ package com.aliens.backend.global;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
-import com.aliens.backend.auth.domain.MemberRole;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.auth.service.TokenProvider;
 import com.aliens.backend.global.exception.RestApiException;
@@ -119,6 +118,7 @@ public class DummyGenerator {
         MemberInfo memberInfo = MemberInfo.of(encodedRequest, member);
         memberInfoRepository.save(memberInfo);
     }
+
     // MultipartFile 생성 메서드
     public MultipartFile generateMultipartFile() {
         String fileName = "test";
@@ -134,10 +134,10 @@ public class DummyGenerator {
     }
 
     //지원자 생성 메서드
-    public void generateAppliersToMatch(Long numberOfMember) {
+    public void generateAppliersToMatch(List<Member> members) {
         Random random = new Random();
 
-        for (long i = 1L; i <= numberOfMember; i++) {
+        for (Member member : members) {
             Language firstPreferLanguage = getRandomLanguage(random);
             Language secondPreferLanguage;
 
@@ -145,10 +145,15 @@ public class DummyGenerator {
                 secondPreferLanguage = getRandomLanguage(random);
             } while (firstPreferLanguage == secondPreferLanguage);
 
-            LoginMember loginMember = new LoginMember(i, MemberRole.MEMBER);
+            LoginMember loginMember = member.getLoginMember();
             MatchingApplicationRequest request = new MatchingApplicationRequest(firstPreferLanguage, secondPreferLanguage);
             matchingApplicationService.saveParticipant(loginMember, request);
         }
+    }
+
+    // 단일 멤버 매칭 신청 메서드
+    public void applySingleMemberToMatch(Member member, MatchingApplicationRequest matchingApplicationRequest) {
+        matchingApplicationService.saveParticipant(member.getLoginMember(), matchingApplicationRequest);
     }
 
     private Language getRandomLanguage(Random random) {

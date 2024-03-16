@@ -42,12 +42,13 @@ public abstract class BaseRestDocsTest {
     @Autowired
     protected DummyGenerator dummyGenerator;
 
+    protected Member member;
     protected String GIVEN_ACCESS_TOKEN;
     protected ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
-        Member member = dummyGenerator.generateSingleMember();
+        member = dummyGenerator.generateSingleMember();
         GIVEN_ACCESS_TOKEN = dummyGenerator.generateAccessToken(member);
     }
 }

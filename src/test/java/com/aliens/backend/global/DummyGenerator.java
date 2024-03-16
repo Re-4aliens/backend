@@ -91,9 +91,8 @@ public class DummyGenerator {
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 
-    // 매칭 동작 메서드 : 매칭 동작 전, generateAppliersToMatch 메서드 선행 동작 필요 ... 매개변수 : TUESDAY 권장
-    public void operateMatching(MockTime mockTime) {
-        mockClock.mockTime(mockTime);
+    // 매칭 동작 메서드 : 매칭 동작 전, 매칭 신청자들 필요
+    public void operateMatching() {
         matchingProcessService.expireMatching();
         matchingProcessService.operateMatching();
     }

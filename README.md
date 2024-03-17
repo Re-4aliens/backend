@@ -23,14 +23,6 @@
  -  GooglePlay URL : https://play.google.com/store/apps/details?id=com.aliens.friendship
 
  -  AppStore URL : https://apps.apple.com/kr/app/friendship/id6466155577
-   
----
-
-**사용 예시** 
-
-
-https://github.com/Re-4aliens/backend/assets/86913355/6fdd562a-aa46-4de6-aafb-35c0c2acde2b
-
 
 
 ---

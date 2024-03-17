@@ -23,7 +23,14 @@
  -  GooglePlay URL : https://play.google.com/store/apps/details?id=com.aliens.friendship
 
  -  AppStore URL : https://apps.apple.com/kr/app/friendship/id6466155577
+ -  
+---
 
+**사용 예시** 
+
+- 사진 (FrontEnd)
+
+  
 ---
 
 **사용된 기술**
@@ -35,12 +42,6 @@ Database - MySQL, MongoDB
 Server - AWS S3, AWS rds mysql, Putty
 
 Notification - Firebase Cloud Messaging (FCM)
-
----
-
-**사용 예시** 
-
-- 사진 (FrontEnd)
 
 ---
 

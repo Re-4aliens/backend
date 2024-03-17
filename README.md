@@ -23,14 +23,13 @@
  -  GooglePlay URL : https://play.google.com/store/apps/details?id=com.aliens.friendship
 
  -  AppStore URL : https://apps.apple.com/kr/app/friendship/id6466155577
- -  
+   
 ---
 
 **사용 예시** 
 
 - 사진 (FrontEnd)
 
-  
 ---
 
 **사용된 기술**
@@ -47,10 +46,7 @@ Notification - Firebase Cloud Messaging (FCM)
 
 **주요 문제 해결**
 
-- 이슈( ex: 매칭 중복접수 예방조치
-- , 사용자 정보 암호화,
-- 이미지 파일 업로드 압축,
-- 채팅 세션 수 조정 )
+- 
 
 ---
 
@@ -65,7 +61,7 @@ Notification - Firebase Cloud Messaging (FCM)
 
 **추가 자료** 
 
-- d
+- [요구사항](https://hulking-edge-c2d.notion.site/d49730579f1149e98d137eafb0b1a72c?pvs=4)
   
 ---
 

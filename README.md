@@ -1,9 +1,5 @@
-# backend
-FriendShip 백엔드 레파지토리
 
----
-
-**애플리케이션 소개**
+# Friendship 소개
 
 <p align="center">  
   <img width="312" alt="image" src="https://github.com/Re-4aliens/backend/assets/86913355/ebd896cc-8cbf-47c8-9952-3b82a76f0e37">
@@ -36,17 +32,9 @@ Programming -  SpringBoot 3.2.1, Gradle
 
 Database - MySQL, MongoDB 
 
-Server - AWS S3, AWS rds mysql, Putty, Raspberry Pi
+Server - AWS S3, AWS rds mysql, Putty
 
 Notification - Firebase Cloud Messaging (FCM)
-
----
-
-**설치 방법**
-
-1. …
-2. …
-3. …
 
 ---
 
@@ -75,23 +63,17 @@ Notification - Firebase Cloud Messaging (FCM)
 ---
 
 **추가 자료** 
-- [요구사항 정의서](https://www.notion.so/d49730579f1149e98d137eafb0b1a72c?pvs=4)
-- [도메인분석DDD](https://www.figma.com/file/vrduvG2YiZCX4aQzGic4jt?type=design%27&node-id=0:1)
-- [API](https://www.notion.so/API-1d654705d6ab416592cef7eee1cb0c1c?pvs=4)
-- 개발 문서 (ex: custom Valid 적용기, Argument Resolver를 통한 인증/인가, 대칭키 암호화란? , STOMP란 무엇인가?, Paralell Stream이란?, 메모리를 아끼는 방법…)
-- ERD, 클래스 다이어그램
-- 요구사항 정의서
-- API
-- ErrorCode
 
+- d
+  
 ---
 
 **릴리스 노트** 
 
-- 2024-01-02
-- 2024-01-07
-- …
+-
+
+---
 
 **라이선스 정보**
 
-- MIT…
+- 

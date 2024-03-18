@@ -73,7 +73,7 @@ Notification - Firebase Cloud Messaging (FCM)
 ---
 
 **문제 분석**
-
+- [테스트 실행 시간이 너무 길다구요!](https://hulking-edge-c2d.notion.site/e628ae31f07743bda95ca08cf71dd38c?pvs=4)
 - [채팅 - MongoDB는 동시성 문제를 일으켰을까?](https://hulking-edge-c2d.notion.site/MongoDB-27c7b6cf8905430aa4fd6091d59f5cd1?pvs=4)
 - [S3, ParallelStream을 사용해서 업로드하지 않기로한 이유 ](https://hulking-edge-c2d.notion.site/S3-ParallelStream-66e979b4be6740f1a8241cccea28a151?pvs=4)
 - [배포 오류 : Asciidoctor 빌드 오류(asGemPath())](https://hulking-edge-c2d.notion.site/Asciidoctor-asGemPath-32a66b4659d94c18ab2c63fe410cf595?pvs=4)

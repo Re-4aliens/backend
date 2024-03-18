@@ -56,6 +56,15 @@ Notification - Firebase Cloud Messaging (FCM)
 - [기술 문서 작성법](https://hulking-edge-c2d.notion.site/eaeee384fd4942d992b065c0b3349143?pvs=4)
 ---
 
+**트러블 슈팅**
+- [테스트 실행 시간이 너무 길다구요!](https://hulking-edge-c2d.notion.site/e628ae31f07743bda95ca08cf71dd38c?pvs=4)
+- [채팅 - MongoDB는 동시성 문제를 일으켰을까?](https://hulking-edge-c2d.notion.site/MongoDB-27c7b6cf8905430aa4fd6091d59f5cd1?pvs=4)
+- [S3, ParallelStream을 사용해서 업로드하지 않기로한 이유 ](https://hulking-edge-c2d.notion.site/S3-ParallelStream-66e979b4be6740f1a8241cccea28a151?pvs=4)
+- [배포 오류 : Asciidoctor 빌드 오류(asGemPath())](https://hulking-edge-c2d.notion.site/Asciidoctor-asGemPath-32a66b4659d94c18ab2c63fe410cf595?pvs=4)
+- [DB해킹 : 회원 정보를 보호합니다. ](https://hulking-edge-c2d.notion.site/b5e9392fb54146dda6245ebf29e5eabe?pvs=4)
+
+---
+
 **기술 문서**
 - [FriendShip의 채팅은 어떻게 이루어지나요?](https://hulking-edge-c2d.notion.site/FriendShip-cffe85a2383f42b9865468462288056a?pvs=4)
 - [웹소켓 채팅 전송시 권한 확인 방법](https://hulking-edge-c2d.notion.site/cb879fe56f0d4a76883bc294cad61bdc?pvs=4)
@@ -68,16 +77,6 @@ Notification - Firebase Cloud Messaging (FCM)
 -  [보안상 분리된 환경 변수 파일의 관리](https://hulking-edge-c2d.notion.site/799ffae9917e4e1f962799d7fb4acb1b?pvs=4)
 -  [Custom Validation 적용](https://hulking-edge-c2d.notion.site/Custom-Validation-870c82af225740e98775b42c65e59782?pvs=4)
 -  [Applicaiotn.yml, properties을 지키기 ](https://hulking-edge-c2d.notion.site/Applicaiotn-yml-properties-dbc7cd3c747c4b40ae025051920db4ed?pvs=4)
-
-  
----
-
-**문제 분석**
-- [테스트 실행 시간이 너무 길다구요!](https://hulking-edge-c2d.notion.site/e628ae31f07743bda95ca08cf71dd38c?pvs=4)
-- [채팅 - MongoDB는 동시성 문제를 일으켰을까?](https://hulking-edge-c2d.notion.site/MongoDB-27c7b6cf8905430aa4fd6091d59f5cd1?pvs=4)
-- [S3, ParallelStream을 사용해서 업로드하지 않기로한 이유 ](https://hulking-edge-c2d.notion.site/S3-ParallelStream-66e979b4be6740f1a8241cccea28a151?pvs=4)
-- [배포 오류 : Asciidoctor 빌드 오류(asGemPath())](https://hulking-edge-c2d.notion.site/Asciidoctor-asGemPath-32a66b4659d94c18ab2c63fe410cf595?pvs=4)
-- [DB해킹 : 회원 정보를 보호합니다. ](https://hulking-edge-c2d.notion.site/b5e9392fb54146dda6245ebf29e5eabe?pvs=4)
 
 ---
 

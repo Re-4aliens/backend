@@ -94,4 +94,5 @@ Notification - Firebase Cloud Messaging (FCM)
 - [테스트 범위와 종류 : 단위 테스트, 통합 테스트](https://hulking-edge-c2d.notion.site/d75a2f101b174482899526aecbe4d247?pvs=4)
 - [Mock : 모의(대역) 객체로 테스트하기](https://hulking-edge-c2d.notion.site/Mock-dcd0528e3aab4d1fb65299e1c9d597c3?pvs=4)
 - [Spring REST Docs, 어떻게 사용할까?](https://hulking-edge-c2d.notion.site/Spring-REST-Docs-dbe26189cb474e2b8c344e8308f80ab3?pvs=4)
-
+- [PK 컬럼 순서 대충하지 말자 ](https://hulking-edge-c2d.notion.site/PK-0ab12a7a5bab4218bbc66b58b6ab20c1?pvs=4)
+- [식별자관계와 비식별자관계 설정](https://hulking-edge-c2d.notion.site/acf9d4f823fc408b9798659e9f38bd21?pvs=4)

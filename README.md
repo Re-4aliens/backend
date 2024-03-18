@@ -43,25 +43,15 @@ Notification - Firebase Cloud Messaging (FCM)
 
 ![image](https://github.com/Re-4aliens/backend/assets/86913355/4d8cdd58-85d5-481b-9e50-4b47f256f421)
 
-
-**협업 전략 (git, rule)**
-
-- [Branch 전략](https://hulking-edge-c2d.notion.site/Branch-159765ac37ed40bdbb38d4ed383738a6?pvs=4)
-- [Git 이슈 컨벤션](https://hulking-edge-c2d.notion.site/Git-771f9209453d4ecb8c39ae75f81b890a?pvs=4)
-- [Git 커밋 컨벤션](https://hulking-edge-c2d.notion.site/Git-2170c3708e0c4464bebeb97f14d5818c?pvs=4)
-- [Pull Request 컨벤션](https://hulking-edge-c2d.notion.site/Pull-Request-c35169d8886041c7957bc31e58a04fd5?pvs=4)
-- [그라운드 룰](https://hulking-edge-c2d.notion.site/d41fa00097474a5ab7c39e02684dadc5?pvs=4)
-- [배포 주기](https://hulking-edge-c2d.notion.site/92d279ad87204ed99fece485846ff5d9?pvs=4)
-- [팀 코드리뷰 문화](https://hulking-edge-c2d.notion.site/65412913c3734b0195cb4c73f8b379fa?pvs=4)
-- [기술 문서 작성법](https://hulking-edge-c2d.notion.site/eaeee384fd4942d992b065c0b3349143?pvs=4)
 ---
 
 **트러블 슈팅**
-- [테스트 실행 시간이 너무 길다구요!](https://hulking-edge-c2d.notion.site/e628ae31f07743bda95ca08cf71dd38c?pvs=4)
 - [채팅 - MongoDB는 동시성 문제를 일으켰을까?](https://hulking-edge-c2d.notion.site/MongoDB-27c7b6cf8905430aa4fd6091d59f5cd1?pvs=4)
 - [S3, ParallelStream을 사용해서 업로드하지 않기로한 이유 ](https://hulking-edge-c2d.notion.site/S3-ParallelStream-66e979b4be6740f1a8241cccea28a151?pvs=4)
 - [배포 오류 : Asciidoctor 빌드 오류(asGemPath())](https://hulking-edge-c2d.notion.site/Asciidoctor-asGemPath-32a66b4659d94c18ab2c63fe410cf595?pvs=4)
 - [DB해킹 : 회원 정보를 보호합니다. ](https://hulking-edge-c2d.notion.site/b5e9392fb54146dda6245ebf29e5eabe?pvs=4)
+- [테스트 실행 시간이 너무 길다구요!](https://hulking-edge-c2d.notion.site/e628ae31f07743bda95ca08cf71dd38c?pvs=4)
+
 
 ---
 
@@ -80,12 +70,6 @@ Notification - Firebase Cloud Messaging (FCM)
 
 ---
 
-**협업 자료** 
-
-- [요구사항 정의서](https://hulking-edge-c2d.notion.site/d49730579f1149e98d137eafb0b1a72c?pvs=4)
-- [DDD 설계](https://www.figma.com/file/vrduvG2YiZCX4aQzGic4jt?type=design)
-
----
 
 **학습 동기화 자료** 
 - [Parallel Stream을 써야할 때는 언제인가](https://hulking-edge-c2d.notion.site/Parallel-Stream-a7c38612b59c48e0a80231a1ac826775?pvs=4)
@@ -96,3 +80,23 @@ Notification - Firebase Cloud Messaging (FCM)
 - [Spring REST Docs, 어떻게 사용할까?](https://hulking-edge-c2d.notion.site/Spring-REST-Docs-dbe26189cb474e2b8c344e8308f80ab3?pvs=4)
 - [PK 컬럼 순서 대충하지 말자 ](https://hulking-edge-c2d.notion.site/PK-0ab12a7a5bab4218bbc66b58b6ab20c1?pvs=4)
 - [식별자관계와 비식별자관계 설정](https://hulking-edge-c2d.notion.site/acf9d4f823fc408b9798659e9f38bd21?pvs=4)
+
+---
+
+**협업 자료** 
+
+- [요구사항 정의서](https://hulking-edge-c2d.notion.site/d49730579f1149e98d137eafb0b1a72c?pvs=4)
+- [DDD 설계](https://www.figma.com/file/vrduvG2YiZCX4aQzGic4jt?type=design)
+  
+---
+**협업 전략 (git, rule)**
+
+- [Branch 전략](https://hulking-edge-c2d.notion.site/Branch-159765ac37ed40bdbb38d4ed383738a6?pvs=4)
+- [Git 이슈 컨벤션](https://hulking-edge-c2d.notion.site/Git-771f9209453d4ecb8c39ae75f81b890a?pvs=4)
+- [Git 커밋 컨벤션](https://hulking-edge-c2d.notion.site/Git-2170c3708e0c4464bebeb97f14d5818c?pvs=4)
+- [Pull Request 컨벤션](https://hulking-edge-c2d.notion.site/Pull-Request-c35169d8886041c7957bc31e58a04fd5?pvs=4)
+- [그라운드 룰](https://hulking-edge-c2d.notion.site/d41fa00097474a5ab7c39e02684dadc5?pvs=4)
+- [배포 주기](https://hulking-edge-c2d.notion.site/92d279ad87204ed99fece485846ff5d9?pvs=4)
+- [팀 코드리뷰 문화](https://hulking-edge-c2d.notion.site/65412913c3734b0195cb4c73f8b379fa?pvs=4)
+- [기술 문서 작성법](https://hulking-edge-c2d.notion.site/eaeee384fd4942d992b065c0b3349143?pvs=4)
+

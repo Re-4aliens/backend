@@ -62,7 +62,6 @@ Notification - Firebase Cloud Messaging (FCM)
 - [채팅 - MongoDB는 동시성 문제를 일으켰을까?](https://hulking-edge-c2d.notion.site/MongoDB-27c7b6cf8905430aa4fd6091d59f5cd1?pvs=4)
 - [S3, ParallelStream을 사용해서 업로드하지 않기로한 이유 ](https://hulking-edge-c2d.notion.site/S3-ParallelStream-66e979b4be6740f1a8241cccea28a151?pvs=4)
 - [DB해킹 : 회원 정보를 보호합니다. ](https://hulking-edge-c2d.notion.site/b5e9392fb54146dda6245ebf29e5eabe?pvs=4)
-- [테스트 실행 시간이 너무 길다구요!](https://hulking-edge-c2d.notion.site/e628ae31f07743bda95ca08cf71dd38c?pvs=4)
 
 ---
 

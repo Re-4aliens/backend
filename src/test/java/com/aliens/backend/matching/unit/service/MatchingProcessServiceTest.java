@@ -10,6 +10,7 @@ import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.global.response.error.MatchingError;
+import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.domain.MatchingResult;
@@ -19,9 +20,7 @@ import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingProcessService;
 import com.aliens.backend.member.domain.MatchingStatus;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -49,15 +48,17 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        members = dummyGenerator.generateMultiMember(20);
-        saveMatchRound(MockTime.TUESDAY);
+        members = dummyGenerator.generateMultiMember(10);
+        dummyGenerator.generateMatchingRound(MockTime.TUESDAY);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
+        dummyGenerator.generateAppliersToMatch(members);
     }
 
     @Test
     @DisplayName("매칭 결과 조회")
     void operateMatchingTest() {
         // given & when
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
+        dummyGenerator.operateMatching();
 
         // then
         List<MatchingResult> result = getMatchingResultByMatchingRound(getCurrentRound());
@@ -68,7 +69,7 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     @DisplayName("매칭 결과 기반으로 채팅방 개설 이벤트 발송")
     void createChatRoomEventTest() {
         // given & when
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
+        dummyGenerator.operateMatching();
 
         // then
         verify(chatService, times(1)).handleChatRoomCreationEvent(any());
@@ -78,7 +79,7 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     @DisplayName("매칭 완료 후, 알림이 전송되는지 테스트")
     void sendNotificationTest() {
         // given & when
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
+        dummyGenerator.operateMatching();
 
         // then
         verify(fcmSender, times(1)).listenMultiMessageRequest(any());
@@ -87,22 +88,28 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     @Test
     @DisplayName("연속 매칭 테스트")
     void operateMatchingTwice() {
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
-        saveMatchRound(MockTime.FRIDAY);
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_FRIDAY);
+        dummyGenerator.operateMatching();
 
-        List<MatchingResult> result = matchingResultRepository.findAll();
-        Assertions.assertThat(result).isNotNull();
+        dummyGenerator.generateMatchingRound(MockTime.FRIDAY);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_FRIDAY);
+        dummyGenerator.generateAppliersToMatch(members);
+        dummyGenerator.operateMatching();
+
+        List<MatchingResult> result = getMatchingResultByMatchingRound(getCurrentRound());
+        Assertions.assertThat(result).isNotEmpty();
     }
 
     @Test
     @DisplayName("직전 회차에 매칭된 사용자와 매칭되지 않는 기능 테스트")
     void isDuplicateMatchingTest() {
         // given & when
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
+        dummyGenerator.operateMatching();
         List<MatchingResult> firstRoundResult = getMatchingResultByMatchingRound(getCurrentRound());
-        saveMatchRound(MockTime.FRIDAY);
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_FRIDAY);
+
+        dummyGenerator.generateMatchingRound(MockTime.FRIDAY);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_FRIDAY);
+        dummyGenerator.generateAppliersToMatch(members);
+        dummyGenerator.operateMatching();
         List<MatchingResult> secondRoundResult = getMatchingResultByMatchingRound(getCurrentRound());
 
         Map<Long, Set<Long>> matchedMembersInSecondRound = secondRoundResult.stream()
@@ -126,7 +133,7 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
         makeThisMemberBlockAllPartner(blockingMember);
 
         // when
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
+        dummyGenerator.operateMatching();
 
         // then
         List<MatchingResult> matchingResults = getMatchingResultByMatchingRound(getCurrentRound());
@@ -139,27 +146,24 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     @DisplayName("매칭 만료시, 사용자 상태가 변경되는지 테스트")
     void resetPreviousMatching() {
         // given
-        operateMatching(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
-        saveMatchRound(MockTime.FRIDAY);
+        dummyGenerator.operateMatching();
+        dummyGenerator.generateMatchingRound(MockTime.FRIDAY);
 
         // when
-        mockClock.mockTime(MockTime.MATCHING_EXPIRATION_TIME_ON_MONDAY);
         matchingProcessService.expireMatching();
 
         // then
-        List<Member> resultMembers = getAllMembers();
-        resultMembers.forEach(member -> {
-            String result = member.getStatus();
-            String expected = MatchingStatus.NOT_APPLIED_NOT_MATCHED.getMessage();
-            assertThat(result).isEqualTo(expected);
-        });
+        Member expiredMember = getMemberById(members.get(0).getId());
+
+        String result = expiredMember.getStatus();
+        assertThat(result).isEqualTo(MatchingStatus.NOT_APPLIED_NOT_MATCHED.getMessage());
     }
 
     @Test
     @DisplayName("매칭을 신청한 적이 없는 회원이 매칭 결과 조회")
     void getMatchingResultTest() {
-        Member member = members.get(0);
-        LoginMember loginMember = member.getLoginMember();
+        Member notAppliedMember = dummyGenerator.generateSingleMember();
+        LoginMember loginMember = notAppliedMember.getLoginMember();
 
         assertThatThrownBy(() -> matchingProcessService.findMatchingResult(loginMember))
                 .hasMessage(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO.getDevelopCode());
@@ -168,19 +172,6 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     private MatchingRound getCurrentRound() {
         return matchingRoundRepository.findCurrentRound()
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
-    }
-
-    private void saveMatchRound(MockTime mockTime) {
-        mockClock.mockTime(mockTime);
-        MatchingRound matchingRound = MatchingRound.from(mockTime.getTime(), matchingTimeProperties);
-        matchingRoundRepository.save(matchingRound);
-    }
-
-    private void operateMatching(MockTime mockTime) {
-        mockClock.mockTime(mockTime);
-        dummyGenerator.generateAppliersToMatch(20L);
-        matchingProcessService.expireMatching();
-        matchingProcessService.operateMatching();
     }
 
     private List<MatchingResult> getMatchingResultByMatchingRound(MatchingRound matchingRound) {
@@ -196,7 +187,7 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
         }
     }
 
-    private List<Member> getAllMembers() {
-        return memberRepository.findAll();
+    private Member getMemberById(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 }

@@ -7,7 +7,8 @@ public enum MatchingSuccess implements SuccessCode {
     GET_MATCHING_APPLICATION_STATUS_SUCCESS(HttpStatus.OK, "MA002", "매칭 신청 정보 조회 성공"),
     CANCEL_MATCHING_APPLICATION_SUCCESS(HttpStatus.OK, "MA003", "매칭 신청 취소 성공"),
     GET_MATCHING_PARTNERS_SUCCESS(HttpStatus.OK, "MA004", "매칭 파트너 조회 성공"),
-
+    GET_MATCHING_BEGIN_TIME_SUCCESS(HttpStatus.OK, "MA005", "매칭 시간 시간 조회 성공"),
+    MODIFY_MATCHING_APPLICATION_INFO_SUCCESS(HttpStatus.OK, "MA006", "매칭 신청 정보 수정 성공"),
     ;
 
     private final HttpStatus httpStatus;

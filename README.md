@@ -47,6 +47,7 @@ Notification - Firebase Cloud Messaging (FCM)
 
 **기술 문서**
 - [FriendShip의 채팅은 어떻게 이루어지나요?](https://hulking-edge-c2d.notion.site/FriendShip-cffe85a2383f42b9865468462288056a?pvs=4)
+- [FriendShip의 채팅은 어떻게 이루어지나요?](https://www.notion.so/80-b3bba869f074437b9c400d687a9fc369?pvs=4)
 - [웹소켓 채팅 전송시 권한 확인 방법](https://hulking-edge-c2d.notion.site/cb879fe56f0d4a76883bc294cad61bdc?pvs=4)
 - [채팅 메시지 인덱싱 - ESR rule](https://hulking-edge-c2d.notion.site/ESR-rule-ff48f2dbba2447f89ba6e838841c65de?pvs=4)
 - [CD/CI : Github Actions를 이용한 배포 자동화](https://hulking-edge-c2d.notion.site/CD-CI-Github-Actions-62f329c0877449c8a554fe42eb62a3a8?pvs=4)

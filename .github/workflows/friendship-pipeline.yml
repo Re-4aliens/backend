@@ -37,6 +37,13 @@ jobs:
           touch ./firebase_service_key.json
           echo "${{ secrets.FCM_KEY }}" > ./firebase_service_key.json
 
+      - name: firebase_service_key.json 파일 생성
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "firebase_service_key.json"
+          json: ${{ secrets.FCM_KEY }}
+
       - name: gradlew 실행 권한 부여
         run: chmod +x gradlew
 

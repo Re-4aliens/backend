@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 src/main/resources/application-secret.yml
 src/main/resources/firebase_service_key.json
+src/main/resources/static/docs/
 
 ### STS ###
 .apt_generated

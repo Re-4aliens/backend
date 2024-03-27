@@ -1,31 +1,26 @@
 package com.aliens.backend.chatting.socket;
 
 import com.aliens.backend.auth.domain.Member;
-import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.domain.MessageType;
+import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.property.WebSocketProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.messaging.simp.stomp.StompSession;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class WebSocketTest {
+class WebSocketTest extends BaseIntegrationTest {
 
     @Autowired
     private WebSocketProperties properties;
-
-    @SpyBean
-    private ChatController chatController;
 
     @Autowired
     DummyGenerator dummyGenerator;
@@ -48,7 +43,7 @@ class WebSocketTest {
         StompSession session = chatClient.connect(accessToken);
 
         // Then
-        assert session.isConnected();
+        Assertions.assertEquals(true, session.isConnected());
     }
 
     @Test

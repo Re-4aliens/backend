@@ -1,21 +1,22 @@
 package com.aliens.backend.chatting.service;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.domain.MessageType;
-import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.service.ChatService;
 import com.aliens.backend.chat.service.model.ChatMessageSummary;
-import com.aliens.backend.global.BaseServiceTest;
+import com.aliens.backend.global.BaseIntegrationTest;
+import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.response.success.ChatSuccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.List;
 
@@ -23,10 +24,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-class ChatServiceTest extends BaseServiceTest {
+class ChatServiceTest extends BaseIntegrationTest {
 
     @Autowired ChatService chatService;
-    @SpyBean MessageRepository messageRepository;
+    @Autowired DummyGenerator dummyGenerator;
 
     @BeforeEach
     void setUp() {
@@ -74,10 +75,11 @@ class ChatServiceTest extends BaseServiceTest {
     @DisplayName("채팅 요약 정보 조회")
     void getChatSummary() {
         //Given
-        Long memberId = 1L;
+        Member member = dummyGenerator.generateSingleMember();
+        LoginMember loginMember = member.getLoginMember();
 
         //When
-        ChatSummaryResponse result = chatService.getChatSummaries(memberId);
+        ChatSummaryResponse result = chatService.getChatSummaries(loginMember);
 
         //Then
         Assertions.assertNotNull(result);

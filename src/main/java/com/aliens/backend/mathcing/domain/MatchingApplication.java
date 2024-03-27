@@ -1,16 +1,13 @@
 package com.aliens.backend.mathcing.domain;
 
+import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
-import com.aliens.backend.mathcing.service.model.Language;
-import com.aliens.backend.mathcing.service.model.Participant;
+import com.aliens.backend.mathcing.business.model.Language;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 public class MatchingApplication {
@@ -34,10 +31,6 @@ public class MatchingApplication {
         this.secondPreferLanguage = secondPreferLanguage;
     }
 
-    public MatchingApplicationId getId() {
-        return id;
-    }
-
     public Language getFirstPreferLanguage() {
         return firstPreferLanguage;
     }
@@ -47,17 +40,39 @@ public class MatchingApplication {
     }
 
     public static MatchingApplication of(final MatchingRound matchingRound,
-                                         final Long memberId,
-                                         final Language firstPreferLanguage, final Language secondPreferLanguage) {
-        return new MatchingApplication(
-                MatchingApplicationId.of(matchingRound, memberId),
-                firstPreferLanguage, secondPreferLanguage);
+                                         final Member member,
+                                         final Language firstPreferLanguage,
+                                         final Language secondPreferLanguage) {
+        return new MatchingApplication(MatchingApplicationId.of(matchingRound, member), firstPreferLanguage, secondPreferLanguage);
     }
 
-    public static List<Participant> toParticipantList(final List<MatchingApplication> matchingApplications) {
-        return matchingApplications.stream()
-                .map(Participant::of)
-                .collect(Collectors.toList());
+    public static MatchingApplication from(final MatchingRound matchingRound,
+                                           final Member member,
+                                           final MatchingApplicationRequest matchingApplicationRequest) {
+        return MatchingApplication.of(matchingRound, member,
+                matchingApplicationRequest.firstPreferLanguage(),
+                matchingApplicationRequest.secondPreferLanguage());
+    }
+
+    public void modifyTo(final MatchingApplicationRequest matchingApplicationRequest) {
+        this.firstPreferLanguage = matchingApplicationRequest.firstPreferLanguage();
+        this.secondPreferLanguage = matchingApplicationRequest.secondPreferLanguage();
+    }
+
+    public Member getMember() {
+        return id.getMember();
+    }
+
+    public Long getMemberId() {
+        return id.getMemberId();
+    }
+
+    public MatchingRound getMatchingRound() {
+        return id.getMatchingRound();
+    }
+
+    public Long getRound() {
+        return getMatchingRound().getRound();
     }
 
     @Override

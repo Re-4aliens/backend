@@ -21,10 +21,28 @@ public class Block {
     protected Block() {
     }
 
+    private Block(Member blockingMember, Member blockedMember) {
+        this.blockingMember = blockingMember;
+        this.blockedMember = blockedMember;
+    }
+
     public static Block of(Member blockedMember, Member blockingMember) {
-        Block block = new Block();
-        block.blockingMember = blockingMember;
-        block.blockedMember = blockedMember;
-        return block;
+        return new Block(blockingMember, blockedMember);
+    }
+
+    public Member getBlockingMember() {
+        return blockingMember;
+    }
+
+    public Member getBlockedMember() {
+        return blockedMember;
+    }
+
+    public Long getBlockingMemberId() {
+        return blockingMember.getId();
+    }
+
+    public Long getBlockedMemberId() {
+        return blockedMember.getId();
     }
 }

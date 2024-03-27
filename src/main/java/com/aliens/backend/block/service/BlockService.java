@@ -3,29 +3,27 @@ package com.aliens.backend.block.service;
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
-import com.aliens.backend.block.domain.repository.BlockRepository;
 import com.aliens.backend.block.controller.dto.BlockRequest;
 import com.aliens.backend.block.domain.Block;
-import com.aliens.backend.chat.domain.ChatRoom;
-import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
+import com.aliens.backend.block.domain.repository.BlockRepository;
+import com.aliens.backend.chat.controller.dto.event.ChatRoomBlockEvent;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.response.success.ChatSuccess;
 import jakarta.transaction.Transactional;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class BlockService {
     private final BlockRepository blockRepository;
-    private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public BlockService(BlockRepository blockRepository, ChatRoomRepository chatRoomRepository, final MemberRepository memberRepository) {
+    public BlockService(final BlockRepository blockRepository, final MemberRepository memberRepository, final ApplicationEventPublisher eventPublisher) {
         this.blockRepository = blockRepository;
-        this.chatRoomRepository = chatRoomRepository;
         this.memberRepository = memberRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -44,13 +42,8 @@ public class BlockService {
     }
 
     private void blockChatRoom(final BlockRequest blockRequest) {
-        List<ChatRoom> chatRooms = findChatRoomsById(blockRequest.chatRoomId());
-        chatRooms.forEach(ChatRoom::block);
-        chatRoomRepository.saveAll(chatRooms);
-    }
-
-    private List<ChatRoom> findChatRoomsById(final Long chatRoomId) {
-        return chatRoomRepository.findByRoomId(chatRoomId);
+        ChatRoomBlockEvent event = new ChatRoomBlockEvent(blockRequest.chatRoomId());
+        eventPublisher.publishEvent(event);
     }
 
     private Member findMemberById(final Long partnerId) {

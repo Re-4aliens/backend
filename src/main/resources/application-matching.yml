@@ -5,19 +5,23 @@ matching:
       normal-partner: 4
     max-tries: 200
   round:
-    update-date: 0 0 0 * * MON,THU
-    start: 0 0 18 * * MON,THU
+    update-date: 0 0 0 * * TUE,FRI # 매칭 회차 업데이트 시간 : 화, 금 0시 (접수 시작 시간)
+    end: 0 0 21 * * MON,THU # 이전 매칭 마감, 채팅방 폐쇄
+    start: 0 0 22 * * MON,THU # 매칭 로직 동작 시간 : 월, 목 22시
+    restricted: 3
   request:
     time:
-      hours: 18
+      default:
+        hours: 48
+      tuesday:
+        hours: 69 # 매칭 접수 시작 시간으로 부터, 69시간 후에 접수 시간 마감
+      friday:
+        hours: 93 # 매칭 접수 시작 시간으로 부터, 93시간 후에 접수 시간 마감
   valid:
     time:
-      hours: 20
-    day-of-week:
-      if:
-        default:
-          hours: 48
-        monday:
-          hours: 52
-        thursday:
-          hours: 76
+      default:
+        hours: 48
+      tuesday:
+        hours: 69
+      friday:
+        hours: 93

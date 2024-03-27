@@ -5,6 +5,7 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.chat.controller.dto.request.ChatReportRequest;
 import com.aliens.backend.chat.domain.ChatReport;
+import com.aliens.backend.chat.domain.ChatReportCategory;
 import com.aliens.backend.chat.domain.repository.ChatReportRepository;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.MemberError;
@@ -29,7 +30,7 @@ public class ChatReportService {
         ChatReport chatReport = ChatReport.of(
                 member,
                 partner,
-                chatReportRequest.category(),
+                ChatReportCategory.fromString(chatReportRequest.category()),
                 chatReportRequest.content());
 
         chatReportRepository.save(chatReport);

@@ -1,11 +1,20 @@
 package com.aliens.backend.global;
 
+import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.auth.service.TokenProvider;
-import com.aliens.backend.mathcing.controller.dto.request.MatchingRequest;
+import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.global.property.MatchingTimeProperties;
+import com.aliens.backend.global.response.error.MatchingError;
+import com.aliens.backend.matching.util.time.MockClock;
+import com.aliens.backend.matching.util.time.MockTime;
+import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
+import com.aliens.backend.mathcing.domain.MatchingRound;
+import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
-import com.aliens.backend.mathcing.service.model.Language;
+import com.aliens.backend.mathcing.business.model.Language;
+import com.aliens.backend.mathcing.service.MatchingProcessService;
 import com.aliens.backend.member.controller.dto.EncodedMember;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
 import com.aliens.backend.member.domain.Image;
@@ -24,20 +33,15 @@ import java.util.Random;
 
 @Component
 public class DummyGenerator {
-    @Autowired
-    MatchingApplicationService matchingApplicationService;
-
-    @Autowired
-    MemberInfoRepository memberInfoRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    SymmetricKeyEncoder encoder;
-
-    @Autowired
-    TokenProvider tokenProvider;
+    @Autowired MatchingApplicationService matchingApplicationService;
+    @Autowired MemberInfoRepository memberInfoRepository;
+    @Autowired MatchingRoundRepository matchingRoundRepository;
+    @Autowired MatchingTimeProperties matchingTimeProperties;
+    @Autowired MatchingProcessService matchingProcessService;
+    @Autowired PasswordEncoder passwordEncoder;
+    @Autowired SymmetricKeyEncoder encoder;
+    @Autowired TokenProvider tokenProvider;
+    @Autowired MockClock mockClock;
 
     public static final String GIVEN_EMAIL = "tmp@example.com";
     public static final String GIVEN_PASSWORD = "tmpPassword";
@@ -74,6 +78,25 @@ public class DummyGenerator {
         return member;
     }
 
+    // 매칭 회차 생성 메서드 : 매칭 신청 전, 해당 메서드 호출로 회차 저장 필요 ... 매개변수 : TUESDAY 권장
+    public MatchingRound generateMatchingRound(MockTime mockTime) {
+        mockClock.mockTime(mockTime);
+        MatchingRound matchingRound = MatchingRound.from(mockTime.getTime(), matchingTimeProperties);
+        matchingRoundRepository.save(matchingRound);
+        return matchingRound;
+    }
+
+    public MatchingRound getCurrentRound() {
+        return matchingRoundRepository.findCurrentRound()
+                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+    }
+
+    // 매칭 동작 메서드 : 매칭 동작 전, 매칭 신청자들 필요
+    public void operateMatching() {
+        matchingProcessService.expireMatching();
+        matchingProcessService.operateMatching();
+    }
+
     private Image makeImage() {
         return Image.from(new S3File(GIVEN_FILE_NAME, GIVEN_FILE_URL));
     }
@@ -94,6 +117,7 @@ public class DummyGenerator {
         MemberInfo memberInfo = MemberInfo.of(encodedRequest, member);
         memberInfoRepository.save(memberInfo);
     }
+
     // MultipartFile 생성 메서드
     public MultipartFile generateMultipartFile() {
         String fileName = "test";
@@ -103,17 +127,16 @@ public class DummyGenerator {
         return new MockMultipartFile(fileName, path, contentType, content);
     }
 
-
     //AccessToken 생성 메서드
     public String generateAccessToken(Member member) {
         return tokenProvider.generateAccessToken(member.getLoginMember());
     }
 
     //지원자 생성 메서드
-    public void generateAppliersToMatch(Long numberOfMember) {
+    public void generateAppliersToMatch(List<Member> members) {
         Random random = new Random();
 
-        for (long i = 1L; i <= numberOfMember; i++) {
+        for (Member member : members) {
             Language firstPreferLanguage = getRandomLanguage(random);
             Language secondPreferLanguage;
 
@@ -121,9 +144,15 @@ public class DummyGenerator {
                 secondPreferLanguage = getRandomLanguage(random);
             } while (firstPreferLanguage == secondPreferLanguage);
 
-            MatchingRequest.MatchingApplicationRequest request = new MatchingRequest.MatchingApplicationRequest(i, firstPreferLanguage, secondPreferLanguage);
-            matchingApplicationService.saveParticipant(request);
+            LoginMember loginMember = member.getLoginMember();
+            MatchingApplicationRequest request = new MatchingApplicationRequest(firstPreferLanguage, secondPreferLanguage);
+            matchingApplicationService.saveParticipant(loginMember, request);
         }
+    }
+
+    // 단일 멤버 매칭 신청 메서드
+    public void applySingleMemberToMatch(Member member, MatchingApplicationRequest matchingApplicationRequest) {
+        matchingApplicationService.saveParticipant(member.getLoginMember(), matchingApplicationRequest);
     }
 
     private Language getRandomLanguage(Random random) {

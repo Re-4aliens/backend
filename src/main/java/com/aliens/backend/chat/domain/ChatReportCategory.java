@@ -1,16 +1,17 @@
 package com.aliens.backend.chat.domain;
 
-import java.util.Optional;
+import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.global.response.error.ChatError;
 
 public enum ChatReportCategory {
     SEXUAL_HARASSMENT, VIOLENCE, SPAM, SCAM, ETC;
 
-    public static Optional<ChatReportCategory> fromString(String category) {
+    public static ChatReportCategory fromString(String category) {
         for (ChatReportCategory reportCategory : ChatReportCategory.values()) {
             if (reportCategory.name().equalsIgnoreCase(category)) {
-                return Optional.of(reportCategory);
+                return reportCategory;
             }
         }
-        return Optional.empty();
+        throw new RestApiException(ChatError.INVALID_REPORT_CATEGORY);
     }
 }

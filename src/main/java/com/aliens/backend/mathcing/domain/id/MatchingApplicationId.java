@@ -1,5 +1,6 @@
 package com.aliens.backend.mathcing.domain.id;
 
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import jakarta.persistence.*;
 
@@ -11,34 +12,39 @@ public class MatchingApplicationId implements Serializable {
     @JoinColumn(name = "matching_round")
     private MatchingRound matchingRound;
 
-    @Column(name = "member_id")
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     protected MatchingApplicationId() {
     }
 
-    private MatchingApplicationId(final MatchingRound matchingRound, final Long memberId) {
+    private MatchingApplicationId(final MatchingRound matchingRound, final Member member) {
         this.matchingRound = matchingRound;
-        this.memberId = memberId;
+        this.member = member;
     }
 
     public MatchingRound getMatchingRound() {
         return matchingRound;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public static MatchingApplicationId of(final MatchingRound matchingRound, final Long memberId) {
-        return new MatchingApplicationId(matchingRound, memberId);
+    public Long getMemberId() {
+        return member.getId();
+    }
+
+    public static MatchingApplicationId of(final MatchingRound matchingRound, final Member member) {
+        return new MatchingApplicationId(matchingRound, member);
     }
 
     @Override
     public String toString() {
         return "MatchingApplicationId{" +
                 "matchingRound=" + matchingRound +
-                ", memberId=" + memberId +
+                ", memberId=" + member +
                 '}';
     }
 }

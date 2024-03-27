@@ -41,7 +41,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Gradle 빌드
-        run: ./gradlew build -x test
+        run: ./gradlew build
 
       - name: Docker 이미지 파일 PUSH
         run: |

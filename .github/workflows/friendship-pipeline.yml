@@ -51,11 +51,16 @@ jobs:
       - name: gradlew 실행 권한 부여
         run: chmod +x gradlew
 
-      - name: Gradle 빌드
-        run: ./gradlew build
+      - name: docs.html 파일 생성
+        run: ./gradlew test
 
       - name: Print doc files
-        run: ls -l src/main/resources/static/docs
+        run:  | 
+          ls -l 
+          ls -l src/main/resources/static/docs
+
+      - name: Gradle 빌드
+        run: ./gradlew build -x test
 
       - name: Docker 이미지 파일 PUSH
         run: |

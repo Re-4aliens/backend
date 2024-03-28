@@ -78,9 +78,6 @@ bootJar {
         from ("${asciidoctor.outputDir}")
         into 'src/main/resources/static/docs'
     }
-    file('src/main/resources/static/docs').listFiles().each { file ->
-        println "file name: ${file.name}, file path: ${file.absolutePath}"
-    }
 }
 
 tasks.named('test') {

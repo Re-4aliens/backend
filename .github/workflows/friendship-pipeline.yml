@@ -57,6 +57,7 @@ jobs:
       - name: Print doc files
         run:  | 
           ls -l 
+          ls -l build/
           ls -l src/main/resources/static/docs
 
       - name: Gradle 빌드

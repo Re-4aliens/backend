@@ -52,6 +52,7 @@ public abstract class BaseIntegrationTest {
         //AWS
         S3File tmpFile = new S3File(DummyGenerator.GIVEN_FILE_NAME,DummyGenerator.GIVEN_FILE_URL);
         doReturn(tmpFile).when(awsS3Uploader).singleUpload(any(MultipartFile.class));
+        doReturn(tmpFile).when(awsS3Uploader).delete(any());
         doReturn(List.of(tmpFile)).when(awsS3Uploader).multiUpload(any());
     }
 }

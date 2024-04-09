@@ -1,10 +1,11 @@
 package com.aliens.backend.member.domain;
 
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
 
 @Entity
-public class Image {
+public class MemberImage {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -16,14 +17,18 @@ public class Image {
     @Column
     String url;
 
-    protected Image() {
+    @OneToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    protected MemberImage() {
     }
 
-    public static Image from(final S3File imageFile) {
-        Image image = new Image();
-        image.name = imageFile.fileName();
-        image.url = imageFile.fileURL();
-        return image;
+    public static MemberImage from(final S3File imageFile) {
+        MemberImage memberImage = new MemberImage();
+        memberImage.name = imageFile.fileName();
+        memberImage.url = imageFile.fileURL();
+        return memberImage;
     }
 
     public void change(final S3File newFile) {

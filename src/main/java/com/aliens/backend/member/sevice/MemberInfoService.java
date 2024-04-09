@@ -61,9 +61,9 @@ public class MemberInfoService {
     public String signUp(final SignUpRequest request, final MultipartFile profileImage) {
         checkEmail(request.email());
 
-        Image image = saveImage(profileImage);
+        MemberImage memberImage = saveImage(profileImage);
 
-        Member member = getMemberEntity(request, image);
+        Member member = getMemberEntity(request, memberImage);
 
         MemberInfo memberInfo = getMemberInfoEntity(request, member);
         member.putMemberInfo(memberInfo);
@@ -83,23 +83,26 @@ public class MemberInfoService {
         }
     }
 
-    private Image saveImage(final MultipartFile profileImage) {
+    private MemberImage saveImage(final MultipartFile profileImage) {
         if (profileImage == null || profileImage.isEmpty()) {
-            return Image.from(new S3File(s3UploadProperties.getDefaultFileName(),
+            return MemberImage.from(new S3File(s3UploadProperties.getDefaultFileName(),
                     s3UploadProperties.getDefaultFileURL()));
         }
 
         S3File uploadedFile = uploader.singleUpload(profileImage);
-        return Image.from(uploadedFile);
+        return MemberImage.from(uploadedFile);
     }
 
-    private Member getMemberEntity(final SignUpRequest request, final Image image) {
+    private Member getMemberEntity(final SignUpRequest request, final MemberImage memberImage) {
         EncodedSignUp encodedSignUp = encodeForMember(request);
-        return Member.of(encodedSignUp, image);
+        return Member.of(encodedSignUp, memberImage);
     }
 
     private EncodedSignUp encodeForMember(final SignUpRequest request) {
-        return new EncodedSignUp(request.name(), request.email(), passwordEncoder.encrypt(request.password()));
+        return new EncodedSignUp(request.name(),
+                request.email(),
+                passwordEncoder.encrypt(request.password()),
+                request.nationality());
     }
 
     private MemberInfo getMemberInfoEntity(final SignUpRequest request, final Member member) {
@@ -112,7 +115,6 @@ public class MemberInfoService {
                 symmetricKeyEncoder.encrypt(request.gender()),
                 symmetricKeyEncoder.encrypt(request.mbti()),
                 symmetricKeyEncoder.encrypt(request.birthday()),
-                symmetricKeyEncoder.encrypt(request.nationality()),
                 symmetricKeyEncoder.encrypt(request.aboutMe()));
     }
 
@@ -191,7 +193,7 @@ public class MemberInfoService {
         return new MemberPageResponse(memberPage.name(),
                 symmetricKeyEncoder.decrypt(encodedMemberPage.mbti()),
                 symmetricKeyEncoder.decrypt(encodedMemberPage.gender()),
-                symmetricKeyEncoder.decrypt(encodedMemberPage.nationality()),
+                memberPage.nationality(),
                 symmetricKeyEncoder.decrypt(encodedMemberPage.birthday()),
                 symmetricKeyEncoder.decrypt(encodedMemberPage.aboutMe()),
                 memberPage.profileImageURL());

@@ -33,7 +33,7 @@ class MemberRestDocsTest extends BaseRestDocsTest {
     @DisplayName("API - 회원가입")
     void signUp() throws Exception {
         final SignUpRequest request = createSignUpRequest();
-        MockMultipartFile signUpRequestFile = getSignUpRequestFile(request);
+
         final String message = MemberResponse.SIGN_UP_SUCCESS.getMessage();
         SuccessResponse<String> response = SuccessResponse.of(MemberSuccess.SIGN_UP_SUCCESS, message);
         MockMultipartFile multipartFile = createMultipartFile();
@@ -42,17 +42,26 @@ class MemberRestDocsTest extends BaseRestDocsTest {
 
         // When and Then
         mockMvc.perform(multipart("/members")
-                        .file(signUpRequestFile)
                         .file("profileImage", multipartFile.getBytes())
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
+
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("member-signup",
                         requestParts(
-                                partWithName("signUpRequest").description("회원가입 요청 데이터"),
                                 partWithName("profileImage").description("프로필 이미지 파일")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("이름"),
+                                fieldWithPath("email").description("이메일"),
+                                fieldWithPath("password").description("비밀번호"),
+                                fieldWithPath("mbti").description("MBTI"),
+                                fieldWithPath("gender").description("성별"),
+                                fieldWithPath("nationality").description("국적"),
+                                fieldWithPath("birthday").description("생년월일"),
+                                fieldWithPath("aboutMe").description("자기소개")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),

@@ -22,7 +22,7 @@ public class MemberController {
     }
 
     @PostMapping()
-    public SuccessResponse<String> signUp(@RequestPart SignUpRequest signUpRequest,
+    public SuccessResponse<String> signUp(@RequestBody SignUpRequest signUpRequest,
                                     @RequestPart MultipartFile profileImage) {
 
         return SuccessResponse.of(

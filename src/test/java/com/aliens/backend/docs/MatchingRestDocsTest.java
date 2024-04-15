@@ -18,8 +18,9 @@ import org.springframework.http.MediaType;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,6 +51,10 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
                 )
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("matching-application-post",
+                        requestFields(
+                                fieldWithPath("firstPreferLanguage").description("1순위 선호 언어"),
+                                fieldWithPath("secondPreferLanguage").description("2순위 선호 언어")
+                        ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
                                 fieldWithPath("result").description("매칭 신청 결과")
@@ -148,6 +153,10 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
                 )
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("matching-application-modify",
+                        requestFields(
+                                fieldWithPath("firstPreferLanguage").description("1순위 선호 언어"),
+                                fieldWithPath("secondPreferLanguage").description("2순위 선호 언어")
+                        ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
                                 fieldWithPath("result").description("매칭 신청 정보 수정 결과")

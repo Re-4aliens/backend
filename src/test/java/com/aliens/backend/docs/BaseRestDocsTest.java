@@ -3,6 +3,10 @@ package com.aliens.backend.docs;
 import com.aliens.backend.auth.controller.AuthController;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.block.controller.BlockController;
+import com.aliens.backend.board.controller.BoardController;
+import com.aliens.backend.board.controller.CommentController;
+import com.aliens.backend.board.controller.GreatController;
+import com.aliens.backend.board.controller.MarketController;
 import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.controller.ChatReportController;
 import com.aliens.backend.email.controller.EmailController;
@@ -36,6 +40,15 @@ public abstract class BaseRestDocsTest {
     protected EmailController emailController;
     @SpyBean
     protected BlockController blockController;
+    @SpyBean
+    protected BoardController boardController;
+    @SpyBean
+    protected CommentController commentController;
+    @SpyBean
+    protected GreatController greatController;
+    @SpyBean
+    protected MarketController marketBoardController;
+
 
     @Autowired
     protected MockMvc mockMvc;

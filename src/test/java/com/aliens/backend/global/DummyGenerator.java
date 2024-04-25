@@ -51,8 +51,7 @@ public class DummyGenerator {
     @Autowired CommentRepository commentRepository;
     @Autowired GreatRepository greatRepository;
     @Autowired BoardRepository boardRepository;
-    @Autowired
-    BoardImageRepository boardImageRepository;
+    @Autowired BoardImageRepository boardImageRepository;
     @Autowired PasswordEncoder passwordEncoder;
     @Autowired SymmetricKeyEncoder encoder;
     @Autowired TokenProvider tokenProvider;

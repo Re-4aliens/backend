@@ -12,8 +12,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -43,9 +42,13 @@ class BlockRestDocsTest extends BaseRestDocsTest {
                 )
                 .andExpect(status().isOk())
                 .andDo(document("chat-block",
+                        requestFields(
+                                fieldWithPath("partnerId").description("차단 대상자의 ID"),
+                                fieldWithPath("chatRoomId").description("채팅방의 ID, 차단이 발생한 채팅방")
+                        ),
                         responseFields(
                                 fieldWithPath("code").description("응답 코드"),
-                                fieldWithPath("result").description("채팅 상대 차단 결과")
+                                fieldWithPath("result").description("채팅 상대 차단 결과 메시지")
                         )
                 ));
     }

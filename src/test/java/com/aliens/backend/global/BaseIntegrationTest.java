@@ -1,6 +1,7 @@
 package com.aliens.backend.global;
 
 import com.aliens.backend.chat.controller.ChatController;
+import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
 import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.service.ChatAuthValidator;
 import com.aliens.backend.chat.service.ChatService;
@@ -34,6 +35,7 @@ public abstract class BaseIntegrationTest {
     @SpyBean protected FcmSender fcmSender;
     // 수정 예정
     @SpyBean protected MessageRepository messageRepository;
+    @SpyBean protected ChatRoomRepository chatRoomRepository;
     @SpyBean protected ChatService chatService;
     @SpyBean protected ChatController chatController;
     @SpyBean protected ChatChannelInterceptor chatChannelInterceptor;

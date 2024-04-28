@@ -38,9 +38,9 @@ public class ChatService {
 
     public String sendMessage(MessageSendRequest messageSendRequest) {
         Message message = Message.of(messageSendRequest);
-        saveMessage(message);
-        publishMessage(message, messageSendRequest.roomId());
-        sendNotification(message);
+        Message savedMessage = saveMessage(message);
+        publishMessage(savedMessage, messageSendRequest.roomId());
+        sendNotification(savedMessage);
         return ChatSuccess.SEND_MESSAGE_SUCCESS.getMessage();
     }
 
@@ -67,8 +67,8 @@ public class ChatService {
         return chatRoomRepository.findByMemberId(memberId);
     }
 
-    private void saveMessage(Message message) {
-        messageRepository.save(message);
+    private Message saveMessage(Message message) {
+        return messageRepository.save(message);
     }
 
     private void publishMessage(Message message, Long ChatRoomId) {

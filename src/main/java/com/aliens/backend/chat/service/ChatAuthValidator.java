@@ -27,6 +27,6 @@ public class ChatAuthValidator {
     }
 
     private long getRoomIdFromTopic(String topic) {
-        return Long.parseLong(topic.split("/")[1]);
+        return Long.parseLong(topic.split("/")[2]);
     }
 }

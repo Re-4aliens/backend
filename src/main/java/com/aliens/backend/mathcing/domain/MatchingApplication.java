@@ -59,6 +59,10 @@ public class MatchingApplication {
         this.secondPreferLanguage = matchingApplicationRequest.secondPreferLanguage();
     }
 
+    public MatchingApplicationId getId() {
+        return id;
+    }
+
     public Member getMember() {
         return id.getMember();
     }
@@ -84,4 +88,3 @@ public class MatchingApplication {
                 '}';
     }
 }
-

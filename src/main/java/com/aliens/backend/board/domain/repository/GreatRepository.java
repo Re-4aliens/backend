@@ -13,7 +13,5 @@ import java.util.Optional;
 public interface GreatRepository extends JpaRepository<Great,Long> {
     long deleteGreatByMemberAndBoard(Member member, Board board);
 
-    Optional<Great> findByMemberAndBoard(Member member, Board board);
-
     boolean existsByMemberAndBoard(Member member, Board board);
 }

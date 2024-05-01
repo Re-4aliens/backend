@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -23,6 +24,8 @@ public class AwsS3Uploader {
 
     private static final String SUFFIX = ".png";
     private static final int MAX_UPLOADS = 2;
+    private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
+
 
     public AwsS3Uploader(final AmazonS3Client amazonS3Client, final S3UploadProperties s3UploadProperties) {
         this.amazonS3Client = amazonS3Client;
@@ -46,6 +49,9 @@ public class AwsS3Uploader {
     }
 
     private S3File uploadToS3(MultipartFile multipartFile) {
+        checkFileSize(multipartFile);
+        checkFilesImage(multipartFile);
+
         String uuidName = UUID.randomUUID() + SUFFIX;
 
         ObjectMetadata metadata = new ObjectMetadata();
@@ -62,6 +68,21 @@ public class AwsS3Uploader {
         }
 
         return new S3File(uuidName,amazonS3Client.getUrl(s3UploadProperties.getBucket(),uuidName).toString());
+    }
+
+    private void checkFilesImage(final MultipartFile multipartFile) {
+        String contentType = multipartFile.getContentType();
+        if(contentType == null
+                || (!contentType.equals(MediaType.IMAGE_JPEG_VALUE)
+                && !contentType.equals(MediaType.IMAGE_PNG_VALUE))) {
+            throw new RestApiException(BoardError.POST_IMAGE_ERROR);
+        }
+    }
+
+    private void checkFileSize(final MultipartFile multipartFile) {
+        if (multipartFile.getSize() > MAX_IMAGE_SIZE) {
+            throw new RestApiException(BoardError.POST_IMAGE_ERROR);
+        }
     }
 
     public boolean delete(String fileName) {

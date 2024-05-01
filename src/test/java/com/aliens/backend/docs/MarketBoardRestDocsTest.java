@@ -4,7 +4,7 @@ import com.aliens.backend.board.controller.dto.request.MarketChangeRequest;
 import com.aliens.backend.board.controller.dto.request.MarketBoardCreateRequest;
 import com.aliens.backend.board.controller.dto.response.MarketBoardResponse;
 import com.aliens.backend.board.controller.dto.response.MemberProfileDto;
-import com.aliens.backend.board.domain.enums.ProductStatus;
+import com.aliens.backend.board.domain.enums.ProductQuality;
 import com.aliens.backend.board.domain.enums.SaleStatus;
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.MarketBoardSuccess;
@@ -40,7 +40,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                 "Content",
                 SaleStatus.SELL,
                 "10000",
-                ProductStatus.BRAND_NEW);
+                ProductQuality.BRAND_NEW);
         SuccessResponse<?> response = SuccessResponse.of(MarketBoardSuccess.CREATE_MARKET_BOARD_SUCCESS);
         doReturn(response).when(marketBoardController).createMarketBoard(any(), any(), any());
 
@@ -220,7 +220,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                 "Content",
                 SaleStatus.SELL,
                 "10000",
-                ProductStatus.BRAND_NEW);
+                ProductQuality.BRAND_NEW);
         SuccessResponse<?> response = SuccessResponse.of(MarketBoardSuccess.CHANGE_MARKET_BOARD_SUCCESS);
         doReturn(response).when(marketBoardController).changeMarketBoard(any(), any(), any());
 
@@ -255,7 +255,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                 "title",
                 SaleStatus.SELL,
                 "10000",
-                ProductStatus.ALMOST_NEW,
+                ProductQuality.ALMOST_NEW,
                 "팔고 있어요",
                 2L,
                 1L,

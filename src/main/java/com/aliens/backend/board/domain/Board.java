@@ -199,7 +199,7 @@ public class Board {
         content = request.content();
         marketInfo.changePrice(request.price());
         marketInfo.changeSaleStatus(request.saleStatus());
-        marketInfo.changeProductStatus(request.productStatus());
+        marketInfo.changeProductStatus(request.productQuality());
     }
 
     public void minusGreatCount() {

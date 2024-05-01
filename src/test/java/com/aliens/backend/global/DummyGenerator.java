@@ -8,7 +8,7 @@ import com.aliens.backend.board.controller.dto.request.BoardCreateRequest;
 import com.aliens.backend.board.controller.dto.request.MarketBoardCreateRequest;
 import com.aliens.backend.board.domain.*;
 import com.aliens.backend.board.domain.enums.BoardCategory;
-import com.aliens.backend.board.domain.enums.ProductStatus;
+import com.aliens.backend.board.domain.enums.ProductQuality;
 import com.aliens.backend.board.domain.enums.SaleStatus;
 import com.aliens.backend.board.domain.repository.BoardImageRepository;
 import com.aliens.backend.board.domain.repository.BoardRepository;
@@ -81,7 +81,7 @@ public class DummyGenerator {
     public static final String GIVEN_COMMENT_CONTENT = "댓글 내용";
     public static final SaleStatus GIVEN_SALE_STATUS = SaleStatus.SELL;
     public static final String GIVEN_PRICE = "10000";
-    public static final ProductStatus GIVEN_PRODUCT_STATUS = ProductStatus.ALMOST_NEW;
+    public static final ProductQuality GIVEN_PRODUCT_STATUS = ProductQuality.ALMOST_NEW;
     public static final String GIVEN_FCM_TOKEN = "GIVEN_FCM_TOKEN";
 
     // 다수 멤버 생성 메서드

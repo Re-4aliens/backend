@@ -1,6 +1,6 @@
 package com.aliens.backend.board.domain.enums;
 
-public enum ProductStatus {
+public enum ProductQuality {
     BRAND_NEW("새 것"),
     ALMOST_NEW("거의 새 것"),
     SLIGHT_DEFECT("약간의 하자"),
@@ -8,7 +8,7 @@ public enum ProductStatus {
 
     private final String value;
 
-    ProductStatus(String value) {
+    ProductQuality(String value) {
         this.value = value;
     }
 
@@ -16,8 +16,8 @@ public enum ProductStatus {
         return value;
     }
 
-    public static ProductStatus of(String value) {
-        for (ProductStatus status : ProductStatus.values()) {
+    public static ProductQuality of(String value) {
+        for (ProductQuality status : ProductQuality.values()) {
             if (status.value.equals(value)) {
                 return status;
             }

@@ -173,7 +173,7 @@ class BoardServiceReadTest extends BaseIntegrationTest {
         assertThat(response.greatCount()).isEqualTo(1L);
         assertThat(response.price()).isEqualTo(DummyGenerator.GIVEN_PRICE);
         assertThat(response.saleStatus()).isEqualTo(DummyGenerator.GIVEN_SALE_STATUS);
-        assertThat(response.productStatus()).isEqualTo(DummyGenerator.GIVEN_PRODUCT_STATUS);
+        assertThat(response.productQuality()).isEqualTo(DummyGenerator.GIVEN_PRODUCT_STATUS);
     }
 
     @Test

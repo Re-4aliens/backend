@@ -44,9 +44,9 @@ public class MarketController {
     }
 
     @GetMapping("/details")
-    public SuccessResponse<?> getMarketBoardDetails(@RequestParam("id") final Long id) {
+    public SuccessResponse<?> getMarketBoardDetails(@RequestParam("id") final Long boardId) {
         return SuccessResponse.of(MarketBoardSuccess.GET_MARKET_BOARD_DETAILS_SUCCESS,
-                boardReadService.getMarketBoardDetails(id));
+                boardReadService.getMarketBoardDetails(boardId));
     }
 
     @GetMapping("/search")

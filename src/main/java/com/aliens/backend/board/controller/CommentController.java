@@ -49,14 +49,14 @@ public class CommentController {
     }
 
     @GetMapping("/comments/boards")
-    public SuccessResponse<List<CommentResponse>> getCommentsByBoardId(@RequestParam("board-id") final Long boardId) {
+    public SuccessResponse<List<CommentResponse>> getCommentsByBoardId(@RequestParam("id") final Long boardId) {
         return SuccessResponse.of(CommentSuccess.GET_COMMENTS_BY_BOARD_ID_SUCCESS,
                 commentService.getCommentsByBoardId(boardId));
     }
 
     @DeleteMapping("/comments")
     public SuccessResponse<?> deleteComment(@Login final LoginMember loginMember,
-                                            @RequestParam("comment-id") final Long commentId) {
+                                            @RequestParam("id") final Long commentId) {
         commentService.deleteComment(loginMember, commentId);
 
         return SuccessResponse.of(CommentSuccess.DELETE_COMMENT_SUCCESS);

@@ -12,6 +12,7 @@ import com.aliens.backend.chat.controller.ChatReportController;
 import com.aliens.backend.email.controller.EmailController;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.member.controller.MemberController;
+import com.aliens.backend.notification.controller.NotificationController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,8 @@ public abstract class BaseRestDocsTest {
     protected GreatController greatController;
     @SpyBean
     protected MarketController marketBoardController;
+    @SpyBean
+    protected NotificationController notificationController;
 
 
     @Autowired

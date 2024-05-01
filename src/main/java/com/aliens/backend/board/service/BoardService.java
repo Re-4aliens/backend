@@ -96,19 +96,20 @@ public class BoardService {
     @Transactional
     public void changeMarketBoard(final Long boardId, final MarketChangeRequest request, final LoginMember loginMember) {
         Board board = getBoardById(boardId);
-        if(!board.isWriter(loginMember.memberId())) {
+        checkWriter(board, loginMember);
+        board.changeByRequest(request);
+    }
+
+    private void checkWriter(final Board board, final LoginMember loginMember) {
+        if (!board.isWriter(loginMember.memberId())) {
             throw new RestApiException(BoardError.NOT_WRITER);
         }
-        board.changeByRequest(request);
     }
 
     @Transactional
     public void deleteBoard(final LoginMember loginMember, final Long boardId) {
         Board board = getBoardById(boardId);
-
-        if(!board.isWriter(loginMember.memberId())) {
-            throw new RestApiException(BoardError.NOT_WRITER);
-        }
+        checkWriter(board, loginMember);
 
         deleteImageOnS3(board);
         boardRepository.delete(board);

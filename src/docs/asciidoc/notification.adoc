@@ -1,0 +1,54 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== 알림
+
+[[resources-post-create]]
+=== 알림 조회
+
+==== HTTP request
+include::{snippets}/notification-get/http-request.adoc[]
+
+==== HTTP response
+include::{snippets}/notification-get/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/notification-get/response-fields.adoc[]
+
+
+
+
+
+[[resources-post-create]]
+=== FCM 토큰 등록
+
+==== HTTP request
+include::{snippets}/notification-register-fcm-token/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/notification-register-fcm-token/request-fields.adoc[]
+
+==== HTTP response
+include::{snippets}/notification-register-fcm-token/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/notification-register-fcm-token/response-fields.adoc[]
+
+
+
+
+[[resources-post-create]]
+=== 알림 읽음 요청
+
+==== HTTP request
+include::{snippets}/notification-read/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/notification-read/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/notification-read/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/notification-read/response-fields.adoc[]
+

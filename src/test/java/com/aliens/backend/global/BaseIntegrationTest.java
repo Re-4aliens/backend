@@ -3,7 +3,7 @@ package com.aliens.backend.global;
 import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.service.ChatService;
-import com.aliens.backend.notification.FcmSender;
+import com.aliens.backend.notification.service.FcmSender;
 import com.aliens.backend.uploader.AwsS3Uploader;
 import com.aliens.backend.uploader.dto.S3File;
 import com.google.firebase.messaging.Message;

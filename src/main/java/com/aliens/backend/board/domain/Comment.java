@@ -133,4 +133,8 @@ public class Comment {
     public CommentStatus getStatus() {
         return status;
     }
+
+    public Long getWriterId() {
+        return member.getId();
+    }
 }

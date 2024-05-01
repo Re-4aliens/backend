@@ -121,12 +121,16 @@ public class CommentService {
                     .map(Comment::getCommentResponse)
                     .toList();
 
-            if(childrenComment != null && !childrenComment.isEmpty()) {
+            if(isNotEmtyChildren(childrenComment)) {
                 parentComment.setChildren(childrenComment);
             }
             result.add(parentComment);
         }
         return result;
+    }
+
+    private boolean isNotEmtyChildren(final List<CommentResponse> childrenComment) {
+        return childrenComment != null && !childrenComment.isEmpty();
     }
 
     @Transactional

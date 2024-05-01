@@ -68,7 +68,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                                 fieldWithPath("content").description("장터 게시물 내용"),
                                 fieldWithPath("saleStatus").description("판매 상태"),
                                 fieldWithPath("price").description("판매 가격"),
-                                fieldWithPath("productStatus").description("상품 상태")
+                                fieldWithPath("productQuality").description("상품 상태")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
@@ -114,7 +114,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                                 fieldWithPath("result[].title").description("게시글 제목"),
                                 fieldWithPath("result[].saleStatus").description("판매 상태"),
                                 fieldWithPath("result[].price").description("상품 가격"),
-                                fieldWithPath("result[].productStatus").description("상품 상태"),
+                                fieldWithPath("result[].productQuality").description("상품 상태"),
                                 fieldWithPath("result[].content").description("게시글 내용"),
                                 fieldWithPath("result[].greatCount").description("게시글 좋아요 수"),
                                 fieldWithPath("result[].commentCount").description("게시글 댓글 수"),
@@ -153,7 +153,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                                 fieldWithPath("result.title").description("게시글 제목"),
                                 fieldWithPath("result.saleStatus").description("판매 상태"),
                                 fieldWithPath("result.price").description("상품 가격"),
-                                fieldWithPath("result.productStatus").description("상품 상태"),
+                                fieldWithPath("result.productQuality").description("상품 상태"),
                                 fieldWithPath("result.content").description("게시글 내용"),
                                 fieldWithPath("result.greatCount").description("게시글 좋아요 수"),
                                 fieldWithPath("result.commentCount").description("게시글 댓글 수"),
@@ -198,7 +198,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                                 fieldWithPath("result[].title").description("게시글 제목"),
                                 fieldWithPath("result[].saleStatus").description("판매 상태"),
                                 fieldWithPath("result[].price").description("상품 가격"),
-                                fieldWithPath("result[].productStatus").description("상품 상태"),
+                                fieldWithPath("result[].productQuality").description("상품 상태"),
                                 fieldWithPath("result[].content").description("게시글 내용"),
                                 fieldWithPath("result[].greatCount").description("게시글 좋아요 수"),
                                 fieldWithPath("result[].commentCount").description("게시글 댓글 수"),
@@ -240,7 +240,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                                 fieldWithPath("content").description("장터 게시물 내용"),
                                 fieldWithPath("saleStatus").description("판매 상태"),
                                 fieldWithPath("price").description("판매 가격"),
-                                fieldWithPath("productStatus").description("상품 상태")
+                                fieldWithPath("productQuality").description("상품 상태")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),

@@ -1,6 +1,8 @@
 package com.aliens.backend.uploader;
 
+import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.S3UploadProperties;
+import com.aliens.backend.global.response.error.BoardError;
 import com.aliens.backend.uploader.dto.S3File;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -20,6 +22,7 @@ public class AwsS3Uploader {
     private final S3UploadProperties s3UploadProperties;
 
     private static final String SUFFIX = ".png";
+    private static final int MAX_UPLOADS = 2;
 
     public AwsS3Uploader(final AmazonS3Client amazonS3Client, final S3UploadProperties s3UploadProperties) {
         this.amazonS3Client = amazonS3Client;
@@ -27,7 +30,15 @@ public class AwsS3Uploader {
     }
 
     public List<S3File> multiUpload(List<MultipartFile> files) {
+
+        checkFileSize(files);
         return files.stream().map(this::uploadToS3).toList();
+    }
+
+    private void checkFileSize(final List<MultipartFile> files) {
+        if(files.size() > MAX_UPLOADS) {
+            throw new RestApiException(BoardError.POST_IMAGE_ERROR);
+        }
     }
 
     public S3File singleUpload(MultipartFile file) {
@@ -47,7 +58,7 @@ public class AwsS3Uploader {
                     multipartFile.getInputStream(),
                     metadata);
         }catch (IOException e) {
-            throw new RuntimeException("업로드 실패");
+            throw new RestApiException(BoardError.POST_IMAGE_ERROR);
         }
 
         return new S3File(uuidName,amazonS3Client.getUrl(s3UploadProperties.getBucket(),uuidName).toString());

@@ -43,7 +43,7 @@ public class BoardService {
         Member member = getMember(loginMember);
         Board board = Board.normalOf(request, member);
 
-        if(boardImages == null || boardImages.isEmpty()) {
+        if(notHasImages(boardImages)) {
             boardRepository.save(board);
             return;
         }
@@ -51,6 +51,10 @@ public class BoardService {
         List<BoardImage> boardImageEntitys = uploadS3(boardImages, board);
         board.setImages(boardImageEntitys);
         boardRepository.save(board);
+    }
+
+    private boolean notHasImages(final List<MultipartFile> boardImages) {
+        return boardImages == null || boardImages.isEmpty();
     }
 
     private List<BoardImage> uploadS3(final List<MultipartFile> boardImages, final Board board) {
@@ -79,7 +83,7 @@ public class BoardService {
         MarketInfo marketInfo = MarketInfo.from(marketRequest);
         Board board = Board.marketOf(boardRequest, member, marketInfo);
 
-        if(marketBoardImages == null ||marketBoardImages.isEmpty()) {
+        if(notHasImages(marketBoardImages)) {
             boardRepository.save(board);
             return;
         }

@@ -217,4 +217,10 @@ public class Board {
     public Long getWriterId() {
         return member.getId();
     }
+
+    public boolean isJustCreated() {
+        Instant now = Instant.now();
+        Instant fiveMinutesAgo = now.minusSeconds(300); // 5 분
+        return createdAt.isAfter(fiveMinutesAgo);
+    }
 }

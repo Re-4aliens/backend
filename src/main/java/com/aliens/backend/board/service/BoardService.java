@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BoardService {
@@ -41,8 +42,9 @@ public class BoardService {
                           final List<MultipartFile> boardImages,
                           final LoginMember loginMember) {
         Member member = getMember(loginMember);
-        Board board = Board.normalOf(request, member);
+        checkWriterTooManyPost(member);
 
+        Board board = Board.normalOf(request, member);
         if(notHasImages(boardImages)) {
             boardRepository.save(board);
             return;
@@ -51,6 +53,13 @@ public class BoardService {
         List<BoardImage> boardImageEntitys = uploadS3(boardImages, board);
         board.setImages(boardImageEntitys);
         boardRepository.save(board);
+    }
+
+    private void checkWriterTooManyPost(final Member member) {
+        Optional<Board> board = boardRepository.findFirstByMemberOrderById(member);
+        if(!board.isEmpty() && board.get().isJustCreated()) {
+            throw new RestApiException(BoardError.TOO_MANY_POST);
+        }
     }
 
     private boolean notHasImages(final List<MultipartFile> boardImages) {
@@ -78,6 +87,8 @@ public class BoardService {
                                 final List<MultipartFile> marketBoardImages,
                                 final LoginMember loginMember) {
         Member member = getMember(loginMember);
+        checkWriterTooManyPost(member);
+
         BoardCreateRequest boardRequest = BoardCreateRequest.from(marketRequest);
 
         MarketInfo marketInfo = MarketInfo.from(marketRequest);

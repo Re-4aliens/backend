@@ -110,4 +110,49 @@ class EmailRestDocsTest extends BaseRestDocsTest {
                         )
                 ));
     }
+
+
+    @Test
+    @DisplayName("API - 이메일 인증완료 확인 (인증완료)")
+    void checkEmailAuthenticated() throws Exception {
+        final String request = "tmp@example.com";
+        final String message = EmailResponse.CAN_NEXT_STEP.getMessage();
+
+        SuccessResponse<String> response = SuccessResponse.of(EmailSuccess.EMAIL_AUTHENTICATE_SUCCESS, message);
+        doReturn(response).when(emailController).checkEmailAuthenticated(any());
+
+        this.mockMvc.perform(get("/emails").param("email", request))
+                .andExpect(status().isOk())
+                .andDo(document("email-authenticated-check",
+                        queryParameters(
+                                parameterWithName("email").description("요청 이메일")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("result").description("응답 결과")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("API - 이메일 인증완료 확인 (미인증)")
+    void checkEmailNotAuthenticated() throws Exception {
+        final String request = "tmp@example.com";
+        final String message = EmailResponse.CANT_NEXT_STEP.getMessage();
+
+        SuccessResponse<String> response = SuccessResponse.of(EmailSuccess.EMAIL_AUTHENTICATE_SUCCESS, message);
+        doReturn(response).when(emailController).checkEmailAuthenticated(any());
+
+        this.mockMvc.perform(get("/emails").param("email", request))
+                .andExpect(status().isOk())
+                .andDo(document("email-authenticated-check-not",
+                        queryParameters(
+                                parameterWithName("email").description("요청 이메일")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 코드"),
+                                fieldWithPath("result").description("응답 결과")
+                        )
+                ));
+    }
 }

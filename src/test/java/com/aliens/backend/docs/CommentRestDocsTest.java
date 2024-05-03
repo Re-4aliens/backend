@@ -143,7 +143,7 @@ class CommentRestDocsTest extends BaseRestDocsTest{
     }
 
     @Test
-    @DisplayName("API - 해당 게시글의 모든 댓글 조회")
+    @DisplayName("API - 특정 게시글의 모든 댓글 조회")
     void getCommentsByBoardIdTest() throws Exception {
         // Given
         final List<CommentResponse> commentResponseList = List.of(createCommentResponseWithoutChildren(), createCommentResponseWithChildren());
@@ -152,12 +152,12 @@ class CommentRestDocsTest extends BaseRestDocsTest{
 
         // When & Then
         mockMvc.perform(get("/comments/boards")
-                        .param("board-id", "1")
+                        .param("id", "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("api-get-comments-by-board-id",
                         queryParameters(
-                                parameterWithName("board-id").description("게시글 ID")
+                                parameterWithName("id").description("게시글 ID")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
@@ -230,7 +230,7 @@ class CommentRestDocsTest extends BaseRestDocsTest{
         doReturn(response).when(commentController).deleteComment(any(), any());
 
         // When & Then
-        mockMvc.perform(delete("/comments?comment-id={id}",1)
+        mockMvc.perform(delete("/comments?id={id}",1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", GIVEN_ACCESS_TOKEN)
                 )
@@ -238,7 +238,7 @@ class CommentRestDocsTest extends BaseRestDocsTest{
 
                 .andDo(document("api-delete-child-comment",
                         queryParameters(
-                                parameterWithName("comment-id").description("댓글 ID")
+                                parameterWithName("id").description("댓글 ID")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),

@@ -31,6 +31,11 @@ import com.aliens.backend.member.domain.MemberImage;
 import com.aliens.backend.member.domain.MemberInfo;
 import com.aliens.backend.member.domain.repository.MemberInfoRepository;
 import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
+import com.aliens.backend.notification.controller.dto.NotificationRequest;
+import com.aliens.backend.notification.domain.FcmToken;
+import com.aliens.backend.notification.domain.FcmTokenRepository;
+import com.aliens.backend.notification.domain.Notification;
+import com.aliens.backend.notification.domain.repository.NotificationRepository;
 import com.aliens.backend.uploader.dto.S3File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
@@ -56,6 +61,10 @@ public class DummyGenerator {
     @Autowired SymmetricKeyEncoder encoder;
     @Autowired TokenProvider tokenProvider;
     @Autowired MockClock mockClock;
+    @Autowired
+    NotificationRepository notificationRepository;
+    @Autowired
+    FcmTokenRepository fcmTokenRepository;
 
     public static final String GIVEN_EMAIL = "tmp@example.com";
     public static final String GIVEN_PASSWORD = "tmpPassword";
@@ -73,6 +82,7 @@ public class DummyGenerator {
     public static final SaleStatus GIVEN_SALE_STATUS = SaleStatus.SELL;
     public static final String GIVEN_PRICE = "10000";
     public static final ProductStatus GIVEN_PRODUCT_STATUS = ProductStatus.ALMOST_NEW;
+    public static final String GIVEN_FCM_TOKEN = "GIVEN_FCM_TOKEN";
 
     // 다수 멤버 생성 메서드
     public List<Member> generateMultiMember(Integer memberCounts) {
@@ -91,11 +101,16 @@ public class DummyGenerator {
 
     // 단일 멤버 생성 메서드
     public Member generateSingleMember() {
-        String tmpEmail = GIVEN_EMAIL;
         MemberImage memberImage = makeImage();
-        Member member = makeMember(tmpEmail, memberImage);
+        Member member = makeMember(GIVEN_EMAIL, memberImage);
         saveAsMemberInfo(member);
+        saveFcmToken(member);
         return member;
+    }
+
+    private void saveFcmToken(final Member member) {
+        FcmToken fcmToken = FcmToken.of(member, GIVEN_FCM_TOKEN);
+        fcmTokenRepository.save(fcmToken);
     }
 
     // 매칭 회차 생성 메서드 : 매칭 신청 전, 해당 메서드 호출로 회차 저장 필요 ... 매개변수 : TUESDAY 권장
@@ -265,5 +280,19 @@ public class DummyGenerator {
         BoardImage boardImage = BoardImage.from(new S3File(GIVEN_FILE_NAME, GIVEN_FILE_URL));
         boardImage.setBoard(board);
         return boardImage;
+    }
+
+    public void generateNotificationWithCount(final Member member, final int count) {
+        for(int i = 0; i < count; i++) {
+            NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, GIVEN_COMMENT_CONTENT,List.of(1L));
+            Notification notification = Notification.of(request,member);
+            notificationRepository.save(notification);
+        }
+    }
+
+    public Notification generateSingleNotification(final Member member) {
+        NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, GIVEN_COMMENT_CONTENT,List.of(1L));
+        Notification notification = Notification.of(request,member);
+        return notificationRepository.save(notification);
     }
 }

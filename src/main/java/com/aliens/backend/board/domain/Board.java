@@ -86,7 +86,7 @@ public class Board {
                 request.content(),
                 request.boardCategory(),
                 member
-                );
+        );
     }
 
     public static Board marketOf(final BoardCreateRequest request,
@@ -98,7 +98,7 @@ public class Board {
                 request.boardCategory(),
                 member,
                 marketInfo
-                );
+        );
     }
 
     private Board(
@@ -208,5 +208,13 @@ public class Board {
 
     public Long getGreatCount() {
         return greatCount;
+    }
+
+    public BoardCategory getCategory() {
+        return category;
+    }
+
+    public Long getWriterId() {
+        return member.getId();
     }
 }

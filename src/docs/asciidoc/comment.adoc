@@ -1,0 +1,86 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== 댓글
+
+[[resources-post-create]]
+=== 부모 댓글 등록
+
+==== HTTP request
+include::{snippets}/api-create-parent-comment/http-request.adoc[]
+==== request-body 설명
+include::{snippets}/api-create-parent-comment/request-fields.adoc[]
+
+==== HTTP response
+include::{snippets}/api-create-parent-comment/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/api-create-parent-comment/response-fields.adoc[]
+
+
+[[resources-post-create]]
+=== 자식 댓글 등록
+
+==== HTTP request
+include::{snippets}/api-create-child-comment/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-create-child-comment/request-fields.adoc[]
+
+==== HTTP response
+include::{snippets}/api-create-child-comment/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/api-create-child-comment/response-fields.adoc[]
+
+
+[[resources-post-create]]
+=== 본인이 댓글 단 게시글 조회
+
+==== HTTP request
+include::{snippets}/api-get-commented-board-page/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-get-commented-board-page/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-get-commented-board-page/http-response.adoc[]
+
+include::{snippets}/api-get-commented-board-page/response-fields.adoc[]
+
+
+
+
+
+[[resources-post-create]]
+=== 특정 게시글의 모든 댓글 조회
+
+==== HTTP request
+include::{snippets}/api-get-comments-by-board-id/http-request.adoc[]
+
+==== parameter 설명
+include::{snippets}/api-get-comments-by-board-id/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-get-comments-by-board-id/http-response.adoc[]
+
+include::{snippets}/api-get-comments-by-board-id/response-fields.adoc[]
+
+
+
+
+
+[[resources-post-create]]
+=== 댓글 삭제
+
+==== HTTP request
+include::{snippets}/api-delete-child-comment/http-request.adoc[]
+
+==== parameter 설명
+include::{snippets}/api-delete-child-comment/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-delete-child-comment/http-response.adoc[]
+
+include::{snippets}/api-delete-child-comment/response-fields.adoc[]

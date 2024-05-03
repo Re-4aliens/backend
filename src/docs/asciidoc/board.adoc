@@ -1,0 +1,140 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== 게시판
+
+[[resources-post-create]]
+=== 일반 게시글 등록
+
+==== HTTP request
+include::{snippets}/board-create/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/board-create/request-parts.adoc[]
+include::{snippets}/board-create/request-fields.adoc[]
+
+==== HTTP response
+include::{snippets}/board-create/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/board-create/response-fields.adoc[]
+
+
+
+
+
+[[resources-post-create]]
+=== 전체 게시글 조회
+
+==== HTTP request
+include::{snippets}/api-board-get-all/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-board-get-all/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-board-get-all/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/api-board-get-all/response-fields.adoc[]
+
+
+
+
+[[resources-post-create]]
+=== 특정 카테고리 게시글 조회
+
+==== HTTP request
+include::{snippets}/api-board-get-all-with-category/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-board-get-all-with-category/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-board-get-all-with-category/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/api-board-get-all-with-category/response-fields.adoc[]
+
+
+
+
+[[resources-post-create]]
+=== 특정 카테고리 게시글 조회
+
+==== HTTP request
+include::{snippets}/api-board-search/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-board-search/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-board-search/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/api-board-search/response-fields.adoc[]
+
+
+
+
+
+[[resources-post-create]]
+=== 공지사항 게시글 조회
+
+==== HTTP request
+include::{snippets}/api-board-get-all-announcements/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-board-get-all-announcements/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-board-get-all-announcements/http-response.adoc[]
+
+include::{snippets}/api-board-get-all-announcements/response-fields.adoc[]
+
+
+
+[[resources-post-create]]
+=== 내가 작성한 게시글 조회
+
+==== HTTP request
+include::{snippets}/api-board-get-my-boards/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-board-get-my-boards/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-board-get-my-boards/http-response.adoc[]
+
+include::{snippets}/api-board-get-my-boards/response-fields.adoc[]
+
+
+
+
+[[resources-post-create]]
+=== 특정 카테고리 게시글 검색
+
+==== HTTP request
+include::{snippets}/api-board-search-with-category/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-board-search-with-category/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-board-search-with-category/http-response.adoc[]
+
+include::{snippets}/api-board-search-with-category/response-fields.adoc[]
+
+
+[[resources-post-create]]
+=== 게시글 삭제
+
+==== HTTP request
+include::{snippets}/api-board-delete/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-board-delete/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-board-delete/http-response.adoc[]
+
+include::{snippets}/api-board-delete/response-fields.adoc[]

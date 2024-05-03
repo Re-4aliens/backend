@@ -1,4 +1,4 @@
-package com.aliens.backend.notification;
+package com.aliens.backend.notification.service;
 
 import com.aliens.backend.global.response.error.CommonError;
 import com.aliens.backend.global.exception.RestApiException;

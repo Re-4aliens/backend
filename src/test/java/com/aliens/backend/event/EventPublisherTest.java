@@ -7,7 +7,7 @@ import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.service.model.MemberPair;
 import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
-import com.aliens.backend.notification.FcmSender;
+import com.aliens.backend.notification.service.FcmSender;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
 import org.junit.jupiter.api.DisplayName;

@@ -1,4 +1,4 @@
-package com.aliens.backend.docs;
+package com.aliens.backend.global;
 
 import com.aliens.backend.auth.controller.AuthController;
 import com.aliens.backend.auth.domain.Member;
@@ -10,7 +10,6 @@ import com.aliens.backend.board.controller.MarketController;
 import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.controller.ChatReportController;
 import com.aliens.backend.email.controller.EmailController;
-import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.member.controller.MemberController;
 import com.aliens.backend.notification.controller.NotificationController;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -15,6 +15,8 @@ import com.aliens.backend.board.domain.repository.custom.CommentCustomRepository
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.BoardError;
 import com.aliens.backend.global.response.error.MemberError;
+import com.aliens.backend.notification.controller.dto.NotificationRequest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +30,15 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final CommentCustomRepository commentCustomRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public CommentService(final CommentRepository commentRepository, final MemberRepository memberRepository, final BoardRepository boardRepository, final CommentCustomRepository commentCustomRepository) {
+
+    public CommentService(final CommentRepository commentRepository, final MemberRepository memberRepository, final BoardRepository boardRepository, final CommentCustomRepository commentCustomRepository, final ApplicationEventPublisher eventPublisher) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.boardRepository = boardRepository;
         this.commentCustomRepository = commentCustomRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -45,6 +50,19 @@ public class CommentService {
         board.addComment(comment);
 
         commentRepository.save(comment);
+
+        if(!comment.isWriter(board.getWriterId())) {
+            sendParentCommentNotification(board, request);
+        }
+    }
+
+    private void sendParentCommentNotification(Board board,
+                                               ParentCommentCreateRequest request) {
+        eventPublisher.publishEvent(new NotificationRequest(
+                board.getCategory(),
+                board.getId(),
+                "\"" + request.content() + "\" 라는 댓글이 달렸습니다.",
+                List.of(board.getWriterId())));
     }
 
     private Board findBoard(final Long boardId) {
@@ -57,13 +75,29 @@ public class CommentService {
 
     @Transactional
     public void postChildComment(final ChildCommentCreateRequest request,
-                                  final LoginMember loginMember) {
+                                 final LoginMember loginMember) {
         Member member = getMember(loginMember);
         Board board = findBoard(request.boardId());
-        Comment comment = Comment.childOf(request, board, member);
-        board.addComment(comment);
+        Comment parentComment = commentRepository.findById(request.parentCommentId()).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
 
-        commentRepository.save(comment);
+        Comment childComment = Comment.childOf(request, board, member);
+        board.addComment(childComment);
+
+        commentRepository.save(childComment);
+
+        if(!parentComment.isChildFrom(childComment.getId())) {
+            sendChildCommentNotification(board, request, parentComment.getWriterId());
+        }
+    }
+
+    private void sendChildCommentNotification(Board board,
+                                              ChildCommentCreateRequest request,
+                                              Long parentCommentMemberId) {
+        eventPublisher.publishEvent(new NotificationRequest(
+                board.getCategory(),
+                board.getId(),
+                "\"" + request.content() + "\" 라는 댓글이 달렸습니다.",
+                List.of(board.getWriterId(), parentCommentMemberId)));
     }
 
     @Transactional(readOnly = true)

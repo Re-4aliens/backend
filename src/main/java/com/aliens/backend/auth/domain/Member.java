@@ -7,6 +7,7 @@ import com.aliens.backend.member.domain.MemberImage;
 import com.aliens.backend.member.domain.MemberInfo;
 import com.aliens.backend.member.domain.MatchingStatus;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
+import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
 
@@ -55,6 +56,9 @@ public class Member {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MemberInfo memberInfo;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private FcmToken fcmToken;
 
     protected Member() {
     }

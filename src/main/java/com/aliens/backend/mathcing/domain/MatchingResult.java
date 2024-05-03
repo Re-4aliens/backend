@@ -6,9 +6,10 @@ import com.aliens.backend.mathcing.business.model.Partner;
 import com.aliens.backend.mathcing.domain.id.MatchingResultId;
 import com.aliens.backend.mathcing.business.model.Relationship;
 import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 
 @Entity
-public class MatchingResult {
+public class MatchingResult implements Persistable<MatchingResultId> {
     @EmbeddedId
     private MatchingResultId id;
 
@@ -65,5 +66,15 @@ public class MatchingResult {
 
     public Relationship getRelationship() {
         return relationship;
+    }
+
+    @Override
+    public MatchingResultId getId() {
+        return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return true;
     }
 }

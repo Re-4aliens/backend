@@ -16,4 +16,4 @@ websocket:
   port: 8080
   endpoint: /ws
   topic: /room
-  request: /chatting
+  request: /chat

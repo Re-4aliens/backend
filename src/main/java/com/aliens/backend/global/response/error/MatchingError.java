@@ -8,6 +8,7 @@ public enum MatchingError implements ErrorCode {
     NOT_FOUND_MATCHING_APPLICATION_INFO(HttpStatus.NOT_FOUND, "MA3", "매칭 신청 정보 찾을 수 없음"),
     NOT_FOUND_PREFER_LANGUAGE(HttpStatus.NOT_FOUND, "MA4", "선호 언어를 찾을 수 없음"),
     INVALID_LANGUAGE_INPUT(HttpStatus.BAD_REQUEST, "MA5", "두 선호 언어가 같을 수 없음"),
+    DUPLICATE_MATCHING_APPLICATION(HttpStatus.BAD_REQUEST, "MA6", "중복된 매칭 신청"),
 
     ;
 

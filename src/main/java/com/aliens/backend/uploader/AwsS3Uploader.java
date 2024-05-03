@@ -49,7 +49,7 @@ public class AwsS3Uploader {
     }
 
     private S3File uploadToS3(MultipartFile multipartFile) {
-        checkFileSize(multipartFile);
+        checkFileLimit(multipartFile);
         checkFilesImage(multipartFile);
 
         String uuidName = UUID.randomUUID() + SUFFIX;
@@ -79,7 +79,7 @@ public class AwsS3Uploader {
         }
     }
 
-    private void checkFileSize(final MultipartFile multipartFile) {
+    private void checkFileLimit(final MultipartFile multipartFile) {
         if (multipartFile.getSize() > MAX_IMAGE_SIZE) {
             throw new RestApiException(BoardError.POST_IMAGE_ERROR);
         }

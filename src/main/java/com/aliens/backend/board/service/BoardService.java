@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BoardService {
@@ -41,9 +42,10 @@ public class BoardService {
                           final List<MultipartFile> boardImages,
                           final LoginMember loginMember) {
         Member member = getMember(loginMember);
-        Board board = Board.normalOf(request, member);
+        checkWriterTooManyPost(member);
 
-        if(boardImages == null || boardImages.isEmpty()) {
+        Board board = Board.normalOf(request, member);
+        if(notHasImages(boardImages)) {
             boardRepository.save(board);
             return;
         }
@@ -51,6 +53,17 @@ public class BoardService {
         List<BoardImage> boardImageEntitys = uploadS3(boardImages, board);
         board.setImages(boardImageEntitys);
         boardRepository.save(board);
+    }
+
+    private void checkWriterTooManyPost(final Member member) {
+        Optional<Board> board = boardRepository.findFirstByMemberOrderById(member);
+        if(!board.isEmpty() && board.get().isJustCreated()) {
+            throw new RestApiException(BoardError.TOO_MANY_POST);
+        }
+    }
+
+    private boolean notHasImages(final List<MultipartFile> boardImages) {
+        return boardImages == null || boardImages.isEmpty();
     }
 
     private List<BoardImage> uploadS3(final List<MultipartFile> boardImages, final Board board) {
@@ -74,12 +87,14 @@ public class BoardService {
                                 final List<MultipartFile> marketBoardImages,
                                 final LoginMember loginMember) {
         Member member = getMember(loginMember);
+        checkWriterTooManyPost(member);
+
         BoardCreateRequest boardRequest = BoardCreateRequest.from(marketRequest);
 
         MarketInfo marketInfo = MarketInfo.from(marketRequest);
         Board board = Board.marketOf(boardRequest, member, marketInfo);
 
-        if(marketBoardImages == null ||marketBoardImages.isEmpty()) {
+        if(notHasImages(marketBoardImages)) {
             boardRepository.save(board);
             return;
         }
@@ -96,19 +111,20 @@ public class BoardService {
     @Transactional
     public void changeMarketBoard(final Long boardId, final MarketChangeRequest request, final LoginMember loginMember) {
         Board board = getBoardById(boardId);
-        if(!board.isWriter(loginMember.memberId())) {
+        checkWriter(board, loginMember);
+        board.changeByRequest(request);
+    }
+
+    private void checkWriter(final Board board, final LoginMember loginMember) {
+        if (!board.isWriter(loginMember.memberId())) {
             throw new RestApiException(BoardError.NOT_WRITER);
         }
-        board.changeByRequest(request);
     }
 
     @Transactional
     public void deleteBoard(final LoginMember loginMember, final Long boardId) {
         Board board = getBoardById(boardId);
-
-        if(!board.isWriter(loginMember.memberId())) {
-            throw new RestApiException(BoardError.NOT_WRITER);
-        }
+        checkWriter(board, loginMember);
 
         deleteImageOnS3(board);
         boardRepository.delete(board);

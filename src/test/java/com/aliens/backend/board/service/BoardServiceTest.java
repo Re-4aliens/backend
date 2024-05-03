@@ -7,7 +7,7 @@ import com.aliens.backend.board.controller.dto.request.BoardCreateRequest;
 import com.aliens.backend.board.controller.dto.request.MarketBoardCreateRequest;
 import com.aliens.backend.board.domain.Board;
 import com.aliens.backend.board.domain.enums.BoardCategory;
-import com.aliens.backend.board.domain.enums.ProductStatus;
+import com.aliens.backend.board.domain.enums.ProductQuality;
 import com.aliens.backend.board.domain.enums.SaleStatus;
 import com.aliens.backend.board.domain.repository.BoardRepository;
 import com.aliens.backend.global.BaseIntegrationTest;
@@ -84,7 +84,7 @@ class BoardServiceTest extends BaseIntegrationTest {
                 givenContent,
                 SaleStatus.SELL,
                 givenPrice,
-                ProductStatus.ALMOST_NEW);
+                ProductQuality.ALMOST_NEW);
 
         //When
         boardService.postMarketBoard(request, givenFiles, givenLoginMember);
@@ -107,7 +107,7 @@ class BoardServiceTest extends BaseIntegrationTest {
                 givenContent,
                 SaleStatus.SELL,
                 givenPrice,
-                ProductStatus.ALMOST_NEW);
+                ProductQuality.ALMOST_NEW);
 
         //When
         boardService.postMarketBoard(request, null, givenLoginMember);
@@ -131,13 +131,13 @@ class BoardServiceTest extends BaseIntegrationTest {
         final String changeContent = "수정 내용";
         final SaleStatus changeSaleStatus = SaleStatus.END;
         final String changePrice = "100";
-        final ProductStatus changeProductStatus = ProductStatus.SLIGHT_DEFECT;
+        final ProductQuality changeProductQuality = ProductQuality.SLIGHT_DEFECT;
         final MarketChangeRequest request = new MarketChangeRequest(
                 changeTitle,
                 changeContent,
                 changeSaleStatus,
                 changePrice,
-                changeProductStatus);
+                changeProductQuality);
 
         //When
         boardService.changeMarketBoard(1L, request, givenLoginMember);

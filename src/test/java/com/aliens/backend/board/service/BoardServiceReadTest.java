@@ -152,7 +152,7 @@ class BoardServiceReadTest extends BaseIntegrationTest {
                 () -> assertThat(response).extracting("commentCount").containsOnly(1L),
                 () -> assertThat(response).extracting("price").allMatch(p -> p.equals(DummyGenerator.GIVEN_PRICE)),
                 () -> assertThat(response).extracting("saleStatus").allMatch(s -> s.equals(DummyGenerator.GIVEN_SALE_STATUS)),
-                () -> assertThat(response).extracting("productStatus").allMatch(p -> p.equals(DummyGenerator.GIVEN_PRODUCT_STATUS))
+                () -> assertThat(response).extracting("productQuality").allMatch(p -> p.equals(DummyGenerator.GIVEN_PRODUCT_STATUS))
         );
     }
 
@@ -173,7 +173,7 @@ class BoardServiceReadTest extends BaseIntegrationTest {
         assertThat(response.greatCount()).isEqualTo(1L);
         assertThat(response.price()).isEqualTo(DummyGenerator.GIVEN_PRICE);
         assertThat(response.saleStatus()).isEqualTo(DummyGenerator.GIVEN_SALE_STATUS);
-        assertThat(response.productStatus()).isEqualTo(DummyGenerator.GIVEN_PRODUCT_STATUS);
+        assertThat(response.productQuality()).isEqualTo(DummyGenerator.GIVEN_PRODUCT_STATUS);
     }
 
     @Test
@@ -200,7 +200,7 @@ class BoardServiceReadTest extends BaseIntegrationTest {
                 () -> assertThat(response).extracting("commentCount").containsOnly(1L),
                 () -> assertThat(response).extracting("price").allMatch(p -> p.equals(DummyGenerator.GIVEN_PRICE)),
                 () -> assertThat(response).extracting("saleStatus").allMatch(s -> s.equals(DummyGenerator.GIVEN_SALE_STATUS)),
-                () -> assertThat(response).extracting("productStatus").allMatch(p -> p.equals(DummyGenerator.GIVEN_PRODUCT_STATUS))
+                () -> assertThat(response).extracting("productQuality").allMatch(p -> p.equals(DummyGenerator.GIVEN_PRODUCT_STATUS))
         );
     }
 

@@ -1,7 +1,7 @@
 package com.aliens.backend.board.domain;
 
 import com.aliens.backend.board.controller.dto.request.MarketBoardCreateRequest;
-import com.aliens.backend.board.domain.enums.ProductStatus;
+import com.aliens.backend.board.domain.enums.ProductQuality;
 import com.aliens.backend.board.domain.enums.SaleStatus;
 import jakarta.persistence.*;
 
@@ -22,24 +22,24 @@ public class MarketInfo {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private ProductStatus productStatus;
+    private ProductQuality productQuality;
 
     protected MarketInfo() {
     }
 
     public MarketInfo(final String price,
                       final SaleStatus saleStatus,
-                      final ProductStatus productStatus) {
+                      final ProductQuality productQuality) {
         this.price = price;
         this.saleStatus = saleStatus;
-        this.productStatus = productStatus;
+        this.productQuality = productQuality;
     }
 
     public static MarketInfo from(final MarketBoardCreateRequest request) {
         return new MarketInfo(
                 request.price(),
                 request.saleStatus(),
-                request.productStatus()
+                request.productQuality()
         );
     }
 
@@ -51,8 +51,8 @@ public class MarketInfo {
         return saleStatus;
     }
 
-    public ProductStatus getProductStatus() {
-        return productStatus;
+    public ProductQuality getProductStatus() {
+        return productQuality;
     }
 
     public void changePrice(final String price) {
@@ -63,7 +63,7 @@ public class MarketInfo {
         this.saleStatus = status;
     }
 
-    public void changeProductStatus(final ProductStatus status) {
-        this.productStatus = status;
+    public void changeProductStatus(final ProductQuality status) {
+        this.productQuality = status;
     }
 }

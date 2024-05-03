@@ -20,6 +20,7 @@ public class BoardReportService {
     private final BoardReportRepository boardReportRepository;
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private static final int RESTRICTION_MAX_COUNT = 5;
 
     public BoardReportService(final BoardReportRepository boardReportRepository,
                               final BoardRepository boardRepository,
@@ -36,7 +37,7 @@ public class BoardReportService {
         BoardReport boardReport = BoardReport.of(member, request);
         boardReportRepository.save(boardReport);
 
-        if(boardReportRepository.countByBoardId(request.boardId()) >= 5) {
+        if(boardReportRepository.countByBoardId(request.boardId()) >= RESTRICTION_MAX_COUNT) {
             Board board = getBoardById(request.boardId());
             boardRepository.delete(board);
         }

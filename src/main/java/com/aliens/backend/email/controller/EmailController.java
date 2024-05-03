@@ -40,4 +40,13 @@ public class EmailController {
                 emailService.authenticateEmail(token)
         );
     }
+
+    @GetMapping("/emails")
+    public SuccessResponse<String> checkEmailAuthenticated(@RequestParam("email") String email) throws Exception {
+
+        return SuccessResponse.of(
+                EmailSuccess.EMAIL_AUTHENTICATE_SUCCESS,
+                emailService.checkEmailAuthenticated(email)
+        );
+    }
 }

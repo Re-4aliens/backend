@@ -1,6 +1,6 @@
 package com.aliens.backend.board.controller.dto.response;
 
-import com.aliens.backend.board.domain.enums.ProductStatus;
+import com.aliens.backend.board.domain.enums.ProductQuality;
 import com.aliens.backend.board.domain.enums.SaleStatus;
 
 import java.time.Instant;
@@ -10,7 +10,7 @@ public record MarketBoardResponse(Long id,
                                   String title,
                                   SaleStatus saleStatus,
                                   String price,
-                                  ProductStatus productStatus,
+                                  ProductQuality productQuality,
                                   String content,
                                   Long greatCount,
                                   Long commentCount,

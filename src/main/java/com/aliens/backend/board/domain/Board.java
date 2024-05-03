@@ -199,7 +199,7 @@ public class Board {
         content = request.content();
         marketInfo.changePrice(request.price());
         marketInfo.changeSaleStatus(request.saleStatus());
-        marketInfo.changeProductStatus(request.productStatus());
+        marketInfo.changeProductStatus(request.productQuality());
     }
 
     public void minusGreatCount() {
@@ -216,5 +216,11 @@ public class Board {
 
     public Long getWriterId() {
         return member.getId();
+    }
+
+    public boolean isJustCreated() {
+        Instant now = Instant.now();
+        Instant fiveMinutesAgo = now.minusSeconds(300); // 5 분
+        return createdAt.isAfter(fiveMinutesAgo);
     }
 }

@@ -41,14 +41,14 @@ public class GreatService {
         Board board = findBoardById(id);
         Member member = getMember(loginMember);
 
-        if (isAlreadyExit(board, member)) return;
+        if (isAlreadyExits(board, member)) return;
 
         Great great = Great.of(board, member);
         board.addGreat(great);
         greatRepository.save(great);
     }
 
-    private boolean isAlreadyExit(final Board board, final Member member) {
+    private boolean isAlreadyExits(final Board board, final Member member) {
         if(greatRepository.existsByMemberAndBoard(member, board)) {
             greatRepository.deleteGreatByMemberAndBoard(member, board);
             board.minusGreatCount();

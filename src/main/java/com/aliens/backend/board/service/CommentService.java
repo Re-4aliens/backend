@@ -111,7 +111,9 @@ public class CommentService {
         ArrayList<CommentResponse> result = new ArrayList<>();
 
         for(Comment comment : comments) {
-            if (!comment.isParent()) continue;
+            if (!comment.isParent()){
+                continue;
+            }
             CommentResponse parentComment = comment.getCommentResponse();
 
             List<CommentResponse> childrenComment = comments.stream()
@@ -119,7 +121,7 @@ public class CommentService {
                     .map(Comment::getCommentResponse)
                     .toList();
 
-            if(childrenComment != null && !childrenComment.isEmpty()) {
+            if(isNotEmtyChildren(childrenComment)) {
                 parentComment.setChildren(childrenComment);
             }
             result.add(parentComment);
@@ -127,10 +129,17 @@ public class CommentService {
         return result;
     }
 
+    private boolean isNotEmtyChildren(final List<CommentResponse> childrenComment) {
+        return childrenComment != null && !childrenComment.isEmpty();
+    }
+
     @Transactional
     public void deleteComment(final LoginMember loginMember, final Long commentId) {
         Comment comment = getComment(commentId);
-        if(!comment.isWriter(loginMember.memberId())) throw new RestApiException(BoardError.INVALID_COMMENT_WRITER);
+        if(!comment.isWriter(loginMember.memberId())) {
+            throw new RestApiException(BoardError.INVALID_COMMENT_WRITER);
+        }
+
         comment.deleteComment();
     }
 

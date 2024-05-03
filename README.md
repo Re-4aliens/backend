@@ -15,23 +15,23 @@
   <img src="https://github.com/Re-4aliens/backend/assets/86913355/13863e52-671b-4b3d-95c6-ab620a3326db" height="350px" width="160px">  
 </p>
 
-  FriendShip은 외국인과 한국인간의 소통을 위한 창구를 제공하기 위한 서비스입니다.
+FriendShip은 외국인과 한국인간의 소통을 위한 창구를 제공하기 위한 서비스입니다.
 
-  일주일에 두 번의 매칭을 통한 3일간의 채팅, 게시판 기능을  제공합니다. 
-  
+일주일에 두 번의 매칭을 통한 3일간의 채팅, 게시판 기능을  제공합니다.
 
- -  GooglePlay URL : https://play.google.com/store/apps/details?id=com.aliens.friendship
 
- -  AppStore URL : https://apps.apple.com/kr/app/friendship/id6466155577
+-  GooglePlay URL : https://play.google.com/store/apps/details?id=com.aliens.friendship
+
+-  AppStore URL : https://apps.apple.com/kr/app/friendship/id6466155577
 
 
 ---
 
 **사용된 기술**
 
-Programming -  SpringBoot 3.2.1, Gradle 
+Programming -  SpringBoot 3.2.1, Gradle
 
-Database - MySQL, MongoDB 
+Database - MySQL, MongoDB
 
 Server - AWS S3, AWS rds mysql, Putty
 
@@ -66,7 +66,7 @@ Notification - Firebase Cloud Messaging (FCM)
 
 ---
 
-**학습 동기화 자료** 
+**학습 동기화 자료**
 - [Parallel Stream을 써야할 때는 언제인가](https://hulking-edge-c2d.notion.site/Parallel-Stream-a7c38612b59c48e0a80231a1ac826775?pvs=4)
 - [DDD : 비즈니스 로직과 요구사항을 코드에 직접적으로 반영하는 방법론](https://hulking-edge-c2d.notion.site/DDD-899ad5e7416848f182b607c81bf3f0cf?pvs=4)
 - [TDD : 테스트 주도 개발 방법론](https://hulking-edge-c2d.notion.site/TDD-d299dfa108c244d9a6820cfa776fd983?pvs=4)
@@ -78,11 +78,11 @@ Notification - Firebase Cloud Messaging (FCM)
 
 ---
 
-**협업 자료** 
+**협업 자료**
 
 - [요구사항 정의서](https://hulking-edge-c2d.notion.site/d49730579f1149e98d137eafb0b1a72c?pvs=4)
 - [DDD 설계](https://www.figma.com/file/vrduvG2YiZCX4aQzGic4jt?type=design)
-  
+
 ---
 **협업 전략 (git, rule)**
 

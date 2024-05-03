@@ -4,6 +4,16 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.auth.service.TokenProvider;
+import com.aliens.backend.board.controller.dto.request.BoardCreateRequest;
+import com.aliens.backend.board.controller.dto.request.MarketBoardCreateRequest;
+import com.aliens.backend.board.domain.*;
+import com.aliens.backend.board.domain.enums.BoardCategory;
+import com.aliens.backend.board.domain.enums.ProductStatus;
+import com.aliens.backend.board.domain.enums.SaleStatus;
+import com.aliens.backend.board.domain.repository.BoardImageRepository;
+import com.aliens.backend.board.domain.repository.BoardRepository;
+import com.aliens.backend.board.domain.repository.CommentRepository;
+import com.aliens.backend.board.domain.repository.GreatRepository;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.global.response.error.MatchingError;
@@ -17,7 +27,7 @@ import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.mathcing.service.MatchingProcessService;
 import com.aliens.backend.member.controller.dto.EncodedMember;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
-import com.aliens.backend.member.domain.Image;
+import com.aliens.backend.member.domain.MemberImage;
 import com.aliens.backend.member.domain.MemberInfo;
 import com.aliens.backend.member.domain.repository.MemberInfoRepository;
 import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
@@ -38,6 +48,10 @@ public class DummyGenerator {
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
     @Autowired MatchingProcessService matchingProcessService;
+    @Autowired CommentRepository commentRepository;
+    @Autowired GreatRepository greatRepository;
+    @Autowired BoardRepository boardRepository;
+    @Autowired BoardImageRepository boardImageRepository;
     @Autowired PasswordEncoder passwordEncoder;
     @Autowired SymmetricKeyEncoder encoder;
     @Autowired TokenProvider tokenProvider;
@@ -53,6 +67,12 @@ public class DummyGenerator {
     public static final String GIVEN_ABOUT_ME = "nice to meet you";
     public static final String GIVEN_FILE_NAME = "test";
     public static final String GIVEN_FILE_URL = "/test";
+    public static final String GIVEN_BOARD_TITLE = "게시글 제목";
+    public static final String GIVEN_BOARD_CONTENT = "게시글 내용";
+    public static final String GIVEN_COMMENT_CONTENT = "댓글 내용";
+    public static final SaleStatus GIVEN_SALE_STATUS = SaleStatus.SELL;
+    public static final String GIVEN_PRICE = "10000";
+    public static final ProductStatus GIVEN_PRODUCT_STATUS = ProductStatus.ALMOST_NEW;
 
     // 다수 멤버 생성 메서드
     public List<Member> generateMultiMember(Integer memberCounts) {
@@ -60,8 +80,8 @@ public class DummyGenerator {
 
         for (int i = 0; i < memberCounts; i++) {
             String tmpEmail = GIVEN_EMAIL + i;
-            Image image = makeImage();
-            Member member = makeMember(tmpEmail, image);
+            MemberImage memberImage = makeImage();
+            Member member = makeMember(tmpEmail, memberImage);
             result.add(member);
         }
 
@@ -72,8 +92,8 @@ public class DummyGenerator {
     // 단일 멤버 생성 메서드
     public Member generateSingleMember() {
         String tmpEmail = GIVEN_EMAIL;
-        Image image = makeImage();
-        Member member = makeMember(tmpEmail, image);
+        MemberImage memberImage = makeImage();
+        Member member = makeMember(tmpEmail, memberImage);
         saveAsMemberInfo(member);
         return member;
     }
@@ -97,21 +117,20 @@ public class DummyGenerator {
         matchingProcessService.operateMatching();
     }
 
-    private Image makeImage() {
-        return Image.from(new S3File(GIVEN_FILE_NAME, GIVEN_FILE_URL));
+    private MemberImage makeImage() {
+        return MemberImage.from(new S3File(GIVEN_FILE_NAME, GIVEN_FILE_URL));
     }
 
-    private Member makeMember(String email, Image image) {
+    private Member makeMember(String email, MemberImage memberImage) {
         String encodedPassword = passwordEncoder.encrypt(GIVEN_PASSWORD);
-        EncodedSignUp signUp = new EncodedSignUp(GIVEN_NAME, email, encodedPassword);
-        return Member.of(signUp, image);
+        EncodedSignUp signUp = new EncodedSignUp(GIVEN_NAME, email, encodedPassword, GIVEN_NATIONALITY);
+        return Member.of(signUp, memberImage);
     }
 
     private void saveAsMemberInfo(final Member member) {
         EncodedMember encodedRequest = new EncodedMember(encoder.encrypt(GIVEN_GENDER),
                 encoder.encrypt(GIVEN_MBTI),
                 encoder.encrypt(GIVEN_BIRTHDAY),
-                encoder.encrypt(GIVEN_NATIONALITY),
                 encoder.encrypt(GIVEN_ABOUT_ME));
 
         MemberInfo memberInfo = MemberInfo.of(encodedRequest, member);
@@ -158,5 +177,93 @@ public class DummyGenerator {
     private Language getRandomLanguage(Random random) {
         Language[] languages = Language.values();
         return languages[random.nextInt(languages.length)];
+    }
+
+    // 일반 카테고리 게시글 생성
+    public Board generateSingleNormalBoard(final Member member, final BoardCategory category) {
+        BoardCreateRequest request = new BoardCreateRequest(GIVEN_BOARD_TITLE, GIVEN_BOARD_CONTENT, category);
+
+        Board board = Board.normalOf(request, member);
+
+        BoardImage givenBoardImage1 = makeBoardImage(board);
+        BoardImage givenBoardImage2 = makeBoardImage(board);
+        board.setImages(List.of(givenBoardImage1, givenBoardImage2));
+
+        Comment comment = Comment.parentOf(GIVEN_COMMENT_CONTENT, board, member);
+        board.addComment(comment);
+
+        Great great = Great.of(board, member);
+        board.addGreat(great);
+
+        return boardRepository.save(board);
+    }
+
+    // 일반 카테고리 게시글 생성(내용 기입 가능)
+    public Board generateSingleNormalBoard(final Member member, final BoardCategory category, final String content) {
+        BoardCreateRequest request = new BoardCreateRequest(GIVEN_BOARD_TITLE, content, category);
+
+        Board board = Board.normalOf(request, member);
+
+        BoardImage givenBoardImage1 = makeBoardImage(board);
+        BoardImage givenBoardImage2 = makeBoardImage(board);
+        board.setImages(List.of(givenBoardImage1, givenBoardImage2));
+
+        Comment comment = Comment.parentOf(GIVEN_COMMENT_CONTENT, board, member);
+        board.addComment(comment);
+
+        Great great = Great.of(board, member);
+        board.addGreat(great);
+
+        return boardRepository.save(board);
+    }
+
+    // 장터 게시글 생성
+    public Board generateSingleMarketBoard(final Member member) {
+        MarketBoardCreateRequest marketRequest = new MarketBoardCreateRequest(GIVEN_BOARD_TITLE,
+                GIVEN_BOARD_CONTENT, GIVEN_SALE_STATUS, GIVEN_PRICE, GIVEN_PRODUCT_STATUS);
+        MarketInfo givenMarketInfo = MarketInfo.from(marketRequest);
+        BoardCreateRequest boardRequest = BoardCreateRequest.from(marketRequest);
+
+        Board board = Board.marketOf(boardRequest, member, givenMarketInfo);
+
+        BoardImage givenBoardImage1 = makeBoardImage(board);
+        BoardImage givenBoardImage2 = makeBoardImage(board);
+        board.setImages(List.of(givenBoardImage1, givenBoardImage2));
+
+        Comment comment = Comment.parentOf(GIVEN_COMMENT_CONTENT, board, member);
+        board.addComment(comment);
+
+        Great great = Great.of(board, member);
+        board.addGreat(great);
+
+        return boardRepository.save(board);
+    }
+
+    // 장터 게시글 생성(내용 기입 가능)
+    public Board generateSingleMarketBoard(final Member member, final String content) {
+        MarketBoardCreateRequest marketRequest = new MarketBoardCreateRequest(GIVEN_BOARD_TITLE,
+                content, GIVEN_SALE_STATUS, GIVEN_PRICE, GIVEN_PRODUCT_STATUS);
+        MarketInfo givenMarketInfo = MarketInfo.from(marketRequest);
+        BoardCreateRequest boardRequest = BoardCreateRequest.from(marketRequest);
+
+        Board board = Board.marketOf(boardRequest, member, givenMarketInfo);
+
+        BoardImage givenBoardImage1 = makeBoardImage(board);
+        BoardImage givenBoardImage2 = makeBoardImage(board);
+        board.setImages(List.of(givenBoardImage1, givenBoardImage2));
+
+        Comment comment = Comment.parentOf(GIVEN_COMMENT_CONTENT, board, member);
+        board.addComment(comment);
+
+        Great great = Great.of(board, member);
+        board.addGreat(great);
+
+        return boardRepository.save(board);
+    }
+
+    private BoardImage makeBoardImage(Board board) {
+        BoardImage boardImage = BoardImage.from(new S3File(GIVEN_FILE_NAME, GIVEN_FILE_URL));
+        boardImage.setBoard(board);
+        return boardImage;
     }
 }

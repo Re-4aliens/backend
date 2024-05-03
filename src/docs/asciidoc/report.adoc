@@ -1,0 +1,23 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-chat]]
+== Report
+
+=== 채팅 상대 신고
+
+==== HTTP request
+
+include::{snippets}/chat-report/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/chat-report/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/chat-report/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/chat-report/response-fields.adoc[]

@@ -1,0 +1,216 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-chat]]
+== Chat
+
+=== 메시지 조회
+
+==== HTTP request
+
+include::{snippets}/chat-get-messages/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/chat-get-messages/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/chat-get-messages/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/chat-get-messages/response-fields.adoc[]
+
+=== 채팅방 요약 정보 조회
+
+==== HTTP request
+
+include::{snippets}/chat-get-summaries/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/chat-get-summaries/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/chat-get-summaries/response-fields.adoc[]
+
+
+[[resources-websocket]]
+== Chat - 웹소켓
+
+아래부터는 웹소켓을 통한 채팅 기능에 대해 설명합니다.
+
+=== 웹소켓 연결 요청
+
+==== STOMP - CONNECT
+[source,http]
+----
+CONNECT /ws STOMP
+Authorization: <access_token>
+----
+[cols="1,1,3"]
+|===
+| Header | Type | Description
+
+| Authorization
+| String
+| 사용자 인증을 위한 JWT 토큰(access token)
+
+|===
+
+=== 웹소켓 구독 요청
+
+==== STOMP - SUBSCRIBE
+[source,http]
+----
+SUBSCRIBE /room/{roomId} STOMP
+----
+[cols="1,1,3"]
+|===
+| Destination | Type | Description
+
+| roomId
+| String
+| 구독할 채팅방의 ID(ex: /room/101)
+
+|===
+
+
+=== 메시지 전송 요청
+==== STOMP - SEND
+[source,http]
+----
+SEND /chat/send STOMP
+content-type: application/json
+
+{
+  "type": "NORMAL",
+  "content": "안녕하세요",
+  "roomId": 1,
+  "senderId": 1,
+  "receiverId": 2
+}
+----
+
+==== Payload 설명
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+
+| type
+| String
+| 메시지 타입(NORMAL, BALANCE_GAME)
+
+| content
+| String
+| 메시지 내용
+
+| roomId
+| Number
+| 메시지를 전송할 채팅방의 ID
+
+| senderId
+| Number
+| 메시지를 전송하는 사용자의 ID
+
+| receiverId
+| Number
+| 메시지를 수신하는 사용자의 ID
+
+|===
+
+=== 읽음 처리 요청
+
+==== STOMP - SEND
+[source,http]
+----
+SEND /chat/send STOMP
+content-type: application/json
+
+{
+  "roomId": 1,
+  "memberId": 1
+}
+----
+
+==== Payload 설명
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+
+| roomId
+| Number
+| 읽음 처리를 요청하는 채팅방의 ID
+
+| memberId
+| Number
+| 읽음 처리를 요청하는 사용자의 ID
+|===
+
+=== 구독 후 메시지 수신
+[source,http]
+----
+Payload
+content-type: application/json
+{
+    "id": "1",
+    "type": "NORMAL",
+    "content": "안녕하세요",
+    "roomId": 1,
+    "senderId": 1,
+    "receiverId": 2,
+    "timestamp": "2021-01-01T00:00:00.000Z"
+    "isRead": false
+}
+----
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+
+| id
+| String
+| 메시지 ID
+
+| type
+| String
+| 메시지 유형 (NORMAL, BALANCE_GAME 등)
+
+| content
+| String
+| 메시지 내용
+
+| roomId
+| Number
+| 메시지가 속한 채팅방 ID
+
+| senderId
+| Number
+| 메시지를 보낸 사용자의 ID
+
+| receiverId
+| Number
+| 메시지를 받은 사용자의 ID
+
+| timestamp
+| String
+| 메시지가 전송된 시각
+
+| isRead
+| Boolean
+| 메시지를 읽었는지 여부
+|===
+
+=== 구독 후 읽음 처리 메시지 수신
+[source,http]
+----
+Payload
+content-type: application/json
+{
+    "readBy": 1
+}
+----
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+| readBy | Number | 읽음 처리를 요청한 사용자의 ID

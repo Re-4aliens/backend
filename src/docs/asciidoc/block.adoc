@@ -1,0 +1,23 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-chat]]
+== Report
+
+=== 채팅 상대 차단
+
+==== HTTP request
+
+include::{snippets}/chat-block/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/chat-block/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/chat-block/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/chat-block/response-fields.adoc[]

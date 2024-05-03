@@ -3,6 +3,7 @@ package com.aliens.backend.event;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomBlockEvent;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomCreationEvent;
+import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.service.model.MemberPair;
 import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
@@ -16,11 +17,11 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class EventPublisherTest extends BaseIntegrationTest {
@@ -81,7 +82,8 @@ class EventPublisherTest extends BaseIntegrationTest {
     void handleChatRoomBlockEventTest() {
         // Given
         ChatRoomBlockEvent event = new ChatRoomBlockEvent(givenChatRoomId);
-        doNothing().when(chatService).handleChatRoomBlockEvent(event);
+        ChatRoom chatRoom = mock(ChatRoom.class);
+        doReturn(Optional.of(chatRoom)).when(chatRoomRepository).findById(givenChatRoomId);
 
         // When
         publisher.publishEvent(event);

@@ -71,6 +71,17 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     }
 
     @Test
+    @DisplayName("매칭 중복 신청 테스트")
+    void duplicateMatchApply() {
+        // given
+        matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
+
+        // when, then
+        assertThatThrownBy(() -> matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest))
+                .hasMessage(MatchingError.DUPLICATE_MATCHING_APPLICATION.getDevelopCode());
+    }
+
+    @Test
     @DisplayName("매칭 신청 정보 수정 테스트")
     void modifyMatchingApplicationTest() {
         // given

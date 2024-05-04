@@ -11,6 +11,7 @@
 
 ==== HTTP request
 include::{snippets}/member-signup/http-request.adoc[]
+include::{snippets}/member-signup/request-parts.adoc[]
 
 
 ==== HTTP response
@@ -25,6 +26,7 @@ include::{snippets}/member-signup/response-fields.adoc[]
 
 ==== HTTP request
 include::{snippets}/member-change-profile-image/http-request.adoc[]
+include::{snippets}/member-change-profile-image/request-parts.adoc[]
 
 ==== HTTP response
 include::{snippets}/member-change-profile-image/http-response.adoc[]

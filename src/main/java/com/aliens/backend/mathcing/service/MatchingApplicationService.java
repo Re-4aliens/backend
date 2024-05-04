@@ -95,6 +95,7 @@ public class MatchingApplicationService {
     }
 
     private void applyForMatching(MatchingApplication matchingApplication) {
+        checkDuplicateApply(matchingApplication);
         matchingApplicationRepository.save(matchingApplication);
         Member member = matchingApplication.getMember();
         member.applyMatch();
@@ -109,6 +110,12 @@ public class MatchingApplicationService {
     private void checkReceptionTime(MatchingRound matchingRound) {
         if (!matchingRound.isReceptionTime(LocalDateTime.now(clock))) {
             throw new RestApiException(MatchingError.NOT_VALID_MATCHING_RECEPTION_TIME);
+        }
+    }
+
+    private void checkDuplicateApply(MatchingApplication matchingApplication) {
+        if (matchingApplicationRepository.existsById(matchingApplication.getId())) {
+            throw new RestApiException(MatchingError.DUPLICATE_MATCHING_APPLICATION);
         }
     }
 }

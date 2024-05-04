@@ -73,3 +73,38 @@ include::{snippets}/email-authentication-success/http-response.adoc[]
 
 ==== response-body 설명
 include::{snippets}/email-authentication-success/response-fields.adoc[]
+
+
+=== 인증 이메일 인증 상태 확인(인증완료)
+
+==== HTTP request
+
+include::{snippets}/email-authenticated-check/http-request.adoc[]
+
+==== request-param 설명
+include::{snippets}/email-authenticated-check//query-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/email-authenticated-check//http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/email-authenticated-check//response-fields.adoc[]
+
+
+
+=== 인증 이메일 인증 상태 확인(인증미완)
+
+==== HTTP request
+
+include::{snippets}/email-authenticated-check-not/http-request.adoc[]
+
+==== request-param 설명
+include::{snippets}/email-authenticated-check-not/query-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/email-authenticated-check-not/http-response.adoc[]
+
+==== response-body 설명
+include::{snippets}/email-authenticated-check-not/response-fields.adoc[]

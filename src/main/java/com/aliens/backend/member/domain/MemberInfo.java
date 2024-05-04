@@ -23,9 +23,6 @@ public class MemberInfo {
     private String gender;
 
     @Column
-    private String nationality;
-
-    @Column
     private String birthday;
 
     @Column(name = "about_me")
@@ -39,7 +36,6 @@ public class MemberInfo {
         memberInfo.member =member;
         memberInfo.gender = request.gender();
         memberInfo.mbti = request.mbti();
-        memberInfo.nationality = request.nationality();
         memberInfo.birthday = request.birthday();
         memberInfo.aboutMe = request.aboutMe();
         return memberInfo;
@@ -54,6 +50,6 @@ public class MemberInfo {
     }
 
     public EncodedMemberPage getMemberPage() {
-        return new EncodedMemberPage(mbti,gender,nationality,birthday,aboutMe);
+        return new EncodedMemberPage(mbti,gender,birthday,aboutMe);
     }
 }

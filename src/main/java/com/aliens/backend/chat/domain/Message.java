@@ -11,7 +11,6 @@ import java.util.Date;
 public class Message {
     @Id
     private String id;
-
     private MessageType type;
     private String content;
     private Long roomId;
@@ -33,6 +32,38 @@ public class Message {
         message.sendTime = new Date();
         message.isRead = false;
         return message;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public MessageType getType() {
+        return type;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public Long getSenderId() {
+        return senderId;
+    }
+
+    public Long getReceiverId() {
+        return receiverId;
+    }
+
+    public Date getSendTime() {
+        return sendTime;
+    }
+
+    public Boolean getIsRead() {
+        return isRead;
     }
 
     @Override

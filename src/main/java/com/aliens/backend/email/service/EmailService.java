@@ -65,4 +65,17 @@ public class EmailService {
     public void listen(TemporaryPasswordEvent event) {
         emailSender.sendTemporaryPassword(event);
     }
+
+    public String checkEmailAuthenticated(final String email) {
+        EmailAuthentication emailAuthentication = findByEmail(email);
+
+        if(emailAuthentication.isAuthenticated()) {
+            return EmailResponse.CAN_NEXT_STEP.getMessage();
+        }
+        return EmailResponse.CANT_NEXT_STEP.getMessage();
+    }
+
+    private EmailAuthentication findByEmail(final String email) {
+        return emailAuthenticationRepository.findByEmail(email).orElseThrow(() -> new RestApiException(EmailError.NULL_EMAIL));
+    }
 }

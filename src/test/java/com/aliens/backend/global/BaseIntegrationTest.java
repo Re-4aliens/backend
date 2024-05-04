@@ -1,9 +1,12 @@
 package com.aliens.backend.global;
 
 import com.aliens.backend.chat.controller.ChatController;
+import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
 import com.aliens.backend.chat.domain.repository.MessageRepository;
+import com.aliens.backend.chat.service.ChatAuthValidator;
 import com.aliens.backend.chat.service.ChatService;
-import com.aliens.backend.notification.FcmSender;
+import com.aliens.backend.notification.service.FcmSender;
+import com.aliens.backend.global.config.interceptor.ChatChannelInterceptor;
 import com.aliens.backend.uploader.AwsS3Uploader;
 import com.aliens.backend.uploader.dto.S3File;
 import com.google.firebase.messaging.Message;
@@ -32,8 +35,11 @@ public abstract class BaseIntegrationTest {
     @SpyBean protected FcmSender fcmSender;
     // 수정 예정
     @SpyBean protected MessageRepository messageRepository;
+    @SpyBean protected ChatRoomRepository chatRoomRepository;
     @SpyBean protected ChatService chatService;
     @SpyBean protected ChatController chatController;
+    @SpyBean protected ChatChannelInterceptor chatChannelInterceptor;
+    @SpyBean protected ChatAuthValidator chatAuthValidator;
 
     @Autowired private DatabaseCleanup databaseCleanUp;
 
@@ -52,6 +58,7 @@ public abstract class BaseIntegrationTest {
         //AWS
         S3File tmpFile = new S3File(DummyGenerator.GIVEN_FILE_NAME,DummyGenerator.GIVEN_FILE_URL);
         doReturn(tmpFile).when(awsS3Uploader).singleUpload(any(MultipartFile.class));
+        doReturn(true).when(awsS3Uploader).delete(any());
         doReturn(List.of(tmpFile)).when(awsS3Uploader).multiUpload(any());
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 
@@ -40,30 +41,30 @@ class BoardRestDocsTest extends BaseRestDocsTest {
         doReturn(response).when(boardController).createBoard(any(), any(), any());
 
         final MockMultipartFile multipartFile = createMultipartFile();
+        final MockMultipartFile requestMultipartFile = new MockMultipartFile("request",
+                null, "application/json", objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
 
         // When & Then
         mockMvc.perform(multipart("/boards/normal")
                         .file("boardImages", multipartFile.getBytes())
+                        .file(requestMultipartFile)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON)
-
                         .header("Authorization", GIVEN_ACCESS_TOKEN))
 
                 .andExpect(status().is2xxSuccessful())
                 .andDo(document("board-create",
                         requestParts(
-                                partWithName("boardImages").description("게시물 등록 이미지 파일")
+                                partWithName("boardImages").description("게시물 등록 이미지 파일"),
+                                partWithName("request").description("게시물 정보")
                         ),
-                        requestFields(
+                        requestPartFields("request",
                                 fieldWithPath("title").description("게시물 제목"),
                                 fieldWithPath("content").description("게시물 내용"),
-                                fieldWithPath("boardCategory").description("게시물 카테고리")
+                                fieldWithPath("boardCategory").description("게시물 카테고리 ex) ALL, FREE, INFO, MUSIC, GAME, FOOD, FASHION")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
-                                fieldWithPath("result").description("회원가입 결과")
+                                fieldWithPath("result").description("응답 결과")
                         )
                 ));
     }

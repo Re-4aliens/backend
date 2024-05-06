@@ -22,12 +22,12 @@ public class MemberController {
     }
 
     @PostMapping()
-    public SuccessResponse<String> signUp(@RequestBody SignUpRequest signUpRequest,
+    public SuccessResponse<String> signUp(@RequestPart SignUpRequest request,
                                     @RequestPart MultipartFile profileImage) {
 
         return SuccessResponse.of(
                 MemberSuccess.SIGN_UP_SUCCESS,
-                memberInfoService.signUp(signUpRequest, profileImage)
+                memberInfoService.signUp(request, profileImage)
         );
     }
 

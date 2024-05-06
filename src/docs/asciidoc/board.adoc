@@ -12,9 +12,9 @@
 ==== HTTP request
 include::{snippets}/board-create/http-request.adoc[]
 
-==== request-body 설명
+==== formData 설명
 include::{snippets}/board-create/request-parts.adoc[]
-include::{snippets}/board-create/request-fields.adoc[]
+include::{snippets}/board-create/request-part-request-fields.adoc[]
 
 ==== HTTP response
 include::{snippets}/board-create/http-response.adoc[]

@@ -4,6 +4,7 @@ import com.aliens.backend.email.service.EmailService;
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.EmailSuccess;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 
 @RestController
@@ -24,7 +25,7 @@ public class EmailController {
     }
 
     @PostMapping("/emails/verification/send")
-    public SuccessResponse<String> sendAuthenticationEmail(@RequestBody String email) throws Exception {
+    public SuccessResponse<String> sendAuthenticationEmail(@RequestParam("email") String email) {
 
         return SuccessResponse.of(
                 EmailSuccess.SEND_EMAIL_SUCCESS,
@@ -33,16 +34,16 @@ public class EmailController {
     }
 
     @GetMapping("/emails/confirm")
-    public SuccessResponse<String> authenticateEmail(@RequestParam("token") String token) throws Exception {
+    public ModelAndView authenticateEmail(@RequestParam("token") String token) {
+        emailService.authenticateEmail(token);
 
-        return SuccessResponse.of(
-                EmailSuccess.EMAIL_AUTHENTICATE_SUCCESS,
-                emailService.authenticateEmail(token)
-        );
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("emailVerificationComplete");
+        return modelAndView;
     }
 
     @GetMapping("/emails")
-    public SuccessResponse<String> checkEmailAuthenticated(@RequestParam("email") String email) throws Exception {
+    public SuccessResponse<String> checkEmailAuthenticated(@RequestParam("email") String email) {
 
         return SuccessResponse.of(
                 EmailSuccess.EMAIL_AUTHENTICATE_SUCCESS,

@@ -58,21 +58,7 @@ include::{snippets}/email-verification-send/http-response.adoc[]
 include::{snippets}/email-verification-send/response-fields.adoc[]
 
 
-=== 인증 이메일 검증 요청
 
-==== HTTP request
-
-include::{snippets}/email-authentication-success/http-request.adoc[]
-
-==== request-param 설명
-include::{snippets}/email-authentication-success/query-parameters.adoc[]
-
-==== HTTP response
-
-include::{snippets}/email-authentication-success/http-response.adoc[]
-
-==== response-body 설명
-include::{snippets}/email-authentication-success/response-fields.adoc[]
 
 
 === 인증 이메일 인증 상태 확인(인증완료)

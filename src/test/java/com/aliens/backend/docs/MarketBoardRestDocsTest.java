@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 
@@ -45,11 +46,15 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
         doReturn(response).when(marketBoardController).createMarketBoard(any(), any(), any());
 
         MockMultipartFile multipartFile = createMultipartFile();
+        final MockMultipartFile requestMultipartFile = new MockMultipartFile("request",
+                null, "application/json", objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
+
 
         // When & Then
         mockMvc.perform(multipart("/boards/market")
                         .file("marketBoardImages", multipartFile.getBytes())
                         .file("marketBoardImages", multipartFile.getBytes())
+                        .file(requestMultipartFile)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
 
                         .content(objectMapper.writeValueAsString(request))
@@ -61,14 +66,15 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                 .andDo(document("market-board-create",
                         requestParts(
                                 partWithName("marketBoardImages").description("게시물 등록 이미지 파일1"),
-                                partWithName("marketBoardImages").description("게시물 등록 이미지 파일2")
+                                partWithName("marketBoardImages").description("게시물 등록 이미지 파일2"),
+                                partWithName("request").description("장터 게시물 내용")
                         ),
-                        requestFields(
+                        requestPartFields("request",
                                 fieldWithPath("title").description("장터 게시물 제목"),
                                 fieldWithPath("content").description("장터 게시물 내용"),
-                                fieldWithPath("saleStatus").description("판매 상태"),
+                                fieldWithPath("saleStatus").description("판매 상태 ex) SELL, END"),
                                 fieldWithPath("price").description("판매 가격"),
-                                fieldWithPath("productQuality").description("상품 상태")
+                                fieldWithPath("productQuality").description("상품 상태 ex) BRAND_NEW, ALMOST_NEW, SLIGHT_DEFECT, USED")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),

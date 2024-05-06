@@ -85,7 +85,7 @@ public class CommentService {
 
         commentRepository.save(childComment);
 
-        if(!parentComment.isChildFrom(childComment.getId())) {
+        if(!parentComment.isWriter(member.getId())) {
             sendChildCommentNotification(board, request, parentComment.getWriterId());
         }
     }

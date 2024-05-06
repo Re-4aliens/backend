@@ -23,6 +23,9 @@ public class AwsS3Uploader {
     private final S3UploadProperties s3UploadProperties;
 
     private static final String SUFFIX = ".png";
+    private static final String PNJ_FILE_EXTENSION = "png";
+    private static final String JPEG_FILE_EXTENSION = "jpeg";
+    private static final String GIF_FILE_EXTENSION = "gif";
     private static final int MAX_UPLOADS = 2;
     private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -33,7 +36,6 @@ public class AwsS3Uploader {
     }
 
     public List<S3File> multiUpload(List<MultipartFile> files) {
-
         checkFileSize(files);
         return files.stream().map(this::uploadToS3).toList();
     }
@@ -69,12 +71,11 @@ public class AwsS3Uploader {
 
         return new S3File(uuidName,amazonS3Client.getUrl(s3UploadProperties.getBucket(),uuidName).toString());
     }
-
     private void checkFilesImage(final MultipartFile multipartFile) {
-        String contentType = multipartFile.getContentType();
-        if(contentType == null
-                || (!contentType.equals(MediaType.IMAGE_JPEG_VALUE)
-                && !contentType.equals(MediaType.IMAGE_PNG_VALUE))) {
+        String extension = StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
+        if (!extension.equalsIgnoreCase(PNJ_FILE_EXTENSION)
+                && !extension.equalsIgnoreCase(JPEG_FILE_EXTENSION)
+                && !extension.equalsIgnoreCase(GIF_FILE_EXTENSION)) {
             throw new RestApiException(BoardError.POST_IMAGE_ERROR);
         }
     }

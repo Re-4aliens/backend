@@ -1,5 +1,7 @@
 package com.aliens.backend.email.service;
 
+import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.email.controller.response.EmailResponse;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
@@ -19,13 +21,15 @@ public class EmailService {
     private final EmailAuthenticationRepository emailAuthenticationRepository;
     private final EmailSender emailSender;
     private final SymmetricKeyEncoder symmetricKeyEncoder;
+    private final MemberRepository memberRepository;
 
     public EmailService(final EmailAuthenticationRepository emailRepository,
                         final EmailSender emailSender,
-                        final SymmetricKeyEncoder symmetricKeyEncoder) {
+                        final SymmetricKeyEncoder symmetricKeyEncoder, final MemberRepository memberRepository) {
         this.emailAuthenticationRepository = emailRepository;
         this.emailSender = emailSender;
         this.symmetricKeyEncoder = symmetricKeyEncoder;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional(readOnly = true)
@@ -39,7 +43,10 @@ public class EmailService {
     }
 
     @Transactional
-    public String sendAuthenticationEmail(final String email) throws Exception {
+    public String sendAuthenticationEmail(final String email) {
+        deleteExistsEmail(email);
+        checkAlreadyMember(email);
+
         EmailAuthentication emailEntity = new EmailAuthentication(email);
         emailAuthenticationRepository.save(emailEntity);
 
@@ -49,8 +56,20 @@ public class EmailService {
         return EmailResponse.EMAIL_SEND_SUCCESS.getMessage();
     }
 
+    private void checkAlreadyMember(final String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if(member.isPresent()) {
+            throw new RestApiException(EmailError.ALREADY_MEMBER);
+        }
+    }
+
+    private void deleteExistsEmail(final String email) {
+        Optional<EmailAuthentication> checkEntity = emailAuthenticationRepository.findByEmail(email);
+        checkEntity.ifPresent(emailAuthentication -> emailAuthenticationRepository.deleteById(emailAuthentication.getId()));
+    }
+
     @Transactional
-    public String authenticateEmail(final String token) throws Exception {
+    public String authenticateEmail(final String token) {
         Long emailEntityId = Long.valueOf(symmetricKeyEncoder.decrypt(token));
         EmailAuthentication emailEntity = getEmailAuthentication(emailEntityId);
         emailEntity.authenticate();

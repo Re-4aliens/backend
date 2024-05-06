@@ -74,35 +74,12 @@ class EmailRestDocsTest extends BaseRestDocsTest {
         SuccessResponse<String> response = SuccessResponse.of(EmailSuccess.SEND_EMAIL_SUCCESS, message);
         doReturn(response).when(emailController).sendAuthenticationEmail(any());
 
-        this.mockMvc.perform(post("/emails/verification/send")
-                        .content(objectMapper.writeValueAsString(Collections.singletonMap("email", email)))
+        this.mockMvc.perform(post("/emails/verification/send?email=" + email)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("email-verification-send",
-                        requestFields(
-                                fieldWithPath("email").description("검증 요청 이메일")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").description("응답 코드"),
-                                fieldWithPath("result").description("응답 결과")
-                        )
-                ));
-    }
-
-    @Test
-    @DisplayName("API - 이메일 검증 요청")
-    void authenticateEmail() throws Exception {
-        final String request = "testToken";
-        final String message = EmailResponse.EMAIL_AUTHENTICATION_SUCCESS.getMessage();
-
-        SuccessResponse<String> response = SuccessResponse.of(EmailSuccess.EMAIL_AUTHENTICATE_SUCCESS, message);
-        doReturn(response).when(emailController).authenticateEmail(any());
-
-        this.mockMvc.perform(get("/emails/confirm").param("token", request))
-                .andExpect(status().isOk())
-                .andDo(document("email-authentication-success",
                         queryParameters(
-                                parameterWithName("token").description("이메일 검증을 위한 토큰")
+                                parameterWithName("email").description("검증을 위한 이메일")
                         ),
                         responseFields(
                                 fieldWithPath("code").description("응답 코드"),

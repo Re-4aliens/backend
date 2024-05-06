@@ -78,6 +78,24 @@ Notification - Firebase Cloud Messaging (FCM)
 - [DDD 설계](https://www.figma.com/file/vrduvG2YiZCX4aQzGic4jt?type=design)
 
 ---
+
+**API 문서**
+- [이메일 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/email.html)
+- [회원 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/member.html)
+- [로그인 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/authentication.html)
+- [차단 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/block.html)
+- [일반 게시판 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/board.html)
+- [장터 게시판 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/market-boar.html)
+- [댓글 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/comment.html)
+- [좋아요 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/great.html)
+- [채팅 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/chat.html)
+- [매칭 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/matching.html)
+- [알림 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/notification.html)
+- [신고 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/report.html)
+
+
+---
+  
 **협업 전략 (git, rule)**
 
 - [Branch 전략](https://hulking-edge-c2d.notion.site/Branch-159765ac37ed40bdbb38d4ed383738a6?pvs=4)

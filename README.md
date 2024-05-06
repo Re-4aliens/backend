@@ -33,15 +33,9 @@ Programming -  SpringBoot 3.2.1, Gradle
 
 Database - MySQL, MongoDB
 
-Server - AWS S3, AWS rds mysql, Putty
+Server - AWS S3, AWS rds mysql
 
 Notification - Firebase Cloud Messaging (FCM)
-
----
-
-**아키텍쳐**
-
-![image](https://github.com/Re-4aliens/backend/assets/86913355/4d8cdd58-85d5-481b-9e50-4b47f256f421)
 
 ---
 

@@ -48,7 +48,7 @@ include::{snippets}/email-duplicateCheck-duplicate/http-response.adoc[]
 include::{snippets}/email-verification-send/http-request.adoc[]
 
 ==== request-body 설명
-include::{snippets}/email-verification-send/request-fields.adoc[]
+include::{snippets}/email-verification-send/query-parameters.adoc[]
 
 ==== HTTP response
 

@@ -12,6 +12,7 @@
 ==== HTTP request
 include::{snippets}/member-signup/http-request.adoc[]
 include::{snippets}/member-signup/request-parts.adoc[]
+include::{snippets}/member-signup/request-part-request-fields.adoc[]
 
 
 ==== HTTP response

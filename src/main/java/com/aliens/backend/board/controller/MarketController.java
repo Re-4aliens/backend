@@ -30,7 +30,7 @@ public class MarketController {
 
     @PostMapping
     public SuccessResponse<?> createMarketBoard(@Login final LoginMember loginMember,
-                                  @RequestBody final MarketBoardCreateRequest request,
+                                  @RequestPart final MarketBoardCreateRequest request,
                                   @RequestPart final List<MultipartFile> marketBoardImages) {
         boardService.postMarketBoard(request, marketBoardImages, loginMember);
 

@@ -14,7 +14,7 @@ include::{snippets}/market-board-create/http-request.adoc[]
 
 ==== request-body 설명
 include::{snippets}/market-board-create/request-parts.adoc[]
-include::{snippets}/market-board-create/request-fields.adoc[]
+include::{snippets}/market-board-create/request-part-request-fields.adoc[]
 
 ==== HTTP response
 include::{snippets}/market-board-create/http-response.adoc[]

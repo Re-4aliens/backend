@@ -12,7 +12,7 @@
 ==== HTTP request
 include::{snippets}/market-board-create/http-request.adoc[]
 
-==== request-body 설명
+==== forData 설명
 include::{snippets}/market-board-create/request-parts.adoc[]
 include::{snippets}/market-board-create/request-part-request-fields.adoc[]
 

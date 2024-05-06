@@ -11,6 +11,8 @@
 
 ==== HTTP request
 include::{snippets}/member-signup/http-request.adoc[]
+
+==== forData 설명
 include::{snippets}/member-signup/request-parts.adoc[]
 include::{snippets}/member-signup/request-part-request-fields.adoc[]
 

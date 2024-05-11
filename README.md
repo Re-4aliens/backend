@@ -25,9 +25,13 @@ FriendShip은 외국인과 한국인간의 소통을 위한 창구를 제공하�
 -  AppStore URL : https://apps.apple.com/kr/app/friendship/id6466155577
 
 ---
-## ERD
+## [ERD](https://github.com/Re-4aliens/backend/files/15283229/model.pdf)
 
-![Re-4Aliens-ERD](https://github.com/Re-4aliens/backend/assets/86913355/6c7288e8-c999-494e-94dc-4c477f6eea27)
+
+<p align="center">
+<img width="275" alt="image" src="https://github.com/Re-4aliens/backend/assets/86913355/158eab34-da94-4235-be9b-67bc1d654f9e"><img width="209" alt="image" src="https://github.com/Re-4aliens/backend/assets/86913355/cfcc3b0e-9b53-44a0-b9fd-d33f2014c53f">
+</p>
+
 
 ---
 

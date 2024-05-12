@@ -21,7 +21,25 @@ include::{snippets}/notification-get/response-fields.adoc[]
 
 
 
-[[resources-post-create]]
+
+
+[[resources-post-read]]
+=== 알림 읽음 요청
+
+==== HTTP request
+include::{snippets}/notification-read/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/notification-read/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/notification-read/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/notification-read/response-fields.adoc[]
+
+
+
+[[resources-post-fcm]]
 === FCM 토큰 등록
 
 ==== HTTP request
@@ -37,18 +55,33 @@ include::{snippets}/notification-register-fcm-token/response-fields.adoc[]
 
 
 
-
-[[resources-post-create]]
-=== 알림 읽음 요청
+[[resources-read-fcm]]
+=== FCM 알림 상태 조회
 
 ==== HTTP request
-include::{snippets}/notification-read/http-request.adoc[]
+include::{snippets}/fcm-status-get/http-request.adoc[]
 
-==== request-body 설명
-include::{snippets}/notification-read/query-parameters.adoc[]
 
 ==== HTTP response
-include::{snippets}/notification-read/http-response.adoc[]
+include::{snippets}/fcm-status-get/http-response.adoc[]
 ==== response-body 설명
-include::{snippets}/notification-read/response-fields.adoc[]
+include::{snippets}/fcm-status-get/response-fields.adoc[]
+
+
+
+
+[[resources-change-fcm]]
+=== FCM 알림 상태 변경
+
+==== HTTP request
+include::{snippets}/fcm-status-change/http-request.adoc[]
+include::{snippets}/fcm-status-change/query-parameters.adoc[]
+
+
+==== HTTP response
+include::{snippets}/fcm-status-change/http-response.adoc[]
+==== response-body 설명
+include::{snippets}/fcm-status-change/response-fields.adoc[]
+
+
 

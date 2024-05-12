@@ -6,7 +6,7 @@
 [[resources-post]]
 == 회원
 
-[[resources-post-create]]
+[[resources-post-signup]]
 === 회원 가입
 
 ==== HTTP request
@@ -90,7 +90,7 @@ include::{snippets}/member-withdraw/response-fields.adoc[]
 
 
 
-=== 회원 상태
+=== 회원 매칭상태 조회
 
 ==== HTTP request
 

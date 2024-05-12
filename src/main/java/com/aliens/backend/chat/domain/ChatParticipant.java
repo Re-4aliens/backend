@@ -35,4 +35,7 @@ public class ChatParticipant {
     protected void setChatRoom(final ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
     }
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
 }

@@ -30,7 +30,6 @@ import java.util.*;
 @Service
 public class MemberInfoService {
     private final AwsS3Uploader uploader;
-    private final SymmetricKeyEncoder symmetricKeyEncoder;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher publisher;
 
@@ -40,7 +39,6 @@ public class MemberInfoService {
     private final EmailAuthenticationRepository emailAuthenticationRepository;
 
     public MemberInfoService(final AwsS3Uploader uploader,
-                             final SymmetricKeyEncoder symmetricKeyEncoder,
                              final PasswordEncoder passwordEncoder,
                              final ApplicationEventPublisher publisher,
                              final S3UploadProperties s3UploadProperties, final MemberRepository memberRepository,
@@ -48,7 +46,6 @@ public class MemberInfoService {
                              final EmailAuthenticationRepository emailAuthenticationRepository)
     {
         this.uploader = uploader;
-        this.symmetricKeyEncoder = symmetricKeyEncoder;
         this.passwordEncoder = passwordEncoder;
         this.s3UploadProperties = s3UploadProperties;
         this.memberRepository = memberRepository;
@@ -112,10 +109,10 @@ public class MemberInfoService {
 
     private EncodedMember encodeForMemberInfo(final SignUpRequest request) {
         return new EncodedMember(
-                symmetricKeyEncoder.encrypt(request.gender()),
-                symmetricKeyEncoder.encrypt(request.mbti()),
-                symmetricKeyEncoder.encrypt(request.birthday()),
-                symmetricKeyEncoder.encrypt(request.aboutMe()));
+                SymmetricKeyEncoder.encrypt(request.gender()),
+                SymmetricKeyEncoder.encrypt(request.mbti()),
+                SymmetricKeyEncoder.encrypt(request.birthday()),
+                SymmetricKeyEncoder.encrypt(request.aboutMe()));
     }
 
     @Transactional
@@ -161,14 +158,14 @@ public class MemberInfoService {
     @Transactional
     public String changeAboutMe(final LoginMember loginMember, final String newAboutMe) {
         MemberInfo memberInfo = getMemberInfo(loginMember);
-        memberInfo.changeAboutMe(symmetricKeyEncoder.encrypt(newAboutMe));
+        memberInfo.changeAboutMe(SymmetricKeyEncoder.encrypt(newAboutMe));
         return MemberResponse.ABOUT_ME_CHANGE_SUCCESS.getMessage();
     }
 
     @Transactional
     public String changeMBTI(final LoginMember loginMember, final String newMBTI) {
         MemberInfo memberInfo = getMemberInfo(loginMember);
-        memberInfo.changeMBTI(symmetricKeyEncoder.encrypt(newMBTI));
+        memberInfo.changeMBTI(SymmetricKeyEncoder.encrypt(newMBTI));
         return MemberResponse.MBTI_CHANGE_SUCCESS.getMessage();
     }
 
@@ -184,19 +181,8 @@ public class MemberInfoService {
 
     @Transactional(readOnly = true)
     public MemberPageResponse getMemberPage(final LoginMember loginMember) {
-        MemberInfo memberInfo = getMemberInfo(loginMember);
-        EncodedMemberPage encodedMemberPage = memberInfo.getMemberPage();
-
         Member member = getMember(loginMember);
-        MemberPage memberPage = member.getMemberPage();
-
-        return new MemberPageResponse(memberPage.name(),
-                symmetricKeyEncoder.decrypt(encodedMemberPage.mbti()),
-                symmetricKeyEncoder.decrypt(encodedMemberPage.gender()),
-                memberPage.nationality(),
-                symmetricKeyEncoder.decrypt(encodedMemberPage.birthday()),
-                symmetricKeyEncoder.decrypt(encodedMemberPage.aboutMe()),
-                memberPage.profileImageURL());
+        return member.getMemberPageResponse();
     }
 
     @Transactional

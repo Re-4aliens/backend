@@ -18,7 +18,7 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "boardId")
     private Long id;
 
     @Column
@@ -53,14 +53,14 @@ public class Board {
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
             orphanRemoval = true)
-    @JoinColumn(name = "market_info_id")
+    @JoinColumn(name = "marketInfoId")
     private MarketInfo marketInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "memberId")
     private Member member;
 
-    @Column(name = "created_at", updatable = false)
+    @Column(updatable = false)
     @CreatedDate
     private Instant createdAt;
 

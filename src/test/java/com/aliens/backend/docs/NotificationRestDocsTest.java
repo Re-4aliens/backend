@@ -104,4 +104,48 @@ class NotificationRestDocsTest extends BaseRestDocsTest{
                                 fieldWithPath("result").description("알림 읽음 요청 결과")
                         )));
     }
+
+    @Test
+    @DisplayName("API - fcm 상태 요청")
+    void getFcmTokenStatus() throws Exception {
+        SuccessResponse<Boolean> response = SuccessResponse.of(NotificationSuccess.GET_FCM_STATUS_SUCCESS, true);
+
+        doReturn(response).when(notificationController).getFcmStatus(any());
+
+        // When and Then
+        mockMvc.perform(get("/notifications/fcm")
+                        .header("Authorization", GIVEN_ACCESS_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("fcm-status-get",
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result").description("fcm 알림 상태 요청 결과 ex) true = 받기, false 안받기")
+                        )));
+    }
+
+
+    @Test
+    @DisplayName("API - fcm 상태 변경")
+    void changeFcmTokenStatus() throws Exception {
+        SuccessResponse<String> response = SuccessResponse.of(NotificationSuccess.CHANGE_FCM_STATUS_SUCCESS);
+
+        doReturn(response).when(notificationController).changeAcceptation(any(), any());
+
+        // When and Then
+        mockMvc.perform(patch("/notifications/fcm?decision="+ "true")
+                        .header("Authorization", GIVEN_ACCESS_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("fcm-status-change",
+                        queryParameters(
+                                parameterWithName("decision").description("알림 설정 ex)true = 받기, false 안받기")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result").description("fcm 알림 변경 결과")
+                        )));
+    }
 }

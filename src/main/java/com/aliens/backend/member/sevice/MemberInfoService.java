@@ -2,7 +2,9 @@ package com.aliens.backend.member.sevice;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.auth.domain.Token;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
+import com.aliens.backend.auth.domain.repository.TokenRepository;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
@@ -10,6 +12,7 @@ import com.aliens.backend.global.response.error.EmailError;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.S3UploadProperties;
+import com.aliens.backend.global.response.error.TokenError;
 import com.aliens.backend.member.controller.dto.*;
 import com.aliens.backend.member.controller.dto.event.TemporaryPasswordEvent;
 import com.aliens.backend.member.controller.dto.request.TemporaryPasswordRequest;
@@ -18,6 +21,7 @@ import com.aliens.backend.member.controller.dto.response.MemberResponse;
 import com.aliens.backend.member.controller.dto.request.SignUpRequest;
 import com.aliens.backend.member.domain.*;
 import com.aliens.backend.member.domain.repository.MemberInfoRepository;
+import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.uploader.AwsS3Uploader;
 import com.aliens.backend.uploader.dto.S3File;
 import org.springframework.context.ApplicationEventPublisher;
@@ -30,31 +34,30 @@ import java.util.*;
 @Service
 public class MemberInfoService {
     private final AwsS3Uploader uploader;
-    private final SymmetricKeyEncoder symmetricKeyEncoder;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher publisher;
-
     private final S3UploadProperties s3UploadProperties;
     private final MemberRepository memberRepository;
     private final MemberInfoRepository memberInfoRepository;
     private final EmailAuthenticationRepository emailAuthenticationRepository;
+    private final TokenRepository tokenRepository;
 
     public MemberInfoService(final AwsS3Uploader uploader,
-                             final SymmetricKeyEncoder symmetricKeyEncoder,
                              final PasswordEncoder passwordEncoder,
                              final ApplicationEventPublisher publisher,
                              final S3UploadProperties s3UploadProperties, final MemberRepository memberRepository,
                              final MemberInfoRepository memberInfoRepository,
-                             final EmailAuthenticationRepository emailAuthenticationRepository)
+                             final EmailAuthenticationRepository emailAuthenticationRepository,
+                             final TokenRepository tokenRepository)
     {
         this.uploader = uploader;
-        this.symmetricKeyEncoder = symmetricKeyEncoder;
         this.passwordEncoder = passwordEncoder;
         this.s3UploadProperties = s3UploadProperties;
         this.memberRepository = memberRepository;
         this.memberInfoRepository = memberInfoRepository;
         this.emailAuthenticationRepository = emailAuthenticationRepository;
         this.publisher = publisher;
+        this.tokenRepository = tokenRepository;
     }
 
     @Transactional
@@ -112,17 +115,23 @@ public class MemberInfoService {
 
     private EncodedMember encodeForMemberInfo(final SignUpRequest request) {
         return new EncodedMember(
-                symmetricKeyEncoder.encrypt(request.gender()),
-                symmetricKeyEncoder.encrypt(request.mbti()),
-                symmetricKeyEncoder.encrypt(request.birthday()),
-                symmetricKeyEncoder.encrypt(request.aboutMe()));
+                SymmetricKeyEncoder.encrypt(request.gender()),
+                SymmetricKeyEncoder.encrypt(request.mbti()),
+                SymmetricKeyEncoder.encrypt(request.birthday()),
+                SymmetricKeyEncoder.encrypt(request.aboutMe()));
     }
 
     @Transactional
     public String withdraw(final LoginMember loginMember) {
         Member member = getMember(loginMember);
         member.withdraw();
+        Token token = getToken(member);
+        token.expire();
         return MemberResponse.WITHDRAW_SUCCESS.getMessage();
+    }
+
+    private Token getToken(final Member member) {
+        return tokenRepository.findByMember(member).orElseThrow(() -> new RestApiException(TokenError.NULL_REFRESH_TOKEN));
     }
 
     private Member getMember(final LoginMember loginMember) {
@@ -161,14 +170,14 @@ public class MemberInfoService {
     @Transactional
     public String changeAboutMe(final LoginMember loginMember, final String newAboutMe) {
         MemberInfo memberInfo = getMemberInfo(loginMember);
-        memberInfo.changeAboutMe(symmetricKeyEncoder.encrypt(newAboutMe));
+        memberInfo.changeAboutMe(SymmetricKeyEncoder.encrypt(newAboutMe));
         return MemberResponse.ABOUT_ME_CHANGE_SUCCESS.getMessage();
     }
 
     @Transactional
     public String changeMBTI(final LoginMember loginMember, final String newMBTI) {
         MemberInfo memberInfo = getMemberInfo(loginMember);
-        memberInfo.changeMBTI(symmetricKeyEncoder.encrypt(newMBTI));
+        memberInfo.changeMBTI(SymmetricKeyEncoder.encrypt(newMBTI));
         return MemberResponse.MBTI_CHANGE_SUCCESS.getMessage();
     }
 
@@ -184,19 +193,8 @@ public class MemberInfoService {
 
     @Transactional(readOnly = true)
     public MemberPageResponse getMemberPage(final LoginMember loginMember) {
-        MemberInfo memberInfo = getMemberInfo(loginMember);
-        EncodedMemberPage encodedMemberPage = memberInfo.getMemberPage();
-
         Member member = getMember(loginMember);
-        MemberPage memberPage = member.getMemberPage();
-
-        return new MemberPageResponse(memberPage.name(),
-                symmetricKeyEncoder.decrypt(encodedMemberPage.mbti()),
-                symmetricKeyEncoder.decrypt(encodedMemberPage.gender()),
-                memberPage.nationality(),
-                symmetricKeyEncoder.decrypt(encodedMemberPage.birthday()),
-                symmetricKeyEncoder.decrypt(encodedMemberPage.aboutMe()),
-                memberPage.profileImageURL());
+        return member.getMemberPageResponse();
     }
 
     @Transactional

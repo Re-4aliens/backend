@@ -30,6 +30,7 @@ class MemberInfoServiceTest extends BaseIntegrationTest {
     void setUp() {
         setUpEmailEntity(DummyGenerator.GIVEN_EMAIL);
         Member member = dummyGenerator.generateSingleMember();
+        dummyGenerator.generateAccessToken(member);
         loginMember = member.getLoginMember();
         file = dummyGenerator.generateMultipartFile();
     }

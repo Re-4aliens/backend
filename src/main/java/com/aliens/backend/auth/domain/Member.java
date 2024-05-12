@@ -2,11 +2,14 @@ package com.aliens.backend.auth.domain;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.board.controller.dto.response.MemberProfileDto;
+import com.aliens.backend.member.controller.dto.EncodedMemberPage;
 import com.aliens.backend.member.controller.dto.MemberPage;
+import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
 import com.aliens.backend.member.domain.MemberImage;
 import com.aliens.backend.member.domain.MemberInfo;
 import com.aliens.backend.member.domain.MatchingStatus;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
+import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
@@ -20,7 +23,7 @@ import java.util.Objects;
 public class Member {
 
     @Id @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "memberId")
     private Long id;
 
     @Column
@@ -51,7 +54,7 @@ public class Member {
     private List<Token> tokens = new ArrayList<>();
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "imageId")
     private MemberImage memberImage;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -163,5 +166,17 @@ public class Member {
 
     public boolean isSameId(final Long memberId) {
         return Objects.equals(id, memberId);
+    }
+
+    public MemberPageResponse getMemberPageResponse() {
+        EncodedMemberPage encodedMemberPage = memberInfo.getMemberPage();
+
+        return new MemberPageResponse(name,
+                SymmetricKeyEncoder.decrypt(encodedMemberPage.mbti()),
+                SymmetricKeyEncoder.decrypt(encodedMemberPage.gender()),
+                nationality,
+                SymmetricKeyEncoder.decrypt(encodedMemberPage.birthday()),
+                SymmetricKeyEncoder.decrypt(encodedMemberPage.aboutMe()),
+                memberImage.getURL());
     }
 }

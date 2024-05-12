@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class MemberImage {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "memberImageId")
     private Long id;
 
     @Column
@@ -18,7 +18,7 @@ public class MemberImage {
     String url;
 
     @OneToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "memberId")
     private Member member;
 
     protected MemberImage() {

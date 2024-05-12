@@ -5,6 +5,8 @@ import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.business.model.Partner;
 import com.aliens.backend.mathcing.domain.id.MatchingResultId;
 import com.aliens.backend.mathcing.business.model.Relationship;
+import com.aliens.backend.member.controller.dto.MemberPage;
+import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Persistable;
 
@@ -76,5 +78,9 @@ public class MatchingResult implements Persistable<MatchingResultId> {
     @Override
     public boolean isNew() {
         return true;
+    }
+
+    public MemberPageResponse getMatchedMemberPageResponse() {
+        return id.getMatchedMember().getMemberPageResponse();
     }
 }

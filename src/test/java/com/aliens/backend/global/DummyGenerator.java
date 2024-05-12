@@ -2,6 +2,8 @@ package com.aliens.backend.global;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.auth.domain.Token;
+import com.aliens.backend.auth.domain.repository.TokenRepository;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.auth.service.TokenProvider;
 import com.aliens.backend.board.controller.dto.request.BoardCreateRequest;
@@ -61,10 +63,9 @@ public class DummyGenerator {
     @Autowired SymmetricKeyEncoder encoder;
     @Autowired TokenProvider tokenProvider;
     @Autowired MockClock mockClock;
-    @Autowired
-    NotificationRepository notificationRepository;
-    @Autowired
-    FcmTokenRepository fcmTokenRepository;
+    @Autowired NotificationRepository notificationRepository;
+    @Autowired FcmTokenRepository fcmTokenRepository;
+    @Autowired TokenRepository tokenRepository;
 
     public static final String GIVEN_EMAIL = "tmp@example.com";
     public static final String GIVEN_PASSWORD = "tmpPassword";
@@ -163,7 +164,11 @@ public class DummyGenerator {
 
     //AccessToken 생성 메서드
     public String generateAccessToken(Member member) {
-        return tokenProvider.generateAccessToken(member.getLoginMember());
+        String accessToken = tokenProvider.generateAccessToken(member.getLoginMember());
+        Token refreshToken = new Token(member);
+        refreshToken.putRefreshToken(accessToken);
+        tokenRepository.save(refreshToken);
+        return accessToken;
     }
 
     //지원자 생성 메서드

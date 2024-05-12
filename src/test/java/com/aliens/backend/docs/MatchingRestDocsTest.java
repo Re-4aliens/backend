@@ -118,8 +118,18 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
                                 fieldWithPath("result[]").description("결과 배열"),
-                                fieldWithPath("result[].matchedMemberId").description("매칭된 멤버 ID"),
-                                fieldWithPath("result[].relationship").description("매칭 관계")
+                                fieldWithPath("result[].roomStatus").description("채팅 방 상태"),
+                                fieldWithPath("result[].chatRoomId").description("채팅 방 ID"),
+                                fieldWithPath("result[].partnerMemberId").description("파트너 ID"),
+                                fieldWithPath("result[].name").description("파트너 이름"),
+                                fieldWithPath("result[].mbti").description("파트너 mbti"),
+                                fieldWithPath("result[].gender").description("파트너 성별"),
+                                fieldWithPath("result[].nationality").description("파트너 국적"),
+                                fieldWithPath("result[].profileImageUrl").description("파트너 프로필 이미지URL"),
+                                fieldWithPath("result[].aboutMe").description("파트너 자기소개"),
+                                fieldWithPath("result[].firstPreferLanguage").description("파트너 제 1 선호언어"),
+                                fieldWithPath("result[].secondPreferLanguage").description("파트너 제 2 선호언어"),
+                                fieldWithPath("result[].relation").description("매칭 관계")
                         )));
     }
 

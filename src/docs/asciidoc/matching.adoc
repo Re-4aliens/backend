@@ -21,6 +21,9 @@ include::{snippets}/matching-application-post/http-response.adoc[]
 ==== response-body 설명
 include::{snippets}/matching-application-post/response-fields.adoc[]
 
+
+
+
 === 매칭 신청 내역 조회
 
 ==== HTTP request
@@ -32,6 +35,10 @@ include::{snippets}/matching-application-get/http-response.adoc[]
 ==== response-body 설명
 include::{snippets}/matching-application-get/response-fields.adoc[]
 
+
+
+
+
 === 매칭 시작 시간 조회
 
 ==== HTTP request
@@ -42,6 +49,10 @@ include::{snippets}/matching-begin-time-get/http-response.adoc[]
 
 ==== response-body 설명
 include::{snippets}/matching-begin-time-get/response-fields.adoc[]
+
+
+
+
 
 === 매칭 신청 정보 수정
 
@@ -57,6 +68,11 @@ include::{snippets}/matching-application-modify/http-response.adoc[]
 ==== response-body 설명
 include::{snippets}/matching-application-modify/response-fields.adoc[]
 
+
+
+
+
+
 === 매칭 신청 취소
 
 ==== HTTP request
@@ -68,7 +84,11 @@ include::{snippets}/matching-application-cancel/http-response.adoc[]
 ==== response-body 설명
 include::{snippets}/matching-application-cancel/response-fields.adoc[]
 
-=== 내 매칭 파트너 조회
+
+
+
+
+=== 나의 매칭 파트너 조회
 
 ==== HTTP request
 include::{snippets}/matching-process-get-partners/http-request.adoc[]

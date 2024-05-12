@@ -9,10 +9,12 @@ public class ChatRoom {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "chatRoomId")
     private Long id;
+
     @Column
     private ChatRoomStatus status;
+
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatParticipant> participants;
 

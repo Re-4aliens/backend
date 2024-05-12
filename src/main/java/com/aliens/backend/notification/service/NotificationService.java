@@ -92,7 +92,10 @@ public class NotificationService {
             notificationRepository.save(notification);
 
             FcmToken fcmToken = getFcmTokenByMemberId(memberId);
-            tokens.add(fcmToken.getToken());
+
+            if(fcmToken.isAccepted()) {
+                tokens.add(fcmToken.getToken());
+            }
         }
 
         MulticastMessage multiMessage = makeMessage(request, tokens);
@@ -111,5 +114,20 @@ public class NotificationService {
                 .putData("content", request.content())
                 .addAllTokens(tokens)
                 .build();
+    }
+
+    public Boolean getFcmstatus(final LoginMember loginMember) {
+        FcmToken token = getFcmTokenByMemberId(loginMember.memberId());
+        return token.isAccepted();
+    }
+
+
+    public void changeAcceptation(final LoginMember loginMember, final Boolean decision) {
+        FcmToken token = getFcmTokenByMemberId(loginMember.memberId());
+        if(token.isAccepted()) {
+            token.accept();
+            return;
+        }
+        token.unAccepted();
     }
 }

@@ -6,7 +6,8 @@ public enum NotificationSuccess implements SuccessCode {
     GET_NOTIFICATION_SUCCESS(HttpStatus.OK, "N001", "알림 정보 조회가 성공하였습니다."),
     REGISTER_TOKEN_SUCCESS(HttpStatus.OK, "N002", "FCM 토큰 등록이 완료되었습니다."),
     READ_NOTIFICATION_SUCCESS(HttpStatus.OK, "N003", "알림 읽음처리가 완료되었습니다."),
-    ;
+    GET_FCM_STATUS_SUCCESS(HttpStatus.OK, "N004", "알림 상태조회가 완료되었습니다."),
+    CHANGE_FCM_STATUS_SUCCESS(HttpStatus.OK, "N005", "알림 상태변경이 완료되었습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

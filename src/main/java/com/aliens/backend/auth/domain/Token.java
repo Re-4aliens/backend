@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 @Entity
 public class Token {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tokenId")
     private Long id;
 
-    @Column(name = "refresh_token")
+    @Column
     private String refreshToken;
 
     @Column
@@ -21,7 +21,7 @@ public class Token {
     private LocalDateTime recentLogin = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "memberId")
     private Member member;
 
     protected Token() {

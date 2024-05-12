@@ -2,7 +2,9 @@ package com.aliens.backend.member.sevice;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.auth.domain.Token;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
+import com.aliens.backend.auth.domain.repository.TokenRepository;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.email.domain.EmailAuthentication;
 import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
@@ -10,6 +12,7 @@ import com.aliens.backend.global.response.error.EmailError;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.S3UploadProperties;
+import com.aliens.backend.global.response.error.TokenError;
 import com.aliens.backend.member.controller.dto.*;
 import com.aliens.backend.member.controller.dto.event.TemporaryPasswordEvent;
 import com.aliens.backend.member.controller.dto.request.TemporaryPasswordRequest;
@@ -18,6 +21,7 @@ import com.aliens.backend.member.controller.dto.response.MemberResponse;
 import com.aliens.backend.member.controller.dto.request.SignUpRequest;
 import com.aliens.backend.member.domain.*;
 import com.aliens.backend.member.domain.repository.MemberInfoRepository;
+import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.uploader.AwsS3Uploader;
 import com.aliens.backend.uploader.dto.S3File;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,18 +36,19 @@ public class MemberInfoService {
     private final AwsS3Uploader uploader;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher publisher;
-
     private final S3UploadProperties s3UploadProperties;
     private final MemberRepository memberRepository;
     private final MemberInfoRepository memberInfoRepository;
     private final EmailAuthenticationRepository emailAuthenticationRepository;
+    private final TokenRepository tokenRepository;
 
     public MemberInfoService(final AwsS3Uploader uploader,
                              final PasswordEncoder passwordEncoder,
                              final ApplicationEventPublisher publisher,
                              final S3UploadProperties s3UploadProperties, final MemberRepository memberRepository,
                              final MemberInfoRepository memberInfoRepository,
-                             final EmailAuthenticationRepository emailAuthenticationRepository)
+                             final EmailAuthenticationRepository emailAuthenticationRepository,
+                             final TokenRepository tokenRepository)
     {
         this.uploader = uploader;
         this.passwordEncoder = passwordEncoder;
@@ -52,6 +57,7 @@ public class MemberInfoService {
         this.memberInfoRepository = memberInfoRepository;
         this.emailAuthenticationRepository = emailAuthenticationRepository;
         this.publisher = publisher;
+        this.tokenRepository = tokenRepository;
     }
 
     @Transactional
@@ -119,7 +125,13 @@ public class MemberInfoService {
     public String withdraw(final LoginMember loginMember) {
         Member member = getMember(loginMember);
         member.withdraw();
+        Token token = getToken(member);
+        token.expire();
         return MemberResponse.WITHDRAW_SUCCESS.getMessage();
+    }
+
+    private Token getToken(final Member member) {
+        return tokenRepository.findByMember(member).orElseThrow(() -> new RestApiException(TokenError.NULL_REFRESH_TOKEN));
     }
 
     private Member getMember(final LoginMember loginMember) {

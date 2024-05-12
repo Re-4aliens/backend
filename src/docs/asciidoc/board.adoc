@@ -42,7 +42,7 @@ include::{snippets}/api-board-get-all/response-fields.adoc[]
 
 
 
-[[resources-post-create]]
+[[resources-post-read]]
 === 특정 카테고리 게시글 조회
 
 ==== HTTP request
@@ -60,7 +60,7 @@ include::{snippets}/api-board-get-all-with-category/response-fields.adoc[]
 
 
 [[resources-post-create]]
-=== 특정 카테고리 게시글 조회
+=== 전체 게시글 검색
 
 ==== HTTP request
 include::{snippets}/api-board-search/http-request.adoc[]
@@ -110,7 +110,7 @@ include::{snippets}/api-board-get-my-boards/response-fields.adoc[]
 
 
 
-[[resources-post-create]]
+[[resources-post-search]]
 === 특정 카테고리 게시글 검색
 
 ==== HTTP request

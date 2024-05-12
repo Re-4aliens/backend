@@ -78,7 +78,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
-                                fieldWithPath("result").description("회원가입 결과")
+                                fieldWithPath("result").description("응답 결과")
                         )
                 ));
     }
@@ -250,7 +250,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                         ),
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
-                                fieldWithPath("result").description("회원가입 결과")
+                                fieldWithPath("result").description("응답 결과")
                         )
                 ));
     }

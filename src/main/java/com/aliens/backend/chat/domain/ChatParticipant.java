@@ -7,16 +7,16 @@ import jakarta.persistence.*;
 public class ChatParticipant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "chatParticipantId")
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "chatRoomId")
     private ChatRoom chatRoom;
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "memberId")
     private Member member;
     @ManyToOne
-    @JoinColumn(name = "partner_id")
+    @JoinColumn(name = "partnerId")
     private Member partner;
 
     protected ChatParticipant() {
@@ -34,5 +34,8 @@ public class ChatParticipant {
 
     protected void setChatRoom(final ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
+    }
+    public ChatRoom getChatRoom() {
+        return chatRoom;
     }
 }

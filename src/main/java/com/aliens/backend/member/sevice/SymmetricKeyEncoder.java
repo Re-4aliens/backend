@@ -12,13 +12,13 @@ import java.util.Base64;
 @Component
 public class SymmetricKeyEncoder {
 
-    private final SymmetricEncoderProperties symmetricEncoderProperties;
+    private static SymmetricEncoderProperties symmetricEncoderProperties;
 
-    public SymmetricKeyEncoder(final SymmetricEncoderProperties symmetricEncoderProperties) {
-        this.symmetricEncoderProperties = symmetricEncoderProperties;
+    private SymmetricKeyEncoder(SymmetricEncoderProperties symmetricEncoderProperties) {
+        SymmetricKeyEncoder.symmetricEncoderProperties = symmetricEncoderProperties;
     }
 
-    public String encrypt(String plaintext) {
+    public static String encrypt(String plaintext) {
         try {
             Cipher cipher = Cipher.getInstance(symmetricEncoderProperties.getChipper());
             cipher.init(Cipher.ENCRYPT_MODE, symmetricEncoderProperties.getEncodeKey());
@@ -29,7 +29,7 @@ public class SymmetricKeyEncoder {
         }
     }
 
-    public String decrypt(String ciphertext) {
+    public static String decrypt(String ciphertext) {
         try {
             Cipher cipher = Cipher.getInstance(symmetricEncoderProperties.getChipper());
             cipher.init(Cipher.DECRYPT_MODE, symmetricEncoderProperties.getEncodeKey());

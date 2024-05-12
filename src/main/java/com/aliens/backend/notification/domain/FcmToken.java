@@ -7,15 +7,18 @@ import jakarta.persistence.*;
 public class FcmToken {
 
     @Id @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "fcmTokenId")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "memberId")
     private Member member;
 
     @Column
     private String token;
+
+    @Column
+    private Boolean isAccepted = true;
 
     protected FcmToken(Member member, String token) {
         this.member = member;
@@ -35,5 +38,17 @@ public class FcmToken {
 
     public void changeToken(final String token) {
         this.token = token;
+    }
+
+    public Boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void unAccepted() {
+        isAccepted = false;
+    }
+
+    public void accept() {
+        isAccepted = true;
     }
 }

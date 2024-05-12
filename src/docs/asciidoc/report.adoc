@@ -21,3 +21,18 @@ include::{snippets}/chat-report/http-response.adoc[]
 
 ==== response-body 설명
 include::{snippets}/chat-report/response-fields.adoc[]
+
+
+[[resources-post-report]]
+=== 게시글 신고
+
+==== HTTP request
+include::{snippets}/board-report/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/board-report/request-fields.adoc[]
+
+==== HTTP response
+include::{snippets}/board-report/http-response.adoc[]
+
+include::{snippets}/board-report/response-fields.adoc[]

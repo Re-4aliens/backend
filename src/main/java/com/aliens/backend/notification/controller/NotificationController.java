@@ -32,6 +32,26 @@ public class NotificationController {
         );
     }
 
+
+    @GetMapping("/fcm")
+    public SuccessResponse<Boolean> getFcmStatus(@Login LoginMember loginMember) {
+
+        return SuccessResponse.of(
+                NotificationSuccess.GET_FCM_STATUS_SUCCESS,
+                notificationService.getFcmstatus(loginMember)
+        );
+    }
+
+    @PatchMapping("/fcm")
+    public SuccessResponse<String> changeAcceptation(@Login LoginMember loginMember,
+                                                     @RequestParam("decision") Boolean decision) {
+
+        notificationService.changeAcceptation(loginMember,decision);
+        return SuccessResponse.of(
+                NotificationSuccess.CHANGE_FCM_STATUS_SUCCESS
+        );
+    }
+
     @GetMapping()
     public SuccessResponse<List<NotificationResponse>> getNotifications(@Login LoginMember loginMember) {
 

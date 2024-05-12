@@ -1,11 +1,13 @@
 package com.aliens.backend.docs;
 
 import com.aliens.backend.board.controller.dto.request.BoardCreateRequest;
+import com.aliens.backend.board.controller.dto.request.ReportBoardRequest;
 import com.aliens.backend.board.controller.dto.response.BoardResponse;
 import com.aliens.backend.board.controller.dto.response.MemberProfileDto;
 import com.aliens.backend.board.domain.enums.BoardCategory;
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.BoardSuccess;
+import com.aliens.backend.global.response.success.ReportSuccess;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
@@ -362,6 +364,35 @@ class BoardRestDocsTest extends BaseRestDocsTest {
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
                                 fieldWithPath("result").description("게시글 삭제 결과")
+                        )
+                ));
+    }
+
+
+    @Test
+    @DisplayName("API - 게시글 신고")
+    void reportBoard() throws Exception {
+        // Given
+        final ReportBoardRequest request = new ReportBoardRequest(
+                1L,"혐오 발언");
+        final SuccessResponse<?> response = SuccessResponse.of(ReportSuccess.REPORT_BOARD_SUCCESS);
+        doReturn(response).when(boardController).reportBoard(any(), any());
+
+        // When & Then
+        mockMvc.perform(post("/boards/report")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", GIVEN_ACCESS_TOKEN))
+
+                .andExpect(status().is2xxSuccessful())
+                .andDo(document("board-report",
+                        requestFields(
+                                fieldWithPath("boardId").description("신고하는 게시글 ID"),
+                                fieldWithPath("reason").description("신고 사유")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("성공 코드"),
+                                fieldWithPath("result").description("응답 결과")
                         )
                 ));
     }

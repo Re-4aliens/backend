@@ -64,6 +64,11 @@ public class AuthService {
 
     private String generateRefreshToken(final Member member, final LoginMember loginMember) {
         Token token = new Token(member);
+
+        if(tokenRepository.findByMember(member).isPresent()) {
+            tokenRepository.deleteAllByMember(member);
+        }
+
         tokenRepository.save(token);
         String refreshToken = tokenProvider.generateRefreshToken(loginMember,token.getId());
 

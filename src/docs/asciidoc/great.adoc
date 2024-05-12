@@ -20,7 +20,7 @@ include::{snippets}/api-great-at-board/http-response.adoc[]
 include::{snippets}/api-great-at-board/response-fields.adoc[]
 
 
-[[resources-post-create]]
+[[resources-great-read]]
 === 본인이 좋아요한 게시글 조회
 
 ==== HTTP request

@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    @Query(value = "SELECT * FROM Notification nc WHERE nc.member_id = :memberId AND nc.is_read = false ORDER BY nc.id DESC LIMIT 20", nativeQuery = true)
+    @Query(value = "SELECT * FROM Notification  WHERE Notification.memberId = :memberId AND Notification.isRead = false ORDER BY Notification.notificationId DESC LIMIT 20", nativeQuery = true)
     List<Notification> findNotificationsByMemberId(Long memberId);
 }

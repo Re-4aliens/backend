@@ -10,7 +10,7 @@ public class MarketInfo {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "marketInfoId")
     private Long id;
 
     @Column

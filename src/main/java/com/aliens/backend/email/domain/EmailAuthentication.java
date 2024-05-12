@@ -3,17 +3,16 @@ package com.aliens.backend.email.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "EMAIL_AUTHENTICATION")
 public class EmailAuthentication {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "emailAuthenticatedId")
     private Long id;
 
     @Column
     private String email;
 
-    @Column(name = "is_authenticated")
+    @Column
     private boolean isAuthenticated = false;
 
     protected EmailAuthentication() {

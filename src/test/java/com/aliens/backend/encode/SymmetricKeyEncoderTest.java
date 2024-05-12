@@ -5,12 +5,8 @@ import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 class SymmetricKeyEncoderTest extends BaseIntegrationTest {
-
-    @Autowired
-    private SymmetricKeyEncoder symmetricKeyEncoder;
 
     @Test
     @DisplayName("문자열 암호화 성공")
@@ -19,7 +15,7 @@ class SymmetricKeyEncoderTest extends BaseIntegrationTest {
         String givenInput = "testText";
 
         //When
-        String result = symmetricKeyEncoder.encrypt(givenInput);
+        String result = SymmetricKeyEncoder.encrypt(givenInput);
 
         //Then
         Assertions.assertNotEquals(result, givenInput);
@@ -30,10 +26,10 @@ class SymmetricKeyEncoderTest extends BaseIntegrationTest {
     void decryptTest() {
         //Given
         String givenInput = "testText";
-        String code = symmetricKeyEncoder.encrypt(givenInput);
+        String code = SymmetricKeyEncoder.encrypt(givenInput);
 
         //When
-        String result = symmetricKeyEncoder.decrypt(code);
+        String result = SymmetricKeyEncoder.decrypt(code);
 
         //Then
         Assertions.assertEquals(result, givenInput);

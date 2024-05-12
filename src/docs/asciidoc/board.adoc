@@ -6,7 +6,7 @@
 [[resources-post]]
 == 게시판
 
-[[resources-post-create]]
+[[resources-post-normal-create]]
 === 일반 게시글 등록
 
 ==== HTTP request
@@ -25,8 +25,8 @@ include::{snippets}/board-create/response-fields.adoc[]
 
 
 
-[[resources-post-create]]
-=== 전체 게시글 조회
+[[resources-post-all-read]]
+=== 전체 게시판 조회
 
 ==== HTTP request
 include::{snippets}/api-board-get-all/http-request.adoc[]
@@ -42,8 +42,8 @@ include::{snippets}/api-board-get-all/response-fields.adoc[]
 
 
 
-[[resources-post-create]]
-=== 특정 카테고리 게시글 조회
+[[resources-post-category-read]]
+=== 특정 카테고리 게시판 조회
 
 ==== HTTP request
 include::{snippets}/api-board-get-all-with-category/http-request.adoc[]
@@ -59,8 +59,39 @@ include::{snippets}/api-board-get-all-with-category/response-fields.adoc[]
 
 
 
-[[resources-post-create]]
-=== 특정 카테고리 게시글 조회
+[[resources-post-announcement-read]]
+=== 공지사항 게시판 조회
+
+==== HTTP request
+include::{snippets}/api-board-get-all-announcements/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-board-get-all-announcements/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-board-get-all-announcements/http-response.adoc[]
+
+include::{snippets}/api-board-get-all-announcements/response-fields.adoc[]
+
+
+
+[[resources-post-my-read]]
+=== 내가 작성한 게시글 조회
+
+==== HTTP request
+include::{snippets}/api-board-get-my-boards/http-request.adoc[]
+
+==== request-body 설명
+include::{snippets}/api-board-get-my-boards/query-parameters.adoc[]
+
+==== HTTP response
+include::{snippets}/api-board-get-my-boards/http-response.adoc[]
+
+include::{snippets}/api-board-get-my-boards/response-fields.adoc[]
+
+
+[[resources-post-all-search]]
+=== 전체 게시글 검색
 
 ==== HTTP request
 include::{snippets}/api-board-search/http-request.adoc[]
@@ -76,41 +107,7 @@ include::{snippets}/api-board-search/response-fields.adoc[]
 
 
 
-
-[[resources-post-create]]
-=== 공지사항 게시글 조회
-
-==== HTTP request
-include::{snippets}/api-board-get-all-announcements/http-request.adoc[]
-
-==== request-body 설명
-include::{snippets}/api-board-get-all-announcements/query-parameters.adoc[]
-
-==== HTTP response
-include::{snippets}/api-board-get-all-announcements/http-response.adoc[]
-
-include::{snippets}/api-board-get-all-announcements/response-fields.adoc[]
-
-
-
-[[resources-post-create]]
-=== 내가 작성한 게시글 조회
-
-==== HTTP request
-include::{snippets}/api-board-get-my-boards/http-request.adoc[]
-
-==== request-body 설명
-include::{snippets}/api-board-get-my-boards/query-parameters.adoc[]
-
-==== HTTP response
-include::{snippets}/api-board-get-my-boards/http-response.adoc[]
-
-include::{snippets}/api-board-get-my-boards/response-fields.adoc[]
-
-
-
-
-[[resources-post-create]]
+[[resources-post-category-search]]
 === 특정 카테고리 게시글 검색
 
 ==== HTTP request
@@ -125,7 +122,9 @@ include::{snippets}/api-board-search-with-category/http-response.adoc[]
 include::{snippets}/api-board-search-with-category/response-fields.adoc[]
 
 
-[[resources-post-create]]
+
+
+[[resources-post-delete]]
 === 게시글 삭제
 
 ==== HTTP request

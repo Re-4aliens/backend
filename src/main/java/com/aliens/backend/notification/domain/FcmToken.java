@@ -17,6 +17,9 @@ public class FcmToken {
     @Column
     private String token;
 
+    @Column
+    private Boolean isAccepted = true;
+
     protected FcmToken(Member member, String token) {
         this.member = member;
         this.token = token;
@@ -35,5 +38,17 @@ public class FcmToken {
 
     public void changeToken(final String token) {
         this.token = token;
+    }
+
+    public Boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void unAccepted() {
+        isAccepted = false;
+    }
+
+    public void accept() {
+        isAccepted = true;
     }
 }

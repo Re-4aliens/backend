@@ -10,18 +10,19 @@ import java.time.LocalDateTime;
 public class MatchingRound {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "round")
     private Long round;
 
-    @Column(name = "request_start_time")
+    @Column
     private LocalDateTime requestStartTime;
 
-    @Column(name = "request_end_time")
+    @Column
     private LocalDateTime requestEndTime;
 
-    @Column(name = "valid_start_time")
+    @Column
     private LocalDateTime validStartTime;
 
-    @Column(name = "valid_end_time")
+    @Column
     private LocalDateTime validEndTime;
 
     protected MatchingRound() {

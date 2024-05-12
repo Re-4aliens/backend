@@ -14,7 +14,7 @@ public class Notification {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "notificationId")
     private Long id;
 
     @Column
@@ -29,12 +29,12 @@ public class Notification {
     @Column
     private BoardCategory boardCategory;
 
-    @Column(name = "created_at", updatable = false)
+    @Column(updatable = false)
     @CreatedDate
     private Instant createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "memberId")
     private Member member;
 
     protected Notification(final BoardCategory boardCategory,

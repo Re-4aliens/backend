@@ -9,11 +9,12 @@ import jakarta.persistence.*;
 public class MemberInfo {
 
     @Id
+    @Column(name = "memberInfoId")
     private Long id;
 
     @MapsId
     @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "memberId")
     private Member member;
 
     @Column
@@ -25,7 +26,7 @@ public class MemberInfo {
     @Column
     private String birthday;
 
-    @Column(name = "about_me")
+    @Column
     private String aboutMe;
 
     protected MemberInfo() {

@@ -7,15 +7,15 @@ import jakarta.persistence.*;
 public class Block {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "blockId")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "blocking_member_id")
+    @JoinColumn(name = "blockingMemberId")
     private Member blockingMember;
 
     @ManyToOne
-    @JoinColumn(name = "blocked_member_id")
+    @JoinColumn(name = "blockedMemberId")
     private Member blockedMember;
 
     protected Block() {

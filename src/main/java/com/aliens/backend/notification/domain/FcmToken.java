@@ -7,11 +7,11 @@ import jakarta.persistence.*;
 public class FcmToken {
 
     @Id @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "fcmTokenId")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "memberId")
     private Member member;
 
     @Column

@@ -20,7 +20,7 @@ import java.util.Objects;
 public class Member {
 
     @Id @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "memberId")
     private Long id;
 
     @Column
@@ -51,7 +51,7 @@ public class Member {
     private List<Token> tokens = new ArrayList<>();
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "imageId")
     private MemberImage memberImage;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

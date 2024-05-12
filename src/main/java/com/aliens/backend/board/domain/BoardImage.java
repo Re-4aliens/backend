@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class BoardImage {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "boardImageId")
     private Long id;
 
     @Column
@@ -21,7 +21,7 @@ public class BoardImage {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "boardId")
     private Board board;
 
     protected BoardImage() {

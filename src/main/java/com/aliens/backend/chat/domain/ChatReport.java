@@ -7,15 +7,15 @@ import jakarta.persistence.*;
 public class ChatReport {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "chatReportId")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "reporting_member_id")
+    @JoinColumn(name = "reportingMemberId")
     private Member reportingMember;
 
     @ManyToOne
-    @JoinColumn(name = "reported_member_id")
+    @JoinColumn(name = "reportedMemberId")
     private Member reportedMember;
 
     @Column

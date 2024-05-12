@@ -8,11 +8,11 @@ import jakarta.persistence.*;
 public class BoardReport {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "boardReportId")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "reporting_member_id")
+    @JoinColumn(name = "reportingMemberId")
     private Member member;
 
     @Column

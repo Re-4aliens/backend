@@ -15,7 +15,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column
+    @Column(name = "commentId")
     private Long id;
 
     @Column
@@ -33,14 +33,14 @@ public class Comment {
     private Long parentCommentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "boardId")
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "memberId")
     private Member member;
 
-    @Column(name = "created_at", updatable = false)
+    @Column(updatable = false)
     @CreatedDate
     private Instant createdAt;
 

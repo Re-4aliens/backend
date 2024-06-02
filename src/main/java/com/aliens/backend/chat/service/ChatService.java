@@ -1,6 +1,8 @@
 package com.aliens.backend.chat.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
+import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomBlockEvent;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomCreationEvent;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
@@ -16,7 +18,10 @@ import com.aliens.backend.chat.service.model.ChatMessageSummary;
 import com.aliens.backend.chat.service.model.MemberPair;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.ChatError;
+import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.response.success.ChatSuccess;
+import com.aliens.backend.notification.domain.FcmTokenRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -29,11 +34,22 @@ public class ChatService {
     private final MessageRepository messageRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomRepository chatRoomRepository;
+    private final FcmTokenRepository fcmTokenRepository;
+    private final MemberRepository memberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public ChatService(MessageRepository messageRepository, ChatRoomRepository chatRoomRepository, SimpMessagingTemplate messagingTemplate) {
+    public ChatService(final MessageRepository messageRepository,
+                       final SimpMessagingTemplate messagingTemplate,
+                       final ChatRoomRepository chatRoomRepository,
+                       final FcmTokenRepository fcmTokenRepository,
+                       final MemberRepository memberRepository,
+                       final ApplicationEventPublisher eventPublisher) {
         this.messageRepository = messageRepository;
-        this.chatRoomRepository = chatRoomRepository;
         this.messagingTemplate = messagingTemplate;
+        this.chatRoomRepository = chatRoomRepository;
+        this.fcmTokenRepository = fcmTokenRepository;
+        this.memberRepository = memberRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public String sendMessage(MessageSendRequest messageSendRequest) {
@@ -76,6 +92,24 @@ public class ChatService {
     }
 
     private void sendNotification(Message message) {
+        var fcmMessage = createFcmMessage(message);
+        eventPublisher.publishEvent(fcmMessage);
+    }
+
+    private com.google.firebase.messaging.Message createFcmMessage(Message message) {
+        Member receiver = memberRepository.findById(message.getReceiverId())
+                .orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+        return com.google.firebase.messaging.Message.builder()
+                .setNotification(com.google.firebase.messaging.Notification.builder()
+                        .setTitle(receiver.getProfileName())
+                        .setBody(message.getContent())
+                        .build())
+                .setToken(findFcmTokenByMember(receiver))
+                .build();
+    }
+
+    private String findFcmTokenByMember(Member receiver) {
+        return fcmTokenRepository.findByMember(receiver).getToken();
     }
 
     private void updateReadState(Long chatRoomId, Long readBy) {

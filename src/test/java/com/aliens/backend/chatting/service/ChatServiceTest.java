@@ -29,8 +29,12 @@ class ChatServiceTest extends BaseIntegrationTest {
     @Autowired ChatService chatService;
     @Autowired DummyGenerator dummyGenerator;
 
+    Member receiver;
+
     @BeforeEach
     void setUp() {
+        receiver = dummyGenerator.generateSingleMember();;
+
         Message message = Message.of(makeMessageSendRequest());
         doReturn(message).when(messageRepository).save(any());
         doNothing().when(messageRepository).markMessagesAsRead(any(),any());
@@ -103,7 +107,7 @@ class ChatServiceTest extends BaseIntegrationTest {
         String content = "Hello";
         Long roomId = 1L;
         Long senderId = 1L;
-        Long receiverId = 2L;
+        Long receiverId = receiver.getId();
         return new MessageSendRequest(type, content, roomId, senderId, receiverId);
     }
 }

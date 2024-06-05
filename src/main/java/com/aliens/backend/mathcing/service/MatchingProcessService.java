@@ -105,7 +105,9 @@ public class MatchingProcessService {
                 .flatMap(participant -> participant.partners().stream()
                         .map(partner -> MatchingResult.from(matchingRound, participant, partner)))
                 .forEach(this::matchBetween);
-
+        participants.stream()
+                .filter(participant -> !participant.hasPartner())
+                .forEach(Participant::expireMatch);
         if (hasMatchedParticipants(participants)) {
             eventPublisher.createChatRoom(participants);
             eventPublisher.sendNotification(participants);

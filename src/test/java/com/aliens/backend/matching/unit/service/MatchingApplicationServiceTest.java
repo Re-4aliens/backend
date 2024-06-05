@@ -142,6 +142,20 @@ class MatchingApplicationServiceTest extends BaseIntegrationTest {
     }
 
     @Test
+    @DisplayName("매칭을 신청했으나, 매칭되지 않은 사용자의 매칭 상태가 정상적으로 변경됨")
+    void changeMatchingStatusIfNotMatched() {
+        // given
+        matchingApplicationService.saveParticipant(loginMember, matchingApplicationRequest);
+
+        // when
+        dummyGenerator.operateMatching();
+
+        // then
+        Member notMatchedMember = getMemberById(member.getId());
+        assertThat(notMatchedMember.getStatus()).isEqualTo(MatchingStatus.NOT_APPLIED_NOT_MATCHED.getMessage());
+    }
+
+    @Test
     @DisplayName("지정 시간 외 매칭 신청시, 에러 발생")
     void applyMatchIfNotValidTime() {
         // given

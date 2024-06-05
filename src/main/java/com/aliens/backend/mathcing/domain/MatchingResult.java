@@ -39,13 +39,6 @@ public class MatchingResult implements Persistable<MatchingResultId> {
         matchedMember.matched();
     }
 
-    public void expireMatch() {
-        Member matchingMember = getMatchingMember();
-        Member matchedMember = getMatchedMember();
-        matchingMember.expireMatch();
-        matchedMember.expireMatch();
-    }
-
     public MatchingRound getMatchingRound() {
         return id.getMatchingRound();
     }

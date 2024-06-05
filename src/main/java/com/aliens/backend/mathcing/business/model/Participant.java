@@ -74,4 +74,8 @@ public record Participant(
     public boolean hasPartner() {
         return !partners.isEmpty();
     }
+
+    public void expireMatch() {
+        member.expireMatch();
+    }
 }

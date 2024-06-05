@@ -92,12 +92,12 @@ public class MatchingProcessService {
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
     }
 
-
     @Scheduled(cron = "${matching.round.end}")
     @Transactional
     public void expireMatching() {
         List<MatchingResult> previousMatchingResults = getPreviousMatchingResults();
-        previousMatchingResults.forEach(MatchingResult::expireMatch);
+        List<MatchingApplication> previousMatchingApplications = getPreviousMatchingApplications();
+        previousMatchingApplications.forEach(MatchingApplication::expireMatch);
         eventPublisher.expireChatRoom(previousMatchingResults);
     }
 
@@ -126,13 +126,19 @@ public class MatchingProcessService {
     }
 
     private List<MatchingApplication> getMatchingApplications(final MatchingRound matchingRound) {
-        return matchingApplicationRepository.findAllByMatchingRound(matchingRound);
+        return matchingApplicationRepository.findAllByRound(matchingRound.getRound());
     }
 
     private List<MatchingResult> getPreviousMatchingResults() {
         MatchingRound currentRound = getCurrentRound();
         Long previousRound = currentRound.getPreviousRound();
         return matchingResultRepository.findAllByRound(previousRound);
+    }
+
+    private List<MatchingApplication> getPreviousMatchingApplications() {
+        MatchingRound currentRound = getCurrentRound();
+        Long previousRound = currentRound.getPreviousRound();
+        return matchingApplicationRepository.findAllByRound(previousRound);
     }
 
     private List<Block> getBlockListByMatchingApplications(final List<MatchingApplication> matchingApplications) {

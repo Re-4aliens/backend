@@ -82,7 +82,6 @@ public class MatchingProcessService {
                 .toList();
     }
 
-
     private ChatParticipant getChatParticipant(final LoginMember loginMember, final MatchingResult result) {
         return chatParticipantRepository.findByMemberIdAndMatchedMemberId(loginMember.memberId(), result.getMatchedMemberId())
                 .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));    }
@@ -106,8 +105,15 @@ public class MatchingProcessService {
                 .flatMap(participant -> participant.partners().stream()
                         .map(partner -> MatchingResult.from(matchingRound, participant, partner)))
                 .forEach(this::matchBetween);
-        eventPublisher.createChatRoom(participants);
-        eventPublisher.sendNotification(participants);
+
+        if (hasMatchedParticipants(participants)) {
+            eventPublisher.createChatRoom(participants);
+            eventPublisher.sendNotification(participants);
+        }
+    }
+
+    private boolean hasMatchedParticipants(List<Participant> participants) {
+        return !participants.stream().filter(Participant::hasPartner).toList().isEmpty();
     }
 
     private void checkHasApplied(final List<MatchingResult> matchingResults) {

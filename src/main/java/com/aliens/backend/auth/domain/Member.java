@@ -127,8 +127,7 @@ public class Member {
     public void applyMatch() {
         if (status == MatchingStatus.NOT_APPLIED_MATCHED) {
             status = MatchingStatus.APPLIED_MATCHED;
-        }
-        if (status == MatchingStatus.NOT_APPLIED_NOT_MATCHED) {
+        } else if (status == MatchingStatus.NOT_APPLIED_NOT_MATCHED) {
             status = MatchingStatus.APPLIED_NOT_MATCHED;
         }
     }
@@ -140,8 +139,7 @@ public class Member {
     public void expireMatch() {
         if (status == MatchingStatus.APPLIED_MATCHED) {
             status = MatchingStatus.APPLIED_NOT_MATCHED;
-        }
-        if (status == MatchingStatus.NOT_APPLIED_MATCHED || status == MatchingStatus.APPLIED_NOT_MATCHED) {
+        } else if (status == MatchingStatus.NOT_APPLIED_MATCHED || status == MatchingStatus.APPLIED_NOT_MATCHED) {
             status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
         }
     }
@@ -149,8 +147,7 @@ public class Member {
     public void cancelApplication() {
         if (status == MatchingStatus.APPLIED_MATCHED) {
             status = MatchingStatus.NOT_APPLIED_MATCHED;
-        }
-        if (status == MatchingStatus.APPLIED_NOT_MATCHED) {
+        } else if (status == MatchingStatus.APPLIED_NOT_MATCHED) {
             status = MatchingStatus.NOT_APPLIED_NOT_MATCHED;
         }
     }

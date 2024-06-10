@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface MatchingApplicationRepository extends JpaRepository<MatchingApplication, MatchingApplicationId> {
-    @Query("SELECT ma FROM MatchingApplication ma WHERE ma.id.matchingRound = :matchingRound")
-    List<MatchingApplication> findAllByMatchingRound(MatchingRound matchingRound);
+    @Query("SELECT ma FROM MatchingApplication ma WHERE ma.id.matchingRound.round = :round")
+    List<MatchingApplication> findAllByRound(Long round);
 
     @Query("SELECT ma FROM MatchingApplication ma WHERE ma.id.matchingRound = :matchingRound AND ma.id.member.id = :memberId")
     Optional<MatchingApplication> findByMatchingRoundAndMemberId(MatchingRound matchingRound, Long memberId);

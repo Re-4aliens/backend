@@ -24,10 +24,18 @@ FriendShip은 외국인과 한국인간의 소통을 위한 창구를 제공하�
 
 -  AppStore URL : https://apps.apple.com/kr/app/friendship/id6466155577
 
+---
+## [ERD](https://github.com/Re-4aliens/backend/files/15283229/model.pdf)
+
+
+<p align="center">
+<img width="275" alt="image" src="https://github.com/Re-4aliens/backend/assets/86913355/158eab34-da94-4235-be9b-67bc1d654f9e"><img width="209" alt="image" src="https://github.com/Re-4aliens/backend/assets/86913355/cfcc3b0e-9b53-44a0-b9fd-d33f2014c53f">
+</p>
+
 
 ---
 
-**사용된 기술**
+## 사용된 기술
 
 Programming -  SpringBoot 3.2.1, Gradle
 
@@ -39,7 +47,7 @@ Notification - Firebase Cloud Messaging (FCM)
 
 ---
 
-**기술 문서**
+## 기술 문서
 - [FriendShip의 채팅은 어떻게 이루어지나요?](https://hulking-edge-c2d.notion.site/FriendShip-cffe85a2383f42b9865468462288056a?pvs=4)
 - [매칭 로직 개선하기 : 79.2%의 성능 향상](https://www.notion.so/80-b3bba869f074437b9c400d687a9fc369?pvs=4)
 - [웹소켓 채팅 전송시 권한 확인 방법](https://hulking-edge-c2d.notion.site/cb879fe56f0d4a76883bc294cad61bdc?pvs=4)
@@ -60,7 +68,7 @@ Notification - Firebase Cloud Messaging (FCM)
 
 ---
 
-**학습 동기화 자료**
+## 학습 동기화 자료
 - [Parallel Stream을 써야할 때는 언제인가](https://hulking-edge-c2d.notion.site/Parallel-Stream-a7c38612b59c48e0a80231a1ac826775?pvs=4)
 - [DDD : 비즈니스 로직과 요구사항을 코드에 직접적으로 반영하는 방법론](https://hulking-edge-c2d.notion.site/DDD-899ad5e7416848f182b607c81bf3f0cf?pvs=4)
 - [TDD : 테스트 주도 개발 방법론](https://hulking-edge-c2d.notion.site/TDD-d299dfa108c244d9a6820cfa776fd983?pvs=4)
@@ -72,13 +80,31 @@ Notification - Firebase Cloud Messaging (FCM)
 
 ---
 
-**협업 자료**
+## 협업 자료
 
 - [요구사항 정의서](https://hulking-edge-c2d.notion.site/d49730579f1149e98d137eafb0b1a72c?pvs=4)
 - [DDD 설계](https://www.figma.com/file/vrduvG2YiZCX4aQzGic4jt?type=design)
 
 ---
-**협업 전략 (git, rule)**
+
+## API 문서 (Spring REST Docs)
+- [이메일 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/email.html)
+- [회원 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/member.html)
+- [로그인 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/authentication.html)
+- [차단 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/block.html)
+- [일반 게시판 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/board.html)
+- [장터 게시판 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/market-boar.html)
+- [댓글 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/comment.html)
+- [좋아요 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/great.html)
+- [채팅 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/chat.html)
+- [매칭 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/matching.html)
+- [알림 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/notification.html)
+- [신고 API](http://ec2-52-79-233-200.ap-northeast-2.compute.amazonaws.com:8080/docs/report.html)
+
+
+---
+  
+## 협업 전략 (git, rule)
 
 - [Branch 전략](https://hulking-edge-c2d.notion.site/Branch-159765ac37ed40bdbb38d4ed383738a6?pvs=4)
 - [Git 이슈 컨벤션](https://hulking-edge-c2d.notion.site/Git-771f9209453d4ecb8c39ae75f81b890a?pvs=4)

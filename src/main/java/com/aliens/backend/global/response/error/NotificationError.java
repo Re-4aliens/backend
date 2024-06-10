@@ -4,7 +4,8 @@ import org.springframework.http.HttpStatus;
 
 public enum NotificationError implements ErrorCode {
 
-    IS_NOT_OWNER(HttpStatus.BAD_REQUEST, "N1", "해당 알림의 주인이 아닙니다.");
+    IS_NOT_OWNER(HttpStatus.BAD_REQUEST, "N1", "해당 알림의 주인이 아닙니다."),
+    FCM_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "N2", "FCM 토큰을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatusCode;
     private final String developCode;

@@ -77,6 +77,6 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
             sudo docker stop $(docker ps -a -q)
-            sudo docker run -d --log-driver=syslog -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}
+            sudo docker run -d --log-driver=syslog -p 443:8080 ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}
             sudo docker rm $(docker ps --filter 'status=exited' -a -q)
             sudo docker image prune -a -f

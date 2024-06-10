@@ -59,6 +59,11 @@ public class MatchingApplication {
         this.secondPreferLanguage = matchingApplicationRequest.secondPreferLanguage();
     }
 
+    public void expireMatch() {
+        Member member = getMember();
+        member.expireMatch();
+    }
+
     public MatchingApplicationId getId() {
         return id;
     }

@@ -76,7 +76,7 @@ jobs:
           # 도커 작업
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
-            sudo docker stop $(docker ps -a -q)
-            sudo docker run -d --log-driver=syslog -p 443:8080 -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}
-            sudo docker rm $(docker ps --filter 'status=exited' -a -q)
-            sudo docker image prune -a -f
+            sudo docker stop $(docker ps --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}" -q)
+            sudo docker run -d --log-driver=syslog -p 443:8080 -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
+            sudo docker rm $(docker ps --filter "status=exited" --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}" -q)
+            sudo docker image prune -f

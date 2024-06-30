@@ -1,6 +1,5 @@
 package com.aliens.backend.member.domain;
 
-import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
 
@@ -16,10 +15,6 @@ public class MemberImage {
 
     @Column
     String url;
-
-    @OneToOne
-    @JoinColumn(name = "memberId")
-    private Member member;
 
     protected MemberImage() {
     }

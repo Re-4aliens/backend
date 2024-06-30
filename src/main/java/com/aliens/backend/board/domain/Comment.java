@@ -7,10 +7,12 @@ import com.aliens.backend.board.domain.enums.CommentStatus;
 import com.aliens.backend.board.domain.enums.CommentType;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Comment {
 
     @Id

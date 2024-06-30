@@ -44,7 +44,7 @@ public class NotificationService {
     @Transactional
     public void registerFcmToken(final LoginMember loginMember, final String fcmToken) {
         Member member = getMember(loginMember.memberId());
-        Optional<FcmToken> optionalFcmToken = fcmTokenRepository.findById(loginMember.memberId());
+        Optional<FcmToken> optionalFcmToken = fcmTokenRepository.findByMember(member);
 
         if (optionalFcmToken.isPresent()) {
             FcmToken fcmTokenEntity = optionalFcmToken.get();

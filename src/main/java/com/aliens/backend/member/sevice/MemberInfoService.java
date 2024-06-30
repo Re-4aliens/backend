@@ -21,7 +21,6 @@ import com.aliens.backend.member.controller.dto.response.MemberResponse;
 import com.aliens.backend.member.controller.dto.request.SignUpRequest;
 import com.aliens.backend.member.domain.*;
 import com.aliens.backend.member.domain.repository.MemberInfoRepository;
-import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.uploader.AwsS3Uploader;
 import com.aliens.backend.uploader.dto.S3File;
 import org.springframework.context.ApplicationEventPublisher;
@@ -64,14 +63,15 @@ public class MemberInfoService {
     public String signUp(final SignUpRequest request, final MultipartFile profileImage) {
         checkEmail(request.email());
 
-        MemberImage memberImage = saveImage(profileImage);
+        MemberImage memberImage = saveImageToS3(profileImage);
 
-        Member member = getMemberEntity(request, memberImage);
+        Member member = saveMemberEntity(request, memberImage);
 
         MemberInfo memberInfo = getMemberInfoEntity(request, member);
-        member.putMemberInfo(memberInfo);
 
-        memberInfoRepository.save(memberInfo);
+        memberInfo = memberInfoRepository.save(memberInfo);
+
+        member.putMemberInfo(memberInfo);
 
         return MemberResponse.SIGN_UP_SUCCESS.getMessage();
     }
@@ -86,7 +86,7 @@ public class MemberInfoService {
         }
     }
 
-    private MemberImage saveImage(final MultipartFile profileImage) {
+    private MemberImage saveImageToS3(final MultipartFile profileImage) {
         if (profileImage == null || profileImage.isEmpty()) {
             return MemberImage.from(new S3File(s3UploadProperties.getDefaultFileName(),
                     s3UploadProperties.getDefaultFileURL()));
@@ -96,9 +96,9 @@ public class MemberInfoService {
         return MemberImage.from(uploadedFile);
     }
 
-    private Member getMemberEntity(final SignUpRequest request, final MemberImage memberImage) {
+    private Member saveMemberEntity(final SignUpRequest request, final MemberImage memberImage) {
         EncodedSignUp encodedSignUp = encodeForMember(request);
-        return Member.of(encodedSignUp, memberImage);
+        return memberRepository.save(Member.of(encodedSignUp, memberImage));
     }
 
     private EncodedSignUp encodeForMember(final SignUpRequest request) {

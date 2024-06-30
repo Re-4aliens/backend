@@ -4,18 +4,14 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.member.controller.dto.EncodedMember;
 import com.aliens.backend.member.controller.dto.EncodedMemberPage;
 import jakarta.persistence.*;
+import org.springframework.data.domain.Persistable;
 
 @Entity
-public class MemberInfo {
+public class MemberInfo implements Persistable<Long> {
 
     @Id
     @Column(name = "memberInfoId")
     private Long id;
-
-    @MapsId
-    @OneToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JoinColumn(name = "memberId")
-    private Member member;
 
     @Column
     private String mbti;
@@ -34,7 +30,7 @@ public class MemberInfo {
 
     public static MemberInfo of(EncodedMember request, Member member) {
         MemberInfo memberInfo = new MemberInfo();
-        memberInfo.member =member;
+        memberInfo.id = member.getId();
         memberInfo.gender = request.gender();
         memberInfo.mbti = request.mbti();
         memberInfo.birthday = request.birthday();
@@ -52,5 +48,19 @@ public class MemberInfo {
 
     public EncodedMemberPage getMemberPage() {
         return new EncodedMemberPage(mbti,gender,birthday,aboutMe);
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return true;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

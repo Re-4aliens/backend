@@ -26,6 +26,7 @@ public class AwsS3Uploader {
     private static final String PNJ_FILE_EXTENSION = "png";
     private static final String JPEG_FILE_EXTENSION = "jpeg";
     private static final String GIF_FILE_EXTENSION = "gif";
+    private static final String JPG_FILE_EXTENSION = "jpg";
     private static final int MAX_UPLOADS = 2;
     private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -75,7 +76,9 @@ public class AwsS3Uploader {
         String extension = StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
         if (!extension.equalsIgnoreCase(PNJ_FILE_EXTENSION)
                 && !extension.equalsIgnoreCase(JPEG_FILE_EXTENSION)
-                && !extension.equalsIgnoreCase(GIF_FILE_EXTENSION)) {
+                && !extension.equalsIgnoreCase(GIF_FILE_EXTENSION)
+                && !extension.equalsIgnoreCase(JPG_FILE_EXTENSION)
+        ) {
             throw new RestApiException(BoardError.POST_IMAGE_ERROR);
         }
     }

@@ -3,6 +3,7 @@ package com.aliens.backend.global;
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.Token;
+import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.auth.domain.repository.TokenRepository;
 import com.aliens.backend.auth.service.PasswordEncoder;
 import com.aliens.backend.auth.service.TokenProvider;
@@ -50,6 +51,7 @@ import java.util.Random;
 
 @Component
 public class DummyGenerator {
+    @Autowired MemberRepository memberRepository;
     @Autowired MatchingApplicationService matchingApplicationService;
     @Autowired MemberInfoRepository memberInfoRepository;
     @Autowired MatchingRoundRepository matchingRoundRepository;
@@ -140,7 +142,7 @@ public class DummyGenerator {
     private Member makeMember(String email, MemberImage memberImage) {
         String encodedPassword = passwordEncoder.encrypt(GIVEN_PASSWORD);
         EncodedSignUp signUp = new EncodedSignUp(GIVEN_NAME, email, encodedPassword, GIVEN_NATIONALITY);
-        return Member.of(signUp, memberImage);
+        return memberRepository.save(Member.of(signUp, memberImage));
     }
 
     private void saveAsMemberInfo(final Member member) {
@@ -151,6 +153,9 @@ public class DummyGenerator {
 
         MemberInfo memberInfo = MemberInfo.of(encodedRequest, member);
         memberInfoRepository.save(memberInfo);
+
+        member.putMemberInfo(memberInfo);
+        memberRepository.save(member);
     }
 
     // MultipartFile 생성 메서드

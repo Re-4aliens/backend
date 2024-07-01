@@ -8,12 +8,14 @@ import com.aliens.backend.board.controller.dto.response.MarketBoardResponse;
 import com.aliens.backend.board.domain.enums.BoardCategory;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Board {
 
     @Id

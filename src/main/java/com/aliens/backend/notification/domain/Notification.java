@@ -6,9 +6,11 @@ import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.controller.dto.NotificationResponse;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Notification {
 

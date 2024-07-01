@@ -109,7 +109,7 @@ public class ChatService {
     }
 
     private String findFcmTokenByMember(Member receiver) {
-        return fcmTokenRepository.findByMember(receiver).getToken();
+        return fcmTokenRepository.findByMember(receiver).get().getToken();
     }
 
     private void updateReadState(Long chatRoomId, Long readBy) {

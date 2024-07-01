@@ -10,7 +10,6 @@ import com.aliens.backend.member.domain.MemberInfo;
 import com.aliens.backend.member.domain.MatchingStatus;
 import com.aliens.backend.member.controller.dto.EncodedSignUp;
 import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
-import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.uploader.dto.S3File;
 import jakarta.persistence.*;
 
@@ -54,14 +53,12 @@ public class Member {
     private List<Token> tokens = new ArrayList<>();
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinColumn(name = "imageId")
+    @JoinColumn(name = "memberImageId")
     private MemberImage memberImage;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberInfoId")
     private MemberInfo memberInfo;
-
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private FcmToken fcmToken;
 
     protected Member() {
     }

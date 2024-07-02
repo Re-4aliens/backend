@@ -86,8 +86,10 @@ jobs:
             sudo docker run -d --log-driver=syslog -p 443:8080 --name friendship -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
             
             # friendship 관련 종료된 컨테이너 삭제
-            sudo docker container prune -f --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}"
+            sudo docker container prune -f
             
             # 사용하지 않는 friendship 이미지만 삭제 (최신 버전 제외)
-            sudo docker image prune -f --filter "dangling=true" --filter "label=com.docker.compose.project=${{ env.APP_NAME }}"
-            sudo docker rmi $(docker images ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }} -q | awk 'NR>1')
+            sudo docker image prune -f
+            
+            # 이전 버전의 friendship 이미지 삭제
+            sudo docker images ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }} -q | awk 'NR>1' | xargs -r sudo docker rmi -f

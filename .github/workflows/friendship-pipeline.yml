@@ -75,8 +75,21 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }} # pem 키
           # 도커 작업
           script: |
+            # 최신 friendship 이미지 pull
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
-            sudo docker stop $(docker ps --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}" -q)
-            sudo docker run -d --log-driver=syslog -p 443:8080 -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
-            sudo docker rm $(docker ps --filter "status=exited" --filter "ancestor=${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}" -q)
+            
+            # 기존 friendship 컨테이너 중지 및 삭제
+            sudo docker stop friendship || true
+            sudo docker rm friendship || true
+            
+            # 새 friendship 컨테이너 실행
+            sudo docker run -d --log-driver=syslog -p 443:8080 --name friendship -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
+            
+            # friendship 관련 종료된 컨테이너 삭제
+            sudo docker container prune -f
+            
+            # 사용하지 않는 friendship 이미지만 삭제 (최신 버전 제외)
             sudo docker image prune -f
+            
+            # 이전 버전의 friendship 이미지 삭제
+            sudo docker images ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }} -q | awk 'NR>1' | xargs -r sudo docker rmi -f

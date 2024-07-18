@@ -83,7 +83,7 @@ jobs:
             sudo docker rm friendship || true
             
             # 새 friendship 컨테이너 실행
-            sudo docker run -d --log-driver=syslog -p 443:8080 --name friendship -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
+            sudo docker run -d --log-driver=syslog -p 443:8080 --name friendship --network friendship-network -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }}:latest
             
             # friendship 관련 종료된 컨테이너 삭제
             sudo docker container prune -f

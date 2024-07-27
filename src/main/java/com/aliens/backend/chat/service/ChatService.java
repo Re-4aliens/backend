@@ -154,6 +154,17 @@ public class ChatService {
         chatRoomRepository.save(chatRoom);
     }
 
+    @EventListener
+    @Transactional
+    public void handleChatRoomExpireEvent(ChatRoomExpireEvent chatRoomExpireEvent) {
+        expireAllChatRooms();
+    }
+
+    private void expireAllChatRooms() {
+        chatRoomRepository.expireAllChatRooms();
+        chatParticipantRepository.deleteAll();
+    }
+
     private ChatRoom findChatRoomsById(final Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new RestApiException(ChatError.CHAT_ROOM_NOT_FOUND));
     }

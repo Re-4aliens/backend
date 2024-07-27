@@ -72,10 +72,10 @@ class ChatRestDocsTest extends BaseRestDocsTest {
         List<ChatRoom> chatRooms = new ArrayList<>();
         ChatRoom chatRoom1 = mock(ChatRoom.class);
         when(chatRoom1.getId()).thenReturn(1L);
-        when(chatRoom1.getStatus()).thenReturn(ChatRoomStatus.OPEN);
+        when(chatRoom1.getStatus()).thenReturn(ChatRoomStatus.OPENED);
         ChatRoom chatRoom2 = mock(ChatRoom.class);
         when(chatRoom2.getId()).thenReturn(2L);
-        when(chatRoom2.getStatus()).thenReturn(ChatRoomStatus.OPEN);
+        when(chatRoom2.getStatus()).thenReturn(ChatRoomStatus.OPENED);
         chatRooms.add(chatRoom1);
         chatRooms.add(chatRoom2);
         Date now = new Date();

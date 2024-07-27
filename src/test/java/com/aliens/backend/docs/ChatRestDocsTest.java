@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -77,10 +78,11 @@ class ChatRestDocsTest extends BaseRestDocsTest {
         when(chatRoom2.getStatus()).thenReturn(ChatRoomStatus.OPEN);
         chatRooms.add(chatRoom1);
         chatRooms.add(chatRoom2);
+        Date now = new Date();
 
         List<ChatMessageSummary> chatMessageSummaries = List.of(
-                new ChatMessageSummary(1L, "Last message in Room 1", 5L),
-                new ChatMessageSummary(2L, "Last message in Room 2", 3L)
+                new ChatMessageSummary(1L, "Last message in Room 1", now, 5L),
+                new ChatMessageSummary(2L, "Last message in Room 2", new Date(now.getTime() - 3600000), 3L)
         );
 
         ChatSummaryResponse result = new ChatSummaryResponse(chatRooms, chatMessageSummaries);
@@ -103,6 +105,7 @@ class ChatRestDocsTest extends BaseRestDocsTest {
                                 fieldWithPath("result.chatMessageSummaries").description("각 채팅방의 요약 정보"),
                                 fieldWithPath("result.chatMessageSummaries[].roomId").description("채팅방 ID"),
                                 fieldWithPath("result.chatMessageSummaries[].lastMessageContent").description("채팅방의 마지막 메시지 내용"),
+                                fieldWithPath("result.chatMessageSummaries[].lastMessageTime").description("채팅방의 마지막 메시지 시간"),
                                 fieldWithPath("result.chatMessageSummaries[].numberOfUnreadMessages").description("읽지 않은 메시지의 수")
                         )
                 ));

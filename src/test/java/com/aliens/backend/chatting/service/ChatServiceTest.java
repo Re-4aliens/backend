@@ -18,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -36,10 +37,11 @@ class ChatServiceTest extends BaseIntegrationTest {
         receiver = dummyGenerator.generateSingleMember();;
 
         Message message = Message.of(makeMessageSendRequest());
+        Date now = new Date();
         doReturn(message).when(messageRepository).save(any());
         doNothing().when(messageRepository).markMessagesAsRead(any(),any());
 
-        ChatMessageSummary summary = new ChatMessageSummary(1L,"g",1L);
+        ChatMessageSummary summary = new ChatMessageSummary(1L,"this is the last message", now,1L);
         List<ChatMessageSummary> givenSummary = List.of(summary,summary) ;
         doReturn(givenSummary).when(messageRepository).aggregateMessageSummaries(any(),any());
 

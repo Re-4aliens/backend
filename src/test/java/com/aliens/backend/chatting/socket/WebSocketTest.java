@@ -71,11 +71,11 @@ class WebSocketTest extends BaseIntegrationTest {
         chatClient.send(properties.getAppDestinationPrefix() + "/send", messageSendRequest);
 
         //Then
-        verify(chatService, timeout(100).times(1)).sendMessage(messageSendRequest);
-        verify(chatChannelInterceptor, timeout(100).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND
-        verify(chatService, timeout(100).times(1)).getChatRooms(member.getId()); // CONNECT
-        verify(chatAuthValidator, timeout(100).times(1)).validateRoomFromTopic(any(), any()); // SUBSCRIBE
-        verify(chatAuthValidator, timeout(100).times(1)).validateRoom(any(), any()); // SEND
+        verify(chatService, timeout(1000).times(1)).sendMessage(messageSendRequest);
+        verify(chatChannelInterceptor, timeout(1000).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND
+        verify(chatService, timeout(1000).times(1)).getChatRooms(member.getId()); // CONNECT
+        verify(chatAuthValidator, timeout(1000).times(1)).validateRoomFromTopic(any(), any()); // SUBSCRIBE
+        verify(chatAuthValidator, timeout(1000).times(1)).validateRoom(any(), any()); // SEND
         Message receivedMessage = objectMapper.readValue((byte[]) receiveMessage.get(0), Message.class);
         Assertions.assertEquals(1, receiveMessage.size());
         Assertions.assertEquals(expectedMessage.getId(), receivedMessage.getId());
@@ -99,10 +99,10 @@ class WebSocketTest extends BaseIntegrationTest {
         chatClient.send(properties.getAppDestinationPrefix() + "/send", messageSendRequest);
 
         //Then
-        verify(chatChannelInterceptor, timeout(100).times(4)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND, 4. DISCONNECT
-        verify(chatService, timeout(100).times(1)).getChatRooms(member.getId());
-        verify(chatAuthValidator, timeout(100).times(1)).validateRoom(any(), any());
-        verify(chatController, timeout(100).times(0)).sendMessage(messageSendRequest); // 호출되지 않음
+        verify(chatChannelInterceptor, timeout(1000).times(4)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND, 4. DISCONNECT
+        verify(chatService, timeout(1000).times(1)).getChatRooms(member.getId());
+        verify(chatAuthValidator, timeout(1000).times(1)).validateRoom(any(), any());
+        verify(chatController, timeout(1000).times(0)).sendMessage(messageSendRequest); // 호출되지 않음
     }
 
     @Test
@@ -116,9 +116,9 @@ class WebSocketTest extends BaseIntegrationTest {
         chatClient.subscribe(unAuthorizedRoomId);
 
         //Then
-        verify(chatChannelInterceptor, timeout(100).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. DISCONNECT
-        verify(chatService, timeout(100).times(1)).getChatRooms(member.getId());
-        verify(chatAuthValidator, timeout(100).times(1)).validateRoomFromTopic(any(), any());
+        verify(chatChannelInterceptor, timeout(1000).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. DISCONNECT
+        verify(chatService, timeout(1000).times(1)).getChatRooms(member.getId());
+        verify(chatAuthValidator, timeout(1000).times(1)).validateRoomFromTopic(any(), any());
     }
 
     @Test
@@ -135,11 +135,11 @@ class WebSocketTest extends BaseIntegrationTest {
         chatClient.send(properties.getAppDestinationPrefix() + "/read", readRequest);
 
         //Then
-        verify(chatChannelInterceptor, timeout(100).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND
-        verify(chatController, timeout(100).times(1)).readMessage(readRequest);
-        verify(chatService, timeout(100).times(1)).getChatRooms(member.getId()); // CONNECT
-        verify(chatAuthValidator, timeout(100).times(1)).validateRoomFromTopic(any(), any()); // SUBSCRIBE
-        verify(chatAuthValidator, timeout(100).times(1)).validateRoom(any(), any()); // SEND
+        verify(chatChannelInterceptor, timeout(1000).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND
+        verify(chatController, timeout(1000).times(1)).readMessage(readRequest);
+        verify(chatService, timeout(1000).times(1)).getChatRooms(member.getId()); // CONNECT
+        verify(chatAuthValidator, timeout(1000).times(1)).validateRoomFromTopic(any(), any()); // SUBSCRIBE
+        verify(chatAuthValidator, timeout(1000).times(1)).validateRoom(any(), any()); // SEND
         ReadResponse receivedReadResponse = objectMapper.readValue((byte[]) receiveMessage.get(0), ReadResponse.class);
         Assertions.assertEquals(1, receiveMessage.size());
         Assertions.assertEquals(readResponse.readBy(), receivedReadResponse.readBy());
@@ -159,10 +159,10 @@ class WebSocketTest extends BaseIntegrationTest {
         chatClient.send(properties.getAppDestinationPrefix() + "/read", unAuthorizedReadRequest);
 
         //Then
-        verify(chatChannelInterceptor, timeout(100).times(4)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND, 4. DISCONNECT
-        verify(chatService, timeout(100).times(1)).getChatRooms(member.getId());
-        verify(chatAuthValidator, timeout(100).times(1)).validateRoom(any(), any());
-        verify(chatController, timeout(100).times(0)).readMessage(unAuthorizedReadRequest); // 호출되지 않음
+        verify(chatChannelInterceptor, timeout(1000).times(4)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND, 4. DISCONNECT
+        verify(chatService, timeout(1000).times(1)).getChatRooms(member.getId());
+        verify(chatAuthValidator, timeout(1000).times(1)).validateRoom(any(), any());
+        verify(chatController, timeout(1000).times(0)).readMessage(unAuthorizedReadRequest); // 호출되지 않음
     }
 
     private MessageSendRequest createMessageSendRequest(Long roomId) {

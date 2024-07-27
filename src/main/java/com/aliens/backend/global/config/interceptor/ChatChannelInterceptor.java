@@ -5,8 +5,6 @@ import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.service.ChatAuthValidator;
 import com.aliens.backend.global.property.WebSocketProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -23,8 +21,6 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
 
     private final ChatAuthValidator chatAuthValidator;
     private final WebSocketProperties properties;
-    private final Logger logger = LoggerFactory.getLogger("웹소켓 요청");
-
     private MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
 
     public ChatChannelInterceptor(ChatAuthValidator chatAuthValidator, WebSocketProperties properties) {
@@ -35,7 +31,6 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-        logger.info("preSend: {} - {}",accessor.getCommand(), accessor.getDestination());
 
         List<ChatRoom> chatRooms = (List<ChatRoom>) accessor.getSessionAttributes().get("chatRooms");
         if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {

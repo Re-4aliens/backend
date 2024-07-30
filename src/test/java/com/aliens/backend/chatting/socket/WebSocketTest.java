@@ -22,6 +22,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.*;
 
 class WebSocketTest extends BaseIntegrationTest {
@@ -69,13 +71,14 @@ class WebSocketTest extends BaseIntegrationTest {
         chatClient.connect(accessToken);
         List<Object> receiveMessage = chatClient.subscribe(authorizedRoomId);
         chatClient.send(properties.getAppDestinationPrefix() + "/send", messageSendRequest);
+        await().atMost(5, SECONDS).until(() -> !receiveMessage.isEmpty());
 
         //Then
-        verify(chatService, timeout(50000).times(1)).sendMessage(messageSendRequest);
-        verify(chatChannelInterceptor, timeout(50000).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND
-        verify(chatService, timeout(50000).times(1)).getChatRooms(member.getId()); // CONNECT
-        verify(chatAuthValidator, timeout(50000).times(1)).validateRoomFromTopic(any(), any()); // SUBSCRIBE
-        verify(chatAuthValidator, timeout(50000).times(1)).validateRoom(any(), any()); // SEND
+        verify(chatService, timeout(20000).times(1)).sendMessage(messageSendRequest);
+        verify(chatChannelInterceptor, timeout(20000).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND
+        verify(chatService, timeout(20000).times(1)).getChatRooms(member.getId()); // CONNECT
+        verify(chatAuthValidator, timeout(20000).times(1)).validateRoomFromTopic(any(), any()); // SUBSCRIBE
+        verify(chatAuthValidator, timeout(20000).times(1)).validateRoom(any(), any()); // SEND
         Message receivedMessage = objectMapper.readValue((byte[]) receiveMessage.get(0), Message.class);
         Assertions.assertEquals(1, receiveMessage.size());
         Assertions.assertEquals(expectedMessage.getId(), receivedMessage.getId());

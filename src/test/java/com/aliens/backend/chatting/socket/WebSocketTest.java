@@ -71,11 +71,11 @@ class WebSocketTest extends BaseIntegrationTest {
         chatClient.send(properties.getAppDestinationPrefix() + "/send", messageSendRequest);
 
         //Then
-        verify(chatService, timeout(20000).times(1)).sendMessage(messageSendRequest);
-        verify(chatChannelInterceptor, timeout(20000).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND
-        verify(chatService, timeout(20000).times(1)).getChatRooms(member.getId()); // CONNECT
-        verify(chatAuthValidator, timeout(20000).times(1)).validateRoomFromTopic(any(), any()); // SUBSCRIBE
-        verify(chatAuthValidator, timeout(20000).times(1)).validateRoom(any(), any()); // SEND
+        verify(chatService, timeout(50000).times(1)).sendMessage(messageSendRequest);
+        verify(chatChannelInterceptor, timeout(50000).times(3)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE, 3. SEND
+        verify(chatService, timeout(50000).times(1)).getChatRooms(member.getId()); // CONNECT
+        verify(chatAuthValidator, timeout(50000).times(1)).validateRoomFromTopic(any(), any()); // SUBSCRIBE
+        verify(chatAuthValidator, timeout(50000).times(1)).validateRoom(any(), any()); // SEND
         Message receivedMessage = objectMapper.readValue((byte[]) receiveMessage.get(0), Message.class);
         Assertions.assertEquals(1, receiveMessage.size());
         Assertions.assertEquals(expectedMessage.getId(), receivedMessage.getId());

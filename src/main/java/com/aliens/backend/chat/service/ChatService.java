@@ -5,6 +5,7 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomBlockEvent;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomCreationEvent;
+import com.aliens.backend.chat.controller.dto.event.ChatRoomExpireEvent;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ChatSummaryResponse;
@@ -12,6 +13,7 @@ import com.aliens.backend.chat.controller.dto.response.ReadResponse;
 import com.aliens.backend.chat.domain.ChatParticipant;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.Message;
+import com.aliens.backend.chat.domain.repository.ChatParticipantRepository;
 import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
 import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.service.model.ChatMessageSummary;
@@ -21,6 +23,7 @@ import com.aliens.backend.global.response.error.ChatError;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.response.success.ChatSuccess;
 import com.aliens.backend.notification.domain.FcmTokenRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -37,19 +40,22 @@ public class ChatService {
     private final FcmTokenRepository fcmTokenRepository;
     private final MemberRepository memberRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final ChatParticipantRepository chatParticipantRepository;
 
     public ChatService(final MessageRepository messageRepository,
                        final SimpMessagingTemplate messagingTemplate,
                        final ChatRoomRepository chatRoomRepository,
                        final FcmTokenRepository fcmTokenRepository,
                        final MemberRepository memberRepository,
-                       final ApplicationEventPublisher eventPublisher) {
+                       final ApplicationEventPublisher eventPublisher,
+                       final ChatParticipantRepository chatParticipantRepository) {
         this.messageRepository = messageRepository;
         this.messagingTemplate = messagingTemplate;
         this.chatRoomRepository = chatRoomRepository;
         this.fcmTokenRepository = fcmTokenRepository;
         this.memberRepository = memberRepository;
         this.eventPublisher = eventPublisher;
+        this.chatParticipantRepository = chatParticipantRepository;
     }
 
     public String sendMessage(MessageSendRequest messageSendRequest) {
@@ -152,6 +158,17 @@ public class ChatService {
         ChatRoom chatRoom = findChatRoomsById(chatRoomId);
         chatRoom.block();
         chatRoomRepository.save(chatRoom);
+    }
+
+    @EventListener
+    @Transactional
+    public void handleChatRoomExpireEvent(ChatRoomExpireEvent chatRoomExpireEvent) {
+        expireAllChatRooms();
+    }
+
+    private void expireAllChatRooms() {
+        chatRoomRepository.expireAllChatRooms();
+        chatParticipantRepository.deleteAll();
     }
 
     private ChatRoom findChatRoomsById(final Long chatRoomId) {

@@ -10,13 +10,20 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
 
   profiles:
     include: secret, matching
+
+logging:
+  level:
+    org.springframework.web.socket.config.WebSocketMessageBrokerStats: ERROR
 
 websocket:
   port: 8080
   endpoint: /ws
   topic: /room
   request: /chat
+
+

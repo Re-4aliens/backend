@@ -4,6 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
+import com.aliens.backend.chat.controller.dto.event.ChatRoomExpireEvent;
 import com.aliens.backend.chat.domain.ChatParticipant;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.repository.ChatParticipantRepository;
@@ -94,10 +95,9 @@ public class MatchingProcessService {
     @Scheduled(cron = "${matching.round.end}")
     @Transactional
     public void expireMatching() {
-        List<MatchingResult> previousMatchingResults = getPreviousMatchingResults();
         List<MatchingApplication> previousMatchingApplications = getPreviousMatchingApplications();
         previousMatchingApplications.forEach(MatchingApplication::expireMatch);
-        eventPublisher.expireChatRoom(previousMatchingResults);
+        eventPublisher.expireChatRoom();
     }
 
     private void saveMatchingResult(final MatchingRound matchingRound, final List<Participant> participants) {

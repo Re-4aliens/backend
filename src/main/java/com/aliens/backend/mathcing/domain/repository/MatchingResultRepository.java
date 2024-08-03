@@ -15,6 +15,6 @@ public interface MatchingResultRepository extends JpaRepository<MatchingResult, 
     List<MatchingResult> findAllByRound(Long round);
 
     @Query("SELECT mr FROM MatchingResult mr " +
-            "WHERE mr.id.matchingRound = :matchingRound AND mr.id.matchingMember.id = :memberId")
-    List<MatchingResult> findAllByMatchingRoundAndMemberId(MatchingRound matchingRound, Long memberId);
+            "WHERE mr.id.matchingRound.round = :round AND mr.id.matchingMember.id = :memberId")
+    List<MatchingResult> findAllByMatchingRoundAndMemberId(Long round, Long memberId);
 }

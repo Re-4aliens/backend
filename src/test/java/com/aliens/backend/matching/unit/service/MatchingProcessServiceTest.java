@@ -13,6 +13,7 @@ import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
+import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
 import com.aliens.backend.mathcing.domain.MatchingResult;
 import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
@@ -55,14 +56,33 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("매칭 결과 조회")
-    void operateMatchingTest() {
-        // given & when
+    @DisplayName("내 매칭 결과 조회")
+    void getMyMatchingResult() {
+        // given
+        Member member = members.get(0);
+
+        // when
         dummyGenerator.operateMatching();
 
         // then
-        List<MatchingResult> result = getMatchingResultByMatchingRound(getCurrentRound());
-        Assertions.assertThat(result).isNotNull();
+        List<MatchingResultResponse> result = matchingProcessService.findMatchingResult(member.getLoginMember());
+        Assertions.assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("매칭 회차가 갱신 된후, 매칭 결과 조회")
+    void getMatchingResultAfterUpdateMatchingRound() {
+        // given
+        Member member = members.get(0);
+        dummyGenerator.operateMatching();
+        dummyGenerator.generateMatchingRound(MockTime.FRIDAY);
+        mockClock.mockTime(MockTime.VALID_RECEPTION_TIME_ON_FRIDAY);
+
+        // when
+        List<MatchingResultResponse> result = matchingProcessService.findMatchingResult(member.getLoginMember());
+
+        // then
+        Assertions.assertThat(result).isNotEmpty();
     }
 
     @Test

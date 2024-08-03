@@ -2,7 +2,10 @@ package com.aliens.backend.mathcing.domain.id;
 
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.mathcing.domain.MatchingRound;
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.io.Serializable;
 

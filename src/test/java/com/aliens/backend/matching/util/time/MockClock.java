@@ -1,7 +1,5 @@
 package com.aliens.backend.matching.util.time;
 
-import com.aliens.backend.mathcing.domain.MatchingRound;
-import org.mockito.BDDMockito;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +7,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.when;
 
 @Component

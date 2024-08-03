@@ -149,6 +149,10 @@ public class Member {
         }
     }
 
+    public boolean hasPartner() {
+        return status == MatchingStatus.NOT_APPLIED_MATCHED || status == MatchingStatus.APPLIED_MATCHED;
+    }
+
     @Override
     public String toString() {
         return String.format("email:  %s, role : %s", this.email, this.role);

@@ -1,9 +1,9 @@
 package com.aliens.backend.mathcing.domain;
 
 import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.mathcing.business.model.Language;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.domain.id.MatchingApplicationId;
-import com.aliens.backend.mathcing.business.model.Language;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

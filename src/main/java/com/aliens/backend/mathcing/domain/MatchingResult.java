@@ -3,11 +3,13 @@ package com.aliens.backend.mathcing.domain;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.business.model.Partner;
-import com.aliens.backend.mathcing.domain.id.MatchingResultId;
 import com.aliens.backend.mathcing.business.model.Relationship;
-import com.aliens.backend.member.controller.dto.MemberPage;
+import com.aliens.backend.mathcing.domain.id.MatchingResultId;
 import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
-import jakarta.persistence.*;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import org.springframework.data.domain.Persistable;
 
 @Entity

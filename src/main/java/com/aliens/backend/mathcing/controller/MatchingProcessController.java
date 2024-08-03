@@ -2,11 +2,13 @@ package com.aliens.backend.mathcing.controller;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.global.config.resolver.Login;
-import com.aliens.backend.global.response.success.MatchingSuccess;
 import com.aliens.backend.global.response.SuccessResponse;
+import com.aliens.backend.global.response.success.MatchingSuccess;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
 import com.aliens.backend.mathcing.service.MatchingProcessService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 

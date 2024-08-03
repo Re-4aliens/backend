@@ -8,11 +8,12 @@ import com.aliens.backend.block.domain.repository.BlockRepository;
 import com.aliens.backend.chat.domain.ChatParticipant;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.repository.ChatParticipantRepository;
+import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.ChatError;
 import com.aliens.backend.global.response.error.MatchingError;
-import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
+import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
@@ -21,7 +22,6 @@ import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
-import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.service.event.MatchingEventPublisher;
 import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service

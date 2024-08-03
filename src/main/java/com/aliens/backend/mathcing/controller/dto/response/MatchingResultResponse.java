@@ -3,9 +3,9 @@ package com.aliens.backend.mathcing.controller.dto.response;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.ChatRoomStatus;
 import com.aliens.backend.mathcing.business.model.Language;
+import com.aliens.backend.mathcing.business.model.Relationship;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingResult;
-import com.aliens.backend.mathcing.business.model.Relationship;
 import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
 
 public record MatchingResultResponse(

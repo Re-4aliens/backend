@@ -2,15 +2,18 @@ package com.aliens.backend.mathcing.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
-import com.aliens.backend.chat.controller.dto.event.ChatRoomExpireEvent;
 import com.aliens.backend.chat.domain.ChatParticipant;
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.repository.ChatParticipantRepository;
-import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.global.response.error.ChatError;
+import com.aliens.backend.global.response.error.MatchingError;
+import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
+import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
 import com.aliens.backend.mathcing.controller.dto.response.MatchingResultResponse;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
@@ -19,13 +22,13 @@ import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingApplicationRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
-import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.service.event.MatchingEventPublisher;
 import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.util.List;
 
 @Service
@@ -37,6 +40,8 @@ public class MatchingProcessService {
     private final BlockRepository blockRepository;
     private final MatchingEventPublisher eventPublisher;
     private final ChatParticipantRepository chatParticipantRepository;
+    private final MemberRepository memberRepository;
+    private final Clock clock;
 
     public MatchingProcessService(final MatchingBusiness matchingBusiness,
                                   final MatchingRoundRepository matchingRoundRepository,
@@ -44,7 +49,9 @@ public class MatchingProcessService {
                                   final MatchingResultRepository matchingResultRepository,
                                   final BlockRepository blockRepository,
                                   final MatchingEventPublisher eventPublisher,
-                                  final ChatParticipantRepository chatParticipantRepository) {
+                                  final ChatParticipantRepository chatParticipantRepository,
+                                  final MemberRepository memberRepository,
+                                  final Clock clock) {
         this.matchingRoundRepository = matchingRoundRepository;
         this.matchingApplicationRepository = matchingApplicationRepository;
         this.matchingResultRepository = matchingResultRepository;
@@ -52,6 +59,8 @@ public class MatchingProcessService {
         this.blockRepository = blockRepository;
         this.eventPublisher = eventPublisher;
         this.chatParticipantRepository = chatParticipantRepository;
+        this.memberRepository = memberRepository;
+        this.clock = clock;
     }
 
     @Scheduled(cron = "${matching.round.start}")
@@ -83,9 +92,21 @@ public class MatchingProcessService {
                 .toList();
     }
 
+    private List<MatchingResult> getMatchingResults(final MatchingRound matchingRound, final LoginMember loginMember) {
+        Member member = getMember(loginMember);
+        List<MatchingResult> matchingResults = matchingResultRepository
+                .findAllByMatchingRoundAndMemberId(matchingRound.getRound(), loginMember.memberId());
+        if (member.hasPartner() && matchingResults.isEmpty()) {
+            return matchingResultRepository
+                    .findAllByMatchingRoundAndMemberId(matchingRound.getPreviousRound(), loginMember.memberId());
+        }
+        return matchingResults;
+    }
+
     private ChatParticipant getChatParticipant(final LoginMember loginMember, final MatchingResult result) {
         return chatParticipantRepository.findByMemberIdAndMatchedMemberId(loginMember.memberId(), result.getMatchedMemberId())
-                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));    }
+                .orElseThrow(() -> new RestApiException(ChatError.CHAT_ROOM_NOT_FOUND));
+    }
 
     private MatchingApplication findMatchedMemberApplicationByRoundAndMemberId(MatchingResult result) {
         return matchingApplicationRepository.findByMatchingRoundAndMemberId(result.getMatchingRound(), result.getMatchedMemberId())
@@ -129,8 +150,9 @@ public class MatchingProcessService {
                 .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
     }
 
-    private List<MatchingResult> getMatchingResults(final MatchingRound matchingRound, final LoginMember loginMember) {
-        return matchingResultRepository.findAllByMatchingRoundAndMemberId(matchingRound, loginMember.memberId());
+    private Member getMember(LoginMember loginMember) {
+        return memberRepository.findById(loginMember.memberId())
+                .orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
     private List<MatchingApplication> getMatchingApplications(final MatchingRound matchingRound) {

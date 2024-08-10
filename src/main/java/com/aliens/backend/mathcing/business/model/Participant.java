@@ -2,8 +2,8 @@ package com.aliens.backend.mathcing.business.model;
 
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.block.domain.Block;
-import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.domain.MatchingResult;
 

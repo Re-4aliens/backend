@@ -16,4 +16,8 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     @Modifying
     @Query("UPDATE ChatRoom c SET c.status = com.aliens.backend.chat.domain.ChatRoomStatus.CLOSED")
     void expireAllChatRooms();
+
+    @Modifying
+    @Query("UPDATE ChatRoom c SET c.status = com.aliens.backend.chat.domain.ChatRoomStatus.OPENED WHERE c.status = com.aliens.backend.chat.domain.ChatRoomStatus.WAITING")
+    void openWaitingChatRooms();
 }

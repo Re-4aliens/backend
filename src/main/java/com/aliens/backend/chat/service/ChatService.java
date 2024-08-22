@@ -27,6 +27,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -173,5 +174,11 @@ public class ChatService {
 
     private ChatRoom findChatRoomsById(final Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new RestApiException(ChatError.CHAT_ROOM_NOT_FOUND));
+    }
+
+    @Scheduled(cron = "${matching.round.update-date}")
+    @Transactional
+    public void openWaitingChatRooms() {
+        chatRoomRepository.openWaitingChatRooms();
     }
 }

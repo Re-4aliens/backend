@@ -54,9 +54,10 @@ public class CustomMessageRepositoryImpl implements CustomMessageRepository {
     public List<ChatMessageSummary> aggregateMessageSummaries(List<Long> chatRoomIds, Long memberId) {
         AggregationOperation match = Aggregation.match(Criteria.where("roomId").in(chatRoomIds));
         AggregationOperation group = Aggregation.group("roomId")
+                .last("roomId").as("roomId")
                 .last("content").as("lastMessageContent")
                 .last("sendTime").as("lastMessageTime")
-                .sum(ConditionalOperators.when(Criteria.where("receiverId").is(memberId).and("isRead").is(false)).then(1).otherwise(0)).as("unreadCount");
+                .sum(ConditionalOperators.when(Criteria.where("receiverId").is(memberId).and("isRead").is(false)).then(1).otherwise(0)).as("numberOfUnreadMessages");
         Aggregation aggregation = Aggregation.newAggregation(match, group);
         AggregationResults<ChatMessageSummary> results = mongoTemplate.aggregate(aggregation, "message", ChatMessageSummary.class);
         return new ArrayList<>(results.getMappedResults());

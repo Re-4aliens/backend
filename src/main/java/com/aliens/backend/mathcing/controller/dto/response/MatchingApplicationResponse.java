@@ -1,7 +1,7 @@
 package com.aliens.backend.mathcing.controller.dto.response;
 
-import com.aliens.backend.mathcing.domain.MatchingApplication;
 import com.aliens.backend.mathcing.business.model.Language;
+import com.aliens.backend.mathcing.domain.MatchingApplication;
 
 public record MatchingApplicationResponse(
         Long matchingRound,

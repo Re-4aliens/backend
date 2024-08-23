@@ -5,6 +5,7 @@ import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.controller.dto.response.ReadResponse;
 import com.aliens.backend.chat.domain.ChatRoom;
+import com.aliens.backend.chat.domain.ChatRoomStatus;
 import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.domain.MessageType;
 import com.aliens.backend.global.BaseIntegrationTest;
@@ -180,6 +181,7 @@ class WebSocketTest extends BaseIntegrationTest {
     private void setValidRooms() {
         ChatRoom chatroom = mock(ChatRoom.class);
         when(chatroom.getId()).thenReturn(authorizedRoomId);
+        when(chatroom.getStatus()).thenReturn(ChatRoomStatus.OPENED);
         List<ChatRoom> chatRooms = new ArrayList<>();
         chatRooms.add(chatroom);
         when(chatService.getChatRooms(member.getId())).thenReturn(chatRooms);

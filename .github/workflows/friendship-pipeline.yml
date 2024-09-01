@@ -51,6 +51,9 @@ jobs:
       - name: gradlew 실행 권한 부여
         run: chmod +x gradlew
 
+      - name: Gradle 빌드
+        run: ./gradlew build
+        
       - name : asciidoc 플러그인 실행 및 생성된 html 파일 정적 저장소로 이동
         run: |
           ./gradlew asciidoctor

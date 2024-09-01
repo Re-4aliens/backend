@@ -21,7 +21,7 @@ logging:
     org.springframework.web.socket.config.WebSocketMessageBrokerStats: ERROR
 
 websocket:
-  port: 8080
+  port: 8082
   endpoint: /ws
   topic: /room
   request: /chat

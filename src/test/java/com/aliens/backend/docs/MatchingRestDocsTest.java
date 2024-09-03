@@ -103,6 +103,7 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
         List<Member> members = dummyGenerator.generateMultiMember(10);
         dummyGenerator.generateAppliersToMatch(members);
         dummyGenerator.operateMatching();
+        dummyGenerator.generateMatchingRound(MockTime.TUESDAY);
 
         // when & then
         mockMvc.perform(get(baseUrl + "/partners")

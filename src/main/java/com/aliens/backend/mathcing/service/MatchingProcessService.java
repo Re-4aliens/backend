@@ -114,7 +114,6 @@ public class MatchingProcessService {
         if(!matchingRound.isFirstTime()) {
             round = matchingRound.getPreviousRound();
         }
-        System.out.println("엥 몇라운드인데 : " + round);
 
         return matchingResultRepository.findAllByMatchingRoundAndMemberId(round, loginMember.memberId());
     }

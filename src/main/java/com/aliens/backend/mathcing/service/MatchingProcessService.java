@@ -2,7 +2,6 @@ package com.aliens.backend.mathcing.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
-import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
 import com.aliens.backend.chat.domain.ChatParticipant;
@@ -11,7 +10,6 @@ import com.aliens.backend.chat.domain.repository.ChatParticipantRepository;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.ChatError;
 import com.aliens.backend.global.response.error.MatchingError;
-import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.mathcing.business.MatchingBusiness;
 import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingOperateRequest;
@@ -28,7 +26,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
 import java.util.List;
 
 @Service
@@ -40,8 +37,6 @@ public class MatchingProcessService {
     private final BlockRepository blockRepository;
     private final MatchingEventPublisher eventPublisher;
     private final ChatParticipantRepository chatParticipantRepository;
-    private final MemberRepository memberRepository;
-    private final Clock clock;
 
     public MatchingProcessService(final MatchingBusiness matchingBusiness,
                                   final MatchingRoundRepository matchingRoundRepository,
@@ -49,9 +44,7 @@ public class MatchingProcessService {
                                   final MatchingResultRepository matchingResultRepository,
                                   final BlockRepository blockRepository,
                                   final MatchingEventPublisher eventPublisher,
-                                  final ChatParticipantRepository chatParticipantRepository,
-                                  final MemberRepository memberRepository,
-                                  final Clock clock) {
+                                  final ChatParticipantRepository chatParticipantRepository) {
         this.matchingRoundRepository = matchingRoundRepository;
         this.matchingApplicationRepository = matchingApplicationRepository;
         this.matchingResultRepository = matchingResultRepository;
@@ -59,8 +52,6 @@ public class MatchingProcessService {
         this.blockRepository = blockRepository;
         this.eventPublisher = eventPublisher;
         this.chatParticipantRepository = chatParticipantRepository;
-        this.memberRepository = memberRepository;
-        this.clock = clock;
     }
 
     @Scheduled(cron = "${matching.round.start}")
@@ -75,12 +66,52 @@ public class MatchingProcessService {
         saveMatchingResult(currentRound, matchedParticipants);
     }
 
+    private MatchingRound getCurrentRound() {
+        return matchingRoundRepository.findCurrentRound()
+                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
+    }
+
+    private MatchingOperateRequest createOperateRequest(final MatchingRound matchingRound) {
+        List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
+        List<MatchingResult> previousMatchingResult = getPreviousMatchingResults();
+        List<Block> participantBlockHistory = getBlockListByMatchingApplications(matchingApplications);
+        return MatchingOperateRequest.of(matchingApplications, previousMatchingResult, participantBlockHistory);
+    }
+
+    private void saveMatchingResult(final MatchingRound matchingRound, final List<Participant> participants) {
+        participants.stream()
+                .flatMap(participant -> participant.partners().stream()
+                        .map(partner -> MatchingResult.from(matchingRound, participant, partner)))
+                .forEach(this::matchBetween);
+
+        participants.stream()
+                .filter(participant -> !participant.hasPartner())
+                .forEach(Participant::expireMatch);
+
+        if (hasMatchedParticipants(participants)) {
+            eventPublisher.createChatRoom(participants);
+            eventPublisher.sendNotification(participants);
+        }
+    }
+
     @Transactional(readOnly = true)
     public List<MatchingResultResponse> findMatchingResult(final LoginMember loginMember) {
         MatchingRound currentRound = getCurrentRound();
         List<MatchingResult> matchingResults = getMatchingResults(currentRound, loginMember);
-        checkHasApplied(matchingResults);
+        return makePartnerInfos(loginMember, matchingResults);
+    }
 
+    private List<MatchingResult> getMatchingResults(final MatchingRound matchingRound, final LoginMember loginMember) {
+        Long round = matchingRound.getRound();
+
+        if(!matchingRound.isFirstTime()) {
+            round = matchingRound.getPreviousRound();
+        }
+
+        return matchingResultRepository.findAllByMatchingRoundAndMemberId(round, loginMember.memberId());
+    }
+
+    private List<MatchingResultResponse> makePartnerInfos(LoginMember loginMember, List<MatchingResult> matchingResults) {
         return matchingResults.stream()
                 .map(result -> {
                     MatchingApplication matchedMemberApplication = findMatchedMemberApplicationByRoundAndMemberId(result);
@@ -92,25 +123,14 @@ public class MatchingProcessService {
                 .toList();
     }
 
-    private List<MatchingResult> getMatchingResults(final MatchingRound matchingRound, final LoginMember loginMember) {
-        Member member = getMember(loginMember);
-        List<MatchingResult> matchingResults = matchingResultRepository
-                .findAllByMatchingRoundAndMemberId(matchingRound.getRound(), loginMember.memberId());
-        if (member.hasPartner() && matchingResults.isEmpty()) {
-            return matchingResultRepository
-                    .findAllByMatchingRoundAndMemberId(matchingRound.getPreviousRound(), loginMember.memberId());
-        }
-        return matchingResults;
+    private MatchingApplication findMatchedMemberApplicationByRoundAndMemberId(MatchingResult result) {
+        return matchingApplicationRepository.findByMatchingRoundAndMemberId(result.getMatchingRound(), result.getMatchedMemberId())
+                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
     }
 
     private ChatParticipant getChatParticipant(final LoginMember loginMember, final MatchingResult result) {
         return chatParticipantRepository.findByMemberIdAndMatchedMemberId(loginMember.memberId(), result.getMatchedMemberId())
                 .orElseThrow(() -> new RestApiException(ChatError.CHAT_ROOM_NOT_FOUND));
-    }
-
-    private MatchingApplication findMatchedMemberApplicationByRoundAndMemberId(MatchingResult result) {
-        return matchingApplicationRepository.findByMatchingRoundAndMemberId(result.getMatchingRound(), result.getMatchedMemberId())
-                .orElseThrow(() -> new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO));
     }
 
     @Scheduled(cron = "${matching.round.end}")
@@ -121,38 +141,8 @@ public class MatchingProcessService {
         eventPublisher.expireChatRoom();
     }
 
-    private void saveMatchingResult(final MatchingRound matchingRound, final List<Participant> participants) {
-        participants.stream()
-                .flatMap(participant -> participant.partners().stream()
-                        .map(partner -> MatchingResult.from(matchingRound, participant, partner)))
-                .forEach(this::matchBetween);
-        participants.stream()
-                .filter(participant -> !participant.hasPartner())
-                .forEach(Participant::expireMatch);
-        if (hasMatchedParticipants(participants)) {
-            eventPublisher.createChatRoom(participants);
-            eventPublisher.sendNotification(participants);
-        }
-    }
-
     private boolean hasMatchedParticipants(List<Participant> participants) {
         return !participants.stream().filter(Participant::hasPartner).toList().isEmpty();
-    }
-
-    private void checkHasApplied(final List<MatchingResult> matchingResults) {
-        if (matchingResults.isEmpty()) {
-            throw new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO);
-        }
-    }
-
-    private MatchingRound getCurrentRound() {
-        return matchingRoundRepository.findCurrentRound()
-                .orElseThrow(()-> new RestApiException(MatchingError.NOT_FOUND_MATCHING_ROUND));
-    }
-
-    private Member getMember(LoginMember loginMember) {
-        return memberRepository.findById(loginMember.memberId())
-                .orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
     private List<MatchingApplication> getMatchingApplications(final MatchingRound matchingRound) {
@@ -172,11 +162,10 @@ public class MatchingProcessService {
     }
 
     private List<Block> getBlockListByMatchingApplications(final List<MatchingApplication> matchingApplications) {
-        List<Block> blockHistory = matchingApplications.stream()
+        return matchingApplications.stream()
                 .map(MatchingApplication::getMember)
                 .flatMap(member -> getBlockListByBlockingMembers(member).stream())
                 .toList();
-        return blockHistory;
     }
 
     private List<Block> getBlockListByBlockingMembers(final Member blockingMember) {
@@ -186,12 +175,5 @@ public class MatchingProcessService {
     private void matchBetween(final MatchingResult matchingResult) {
         matchingResultRepository.save(matchingResult);
         matchingResult.matchEach();
-    }
-
-    private MatchingOperateRequest createOperateRequest(final MatchingRound matchingRound) {
-        List<MatchingApplication> matchingApplications = getMatchingApplications(matchingRound);
-        List<MatchingResult> previousMatchingResult = getPreviousMatchingResults();
-        List<Block> participantBlockHistory = getBlockListByMatchingApplications(matchingApplications);
-        return MatchingOperateRequest.of(matchingApplications, previousMatchingResult, participantBlockHistory);
     }
 }

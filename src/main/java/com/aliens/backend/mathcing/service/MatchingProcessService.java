@@ -90,7 +90,6 @@ public class MatchingProcessService {
 
         if (hasMatchedParticipants(participants)) {
             eventPublisher.createChatRoom(participants);
-            eventPublisher.sendNotification(participants);
         }
     }
 

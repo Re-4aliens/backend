@@ -12,6 +12,7 @@ import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.event.MatchingEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -39,7 +40,8 @@ public class MatchingRoundService {
     }
 
     @Scheduled(cron = "${matching.round.update-date}")
-    private void saveMatchRound() {
+    @Transactional
+    public void saveMatchRound() {
         MatchingRound matchingRound = MatchingRound.from(LocalDateTime.now(clock), matchingTimeProperties);
         matchingRoundRepository.save(matchingRound);
 
@@ -50,7 +52,9 @@ public class MatchingRoundService {
         List<MatchingResult> previousMatchingResults = findPreviousMatchingResults();
         MatchingResultGroup matchingResultGroup = MatchingResultGroup.of(previousMatchingResults);
         Set<Member> matchedMemberSet = matchingResultGroup.getMatchedMemberSet();
-        eventPublisher.sendMatchedNotification(matchedMemberSet);
+        if (!matchedMemberSet.isEmpty()) {
+            eventPublisher.sendMatchedNotification(matchedMemberSet);
+        }
     }
 
     private List<MatchingResult> findPreviousMatchingResults() {

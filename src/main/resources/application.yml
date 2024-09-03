@@ -1,18 +1,4 @@
 spring:
-  jpa:
-    show_sql: false
-    hibernate:
-      ddl-auto: none
-      naming:
-        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
-    defer-datasource-initialization: true
-
   profiles:
     include: secret, matching
 
@@ -25,5 +11,3 @@ websocket:
   endpoint: /ws
   topic: /room
   request: /chat
-
-

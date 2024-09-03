@@ -15,8 +15,6 @@ import com.aliens.backend.board.domain.repository.custom.CommentCustomRepository
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.BoardError;
 import com.aliens.backend.global.response.error.MemberError;
-import com.aliens.backend.notification.controller.dto.NotificationRequest;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +28,14 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final CommentCustomRepository commentCustomRepository;
-    private final ApplicationEventPublisher eventPublisher;
+    private final CommentEventPublisher eventPublisher;
 
 
-    public CommentService(final CommentRepository commentRepository, final MemberRepository memberRepository, final BoardRepository boardRepository, final CommentCustomRepository commentCustomRepository, final ApplicationEventPublisher eventPublisher) {
+    public CommentService(final CommentRepository commentRepository,
+                          final MemberRepository memberRepository,
+                          final BoardRepository boardRepository,
+                          final CommentCustomRepository commentCustomRepository,
+                          final CommentEventPublisher eventPublisher) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.boardRepository = boardRepository;
@@ -46,27 +48,19 @@ public class CommentService {
                                   final LoginMember loginMember) {
         Member member = getMember(loginMember);
         Board board = findBoard(request.boardId());
+
         Comment comment = Comment.parentOf(request.content(), board, member);
         board.addComment(comment);
 
         commentRepository.save(comment);
 
         if(!comment.isWriter(board.getWriterId())) {
-            sendParentCommentNotification(board, request);
+            eventPublisher.sendParentCommentNotification(board, request);
         }
     }
 
-    private void sendParentCommentNotification(Board board,
-                                               ParentCommentCreateRequest request) {
-        eventPublisher.publishEvent(new NotificationRequest(
-                board.getCategory(),
-                board.getId(),
-                "\"" + request.content() + "\" 라는 댓글이 달렸습니다.",
-                List.of(board.getWriterId())));
-    }
-
     private Board findBoard(final Long boardId) {
-        return boardRepository.findById(boardId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+        return boardRepository.findById(boardId).orElseThrow(() -> new RestApiException(BoardError.INVALID_BOARD_ID));
     }
 
     private Member getMember(final LoginMember loginMember) {
@@ -78,7 +72,7 @@ public class CommentService {
                                  final LoginMember loginMember) {
         Member member = getMember(loginMember);
         Board board = findBoard(request.boardId());
-        Comment parentComment = commentRepository.findById(request.parentCommentId()).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+        Comment parentComment = findComment(request);
 
         Comment childComment = Comment.childOf(request, board, member);
         board.addComment(childComment);
@@ -86,18 +80,12 @@ public class CommentService {
         commentRepository.save(childComment);
 
         if(!parentComment.isWriter(member.getId())) {
-            sendChildCommentNotification(board, request, parentComment.getWriterId());
+            eventPublisher.sendChildCommentNotification(board, request, parentComment.getWriterId());
         }
     }
 
-    private void sendChildCommentNotification(Board board,
-                                              ChildCommentCreateRequest request,
-                                              Long parentCommentMemberId) {
-        eventPublisher.publishEvent(new NotificationRequest(
-                board.getCategory(),
-                board.getId(),
-                "\"" + request.content() + "\" 라는 댓글이 달렸습니다.",
-                List.of(board.getWriterId(), parentCommentMemberId)));
+    private Comment findComment(ChildCommentCreateRequest request) {
+        return commentRepository.findById(request.parentCommentId()).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
     @Transactional(readOnly = true)
@@ -108,12 +96,19 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsByBoardId(final Long boardId) {
         List<Comment> comments = commentCustomRepository.getCommentsByBoardId(boardId);
-        ArrayList<CommentResponse> result = new ArrayList<>();
 
+        ArrayList<CommentResponse> result = new ArrayList<>();
+        sortComments(comments, result);
+
+        return result;
+    }
+
+    private void sortComments(List<Comment> comments, ArrayList<CommentResponse> result) {
         for(Comment comment : comments) {
             if (!comment.isParent()){
                 continue;
             }
+
             CommentResponse parentComment = comment.getCommentResponse();
 
             List<CommentResponse> childrenComment = comments.stream()
@@ -121,15 +116,14 @@ public class CommentService {
                     .map(Comment::getCommentResponse)
                     .toList();
 
-            if(isNotEmtyChildren(childrenComment)) {
+            if(isNotEmptyChildren(childrenComment)) {
                 parentComment.setChildren(childrenComment);
             }
             result.add(parentComment);
         }
-        return result;
     }
 
-    private boolean isNotEmtyChildren(final List<CommentResponse> childrenComment) {
+    private boolean isNotEmptyChildren(final List<CommentResponse> childrenComment) {
         return childrenComment != null && !childrenComment.isEmpty();
     }
 

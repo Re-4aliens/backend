@@ -28,34 +28,20 @@ import org.springframework.test.web.servlet.MockMvc;
 @ActiveProfiles("test")
 public abstract class BaseRestDocsTest {
 
-    @SpyBean
-    protected ChatController chatController;
-    @SpyBean
-    protected AuthController authController;
-    @SpyBean
-    protected ChatReportController chatReportController;
-    @SpyBean
-    protected MemberController memberController;
-    @SpyBean
-    protected EmailController emailController;
-    @SpyBean
-    protected BlockController blockController;
-    @SpyBean
-    protected BoardController boardController;
-    @SpyBean
-    protected CommentController commentController;
-    @SpyBean
-    protected GreatController greatController;
-    @SpyBean
-    protected MarketController marketBoardController;
-    @SpyBean
-    protected NotificationController notificationController;
+    @SpyBean protected ChatController chatController;
+    @SpyBean protected AuthController authController;
+    @SpyBean protected ChatReportController chatReportController;
+    @SpyBean protected MemberController memberController;
+    @SpyBean protected EmailController emailController;
+    @SpyBean protected BlockController blockController;
+    @SpyBean protected BoardController boardController;
+    @SpyBean protected CommentController commentController;
+    @SpyBean protected GreatController greatController;
+    @SpyBean protected MarketController marketBoardController;
+    @SpyBean protected NotificationController notificationController;
 
-
-    @Autowired
-    protected MockMvc mockMvc;
-    @Autowired
-    protected DummyGenerator dummyGenerator;
+    @Autowired protected MockMvc mockMvc;
+    @Autowired protected DummyGenerator dummyGenerator;
 
     protected Member member;
     protected String GIVEN_ACCESS_TOKEN;

@@ -32,20 +32,8 @@ public class MatchingRound {
         return round;
     }
 
-    public LocalDateTime getRequestStartTime() {
-        return requestStartTime;
-    }
-
-    public LocalDateTime getRequestEndTime() {
-        return requestEndTime;
-    }
-
     public LocalDateTime getValidStartTime() {
         return validStartTime;
-    }
-
-    public LocalDateTime getValidEndTime() {
-        return validEndTime;
     }
 
     public DayOfWeek getDayOfWeek() {
@@ -89,5 +77,9 @@ public class MatchingRound {
                 ", validStartTime=" + validStartTime +
                 ", validEndTime=" + validEndTime +
                 '}';
+    }
+
+    public boolean isFirstTime() {
+        return round == 1;
     }
 }

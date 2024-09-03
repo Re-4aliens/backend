@@ -5,8 +5,6 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.business.model.Language;
-import com.aliens.backend.mathcing.controller.MatchingApplicationController;
-import com.aliens.backend.mathcing.controller.MatchingProcessController;
 import com.aliens.backend.mathcing.controller.dto.request.MatchingApplicationRequest;
 import com.aliens.backend.mathcing.service.MatchingApplicationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,8 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class MatchingRestDocsTest extends BaseRestDocsTest {
     @Autowired MockClock mockClock;
-    @Autowired MatchingApplicationController matchingApplicationController;
-    @Autowired MatchingProcessController matchingProcessController;
     @Autowired MatchingApplicationService matchingApplicationService;
 
     String baseUrl = "/matchings";
@@ -107,6 +103,7 @@ class MatchingRestDocsTest extends BaseRestDocsTest {
         List<Member> members = dummyGenerator.generateMultiMember(10);
         dummyGenerator.generateAppliersToMatch(members);
         dummyGenerator.operateMatching();
+        dummyGenerator.generateMatchingRound(MockTime.TUESDAY);
 
         // when & then
         mockMvc.perform(get(baseUrl + "/partners")

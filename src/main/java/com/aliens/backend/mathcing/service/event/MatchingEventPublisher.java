@@ -1,5 +1,6 @@
 package com.aliens.backend.mathcing.service.event;
 
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomCreationEvent;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomExpireEvent;
 import com.aliens.backend.chat.service.model.MemberPair;
@@ -31,10 +32,8 @@ public class MatchingEventPublisher {
         eventPublisher.publishEvent(new ChatRoomExpireEvent());
     }
 
-    public void sendNotification(List<Participant> participants) {
-        List<Participant> participantsHasPartner = participants.stream()
-                .filter(Participant::hasPartner).toList();
-        MulticastMessage multicastMessage = MatchingNotificationMessage.createMulticastMessage(participantsHasPartner);
+    public void sendMatchedNotification(Set<Member> members) {
+        MulticastMessage multicastMessage = MatchingNotificationMessage.createMulticastMessage(members);
         eventPublisher.publishEvent(multicastMessage);
     }
 }

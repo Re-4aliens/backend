@@ -98,7 +98,14 @@ public class MatchingProcessService {
     public List<MatchingResultResponse> findMatchingResult(final LoginMember loginMember) {
         MatchingRound currentRound = getCurrentRound();
         List<MatchingResult> matchingResults = getMatchingResults(currentRound, loginMember);
+        checkIsNotApplied(matchingResults);
         return makePartnerInfos(loginMember, matchingResults);
+    }
+
+    private void checkIsNotApplied(List<MatchingResult> matchingResults) {
+        if(matchingResults == null || matchingResults.isEmpty()) {
+            throw new RestApiException(MatchingError.NOT_FOUND_MATCHING_APPLICATION_INFO);
+        }
     }
 
     private List<MatchingResult> getMatchingResults(final MatchingRound matchingRound, final LoginMember loginMember) {
@@ -107,6 +114,7 @@ public class MatchingProcessService {
         if(!matchingRound.isFirstTime()) {
             round = matchingRound.getPreviousRound();
         }
+        System.out.println("엥 몇라운드인데 : " + round);
 
         return matchingResultRepository.findAllByMatchingRoundAndMemberId(round, loginMember.memberId());
     }

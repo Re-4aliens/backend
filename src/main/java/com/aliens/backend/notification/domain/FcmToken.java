@@ -44,11 +44,7 @@ public class FcmToken {
         return isAccepted;
     }
 
-    public void unAccepted() {
-        isAccepted = false;
-    }
-
-    public void accept() {
-        isAccepted = true;
+    public void changeAccept(Boolean decision) {
+        this.isAccepted = decision;
     }
 }

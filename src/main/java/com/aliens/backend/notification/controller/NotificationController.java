@@ -38,7 +38,7 @@ public class NotificationController {
 
         return SuccessResponse.of(
                 NotificationSuccess.GET_FCM_STATUS_SUCCESS,
-                notificationService.getFcmstatus(loginMember)
+                notificationService.getStatus(loginMember)
         );
     }
 

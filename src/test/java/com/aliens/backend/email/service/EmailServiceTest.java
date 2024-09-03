@@ -68,8 +68,8 @@ class EmailServiceTest extends BaseIntegrationTest {
     @DisplayName("이메일 검증")
     void authenticateEmailTest() throws Exception {
         //Given
-        Long entityId = emailAuthenticationRepository.save(emailEntity).getId();
-        String token = symmetricKeyEncoder.encrypt(String.valueOf(entityId));
+        emailAuthenticationRepository.save(emailEntity);
+        String token = symmetricKeyEncoder.encrypt(givenEmail);
 
         //When
         String result = emailService.authenticateEmail(token);

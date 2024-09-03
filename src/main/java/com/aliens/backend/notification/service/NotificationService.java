@@ -4,6 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.global.exception.RestApiException;
+import com.aliens.backend.global.response.error.CommonError;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.response.error.NotificationError;
 import com.aliens.backend.notification.domain.NotificationType;
@@ -91,7 +92,7 @@ public class NotificationService {
 
             notificationRepository.save(notification);
 
-            FcmToken fcmToken = getFcmTokenByMemberId(memberId);
+            FcmToken fcmToken = getFcmTokenByMember(member);
 
             if(fcmToken.isAccepted()) {
                 tokens.add(fcmToken.getToken());
@@ -102,8 +103,8 @@ public class NotificationService {
         eventPublisher.publishEvent(multiMessage);
     }
 
-    private FcmToken getFcmTokenByMemberId(final Long memberId) {
-        return fcmTokenRepository.findById(memberId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+    private FcmToken getFcmTokenByMember(final Member member) {
+        return fcmTokenRepository.findByMember(member).orElseThrow(() -> new RestApiException(CommonError.FCM_MESSAGING_ERROR));
     }
 
     private MulticastMessage makeMessage(NotificationRequest request,
@@ -116,18 +117,16 @@ public class NotificationService {
                 .build();
     }
 
-    public Boolean getFcmstatus(final LoginMember loginMember) {
-        FcmToken token = getFcmTokenByMemberId(loginMember.memberId());
+    public Boolean getStatus(final LoginMember loginMember) {
+        Member member = getMember(loginMember.memberId());
+        FcmToken token = getFcmTokenByMember(member);
         return token.isAccepted();
     }
 
 
     public void changeAcceptation(final LoginMember loginMember, final Boolean decision) {
-        FcmToken token = getFcmTokenByMemberId(loginMember.memberId());
-        if(token.isAccepted()) {
-            token.accept();
-            return;
-        }
-        token.unAccepted();
+        Member member = getMember(loginMember.memberId());
+        FcmToken token = getFcmTokenByMember(member);
+        token.changeAccept(decision);
     }
 }

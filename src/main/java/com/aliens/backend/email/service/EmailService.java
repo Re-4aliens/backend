@@ -20,15 +20,13 @@ public class EmailService {
 
     private final EmailAuthenticationRepository emailAuthenticationRepository;
     private final EmailSender emailSender;
-    private final SymmetricKeyEncoder symmetricKeyEncoder;
     private final MemberRepository memberRepository;
 
     public EmailService(final EmailAuthenticationRepository emailRepository,
                         final EmailSender emailSender,
-                        final SymmetricKeyEncoder symmetricKeyEncoder, final MemberRepository memberRepository) {
+                        final MemberRepository memberRepository) {
         this.emailAuthenticationRepository = emailRepository;
         this.emailSender = emailSender;
-        this.symmetricKeyEncoder = symmetricKeyEncoder;
         this.memberRepository = memberRepository;
     }
 
@@ -50,7 +48,7 @@ public class EmailService {
         EmailAuthentication emailEntity = new EmailAuthentication(email);
         emailAuthenticationRepository.save(emailEntity);
 
-        String emailToken = symmetricKeyEncoder.encrypt(String.valueOf(emailEntity.getId()));
+        String emailToken = SymmetricKeyEncoder.encrypt(email);
         emailSender.sendAuthenticationEmail(email, emailToken);
 
         return EmailResponse.EMAIL_SEND_SUCCESS.getMessage();
@@ -70,14 +68,14 @@ public class EmailService {
 
     @Transactional
     public String authenticateEmail(final String token) {
-        Long emailEntityId = Long.valueOf(symmetricKeyEncoder.decrypt(token));
-        EmailAuthentication emailEntity = getEmailAuthentication(emailEntityId);
+        String email = SymmetricKeyEncoder.decrypt(token);
+        EmailAuthentication emailEntity = getEmailAuthenticationByEmail(email);
         emailEntity.authenticate();
         return EmailResponse.EMAIL_AUTHENTICATION_SUCCESS.getMessage();
     }
 
-    private EmailAuthentication getEmailAuthentication(final Long emailEntityId) {
-        return emailAuthenticationRepository.findById(emailEntityId).orElseThrow(() -> new RestApiException(EmailError.NULL_EMAIL));
+    private EmailAuthentication getEmailAuthenticationByEmail(final String email) {
+        return emailAuthenticationRepository.findByEmail(email).orElseThrow(() -> new RestApiException(EmailError.NULL_EMAIL));
     }
 
     @EventListener

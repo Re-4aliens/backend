@@ -37,7 +37,7 @@ public class BoardController {
     @PostMapping("/normal")
     public SuccessResponse<?> createBoard(@Login final LoginMember loginMember,
                                        @RequestPart final BoardCreateRequest request,
-                                       @RequestPart final List<MultipartFile> boardImages) {
+                                       @RequestPart(required = false) final List<MultipartFile> boardImages) {
         boardService.postNormalBoard(request, boardImages, loginMember);
         return SuccessResponse.of(BoardSuccess.POST_BOARD_SUCCESS);
     }

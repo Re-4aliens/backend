@@ -38,7 +38,7 @@ public class MarketController {
     }
 
     @GetMapping
-    public SuccessResponse<?> getMarketBoardPage(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
+    public SuccessResponse<?> getMarketBoardPage(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return SuccessResponse.of(MarketBoardSuccess.GET_MARKET_BOARD_PAGE_SUCCESS,
                 boardReadService.getMarketBoardPage(pageable));
     }
@@ -51,7 +51,7 @@ public class MarketController {
 
     @GetMapping("/search")
     public SuccessResponse<?> searchMarketBoards(@RequestParam("search-keyword") final String searchKeyword,
-                                                     @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
+                                                     @PageableDefault(sort = "id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return SuccessResponse.of(MarketBoardSuccess.SEARCH_MARKET_BOARD_SUCCESS,
                 boardReadService.searchMarketBoardPage(searchKeyword, pageable));
     }

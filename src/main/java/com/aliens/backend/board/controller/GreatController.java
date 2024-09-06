@@ -33,7 +33,7 @@ public class GreatController {
 
     @GetMapping("/great/my-board")
     public SuccessResponse<List<BoardResponse>> getAllGreatBoards(@Login final LoginMember loginMember,
-                                                                  @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
+                                                                  @PageableDefault(sort = "id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return SuccessResponse.of(GreatSuccess.GET_ALL_GREAT_BOARDS_SUCCESS,
                 greatService.getGreatBoardPage(loginMember, pageable));
     }

@@ -46,10 +46,6 @@ public record Participant(
         return partners.size();
     }
 
-    public String getFcmToken() {
-        return member().getFcmToken();
-    }
-
     public void addPartner(Relationship relationship, Participant participant) {
         partners.add(Partner.of(relationship, participant.member));
     }

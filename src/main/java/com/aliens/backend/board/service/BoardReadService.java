@@ -71,4 +71,9 @@ public class BoardReadService {
         BoardCategory boardCategory = BoardCategory.from(category);
         return boardCustomRepository.searchBoardPageWithKeywordAndCategory(searchKeyword, boardCategory, pageable);
     }
+
+    public BoardResponse getSingleBoard(Long id) {
+        Board board = getBoard(id);
+        return board.getBoardResponse();
+    }
 }

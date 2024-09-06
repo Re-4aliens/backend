@@ -43,6 +43,12 @@ public class BoardController {
     }
 
     @GetMapping
+    public SuccessResponse<BoardResponse> getSingleBoard(@RequestParam("boardId") final Long id) {
+        return SuccessResponse.of(BoardSuccess.GET_ALL_BOARDS_SUCCESS,
+                boardReadService.getSingleBoard(id));
+    }
+
+    @GetMapping
     public SuccessResponse<List<BoardResponse>> getAllBoards(@PageableDefault(sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable) {
         return SuccessResponse.of(BoardSuccess.GET_ALL_BOARDS_SUCCESS,
                 boardReadService.getBoardPage(pageable));

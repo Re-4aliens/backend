@@ -43,7 +43,7 @@ public class CommentController {
 
     @GetMapping("/comments/my-boards")
     public SuccessResponse<List<BoardResponse>> getPageMyCommentedBoards(@Login final LoginMember loginMember,
-                                                                         @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) final Pageable pageable) {
+                                                                         @PageableDefault(sort = "id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return SuccessResponse.of(CommentSuccess.GET_MY_COMMENTED_BOARD_PAGE_SUCCESS,
                 commentService.getCommentedBoardPage(loginMember, pageable));
     }

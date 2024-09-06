@@ -82,7 +82,7 @@ class BoardRestDocsTest extends BaseRestDocsTest {
     @DisplayName("API - 전체 게시글 조회")
     void getAllBoardsTest() throws Exception {
         // Given
-        final Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "boardId"));
+        final Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
         final List<BoardResponse> boardResponses = List.of(
                 createBoardResponse(),
                 createBoardResponse());

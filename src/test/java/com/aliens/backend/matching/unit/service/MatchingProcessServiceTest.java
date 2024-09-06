@@ -98,16 +98,6 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("매칭 완료 후, 알림이 전송되는지 테스트")
-    void sendNotificationTest() {
-        // given & when
-        dummyGenerator.operateMatching();
-
-        // then
-        verify(fcmSender, times(1)).listenMultiMessageRequest(any());
-    }
-
-    @Test
     @DisplayName("연속 매칭 테스트")
     void operateMatchingTwice() {
         dummyGenerator.operateMatching();

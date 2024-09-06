@@ -94,7 +94,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
     @DisplayName("API - 장터 게시글 조회")
     void getAllBoardsTest() throws Exception {
         // Given
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
         List<MarketBoardResponse> markets = List.of(
                 createMarketBoardResponse(),
                 createMarketBoardResponse());

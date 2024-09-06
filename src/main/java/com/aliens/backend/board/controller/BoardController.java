@@ -42,35 +42,41 @@ public class BoardController {
         return SuccessResponse.of(BoardSuccess.POST_BOARD_SUCCESS);
     }
 
+    @GetMapping("/normal")
+    public SuccessResponse<BoardResponse> getSingleBoard(@RequestParam("boardId") final Long id) {
+        return SuccessResponse.of(BoardSuccess.GET_ALL_BOARDS_SUCCESS,
+                boardReadService.getSingleBoard(id));
+    }
+
     @GetMapping
-    public SuccessResponse<List<BoardResponse>> getAllBoards(@PageableDefault(sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable) {
+    public SuccessResponse<List<BoardResponse>> getAllBoards(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         return SuccessResponse.of(BoardSuccess.GET_ALL_BOARDS_SUCCESS,
                 boardReadService.getBoardPage(pageable));
     }
 
     @GetMapping("/category")
     public SuccessResponse<List<BoardResponse>> getAllBoardsWithCategory(@RequestParam final String category,
-                                                                         @PageableDefault(sort = "boardId", direction = Sort.Direction.DESC) final Pageable pageable) {
+                                                                         @PageableDefault(sort = "id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return SuccessResponse.of(BoardSuccess.GET_ALL_BOARDS_WITH_CATEGORY_SUCCESS,
                 boardReadService.getBoardPageWithCategory(category,pageable));
     }
 
     @GetMapping("/search")
     public SuccessResponse<List<BoardResponse>> searchAllBoardPage(@RequestParam("search-keyword") final String searchKeyword,
-                                                                   @PageableDefault(sort = "boardId", direction = Sort.Direction.DESC) final Pageable pageable) {
+                                                                   @PageableDefault(sort = "id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return SuccessResponse.of(BoardSuccess.SEARCH_ALL_BOARDS_SUCCESS,
                 boardReadService.searchBoardPageWithKeyword(searchKeyword,pageable));
     }
 
     @GetMapping("/announcements")
-    public SuccessResponse<List<BoardResponse>> getAllAnnouncementBoards(@PageableDefault(sort = "boardId", direction = Sort.Direction.DESC) final Pageable pageable) {
+    public SuccessResponse<List<BoardResponse>> getAllAnnouncementBoards(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return SuccessResponse.of(BoardSuccess.GET_ALL_ANNOUNCEMENT_BOARDS_SUCCESS,
                 boardReadService.getAnnouncePage(pageable));
     }
 
     @GetMapping("/writes")
     public SuccessResponse<List<BoardResponse>> getPageMyBoards(@Login LoginMember loginMember,
-                                                                @PageableDefault(sort = "boardId", direction = Sort.Direction.DESC) final Pageable pageable) {
+                                                                @PageableDefault(sort = "id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return SuccessResponse.of(BoardSuccess.GET_MY_BOARD_PAGE_SUCCESS,
                 boardReadService.getMyBoardPage(loginMember, pageable));
     }
@@ -78,7 +84,7 @@ public class BoardController {
     @GetMapping("/category/search")
     public SuccessResponse<List<BoardResponse>> searchBoardsWithCategory(@RequestParam("search-keyword") final String searchKeyword,
                                                                          @RequestParam("category") final String category,
-                                                                         @PageableDefault(sort = "boardId", direction = Sort.Direction.DESC) final Pageable pageable) {
+                                                                         @PageableDefault(sort = "id", direction = Sort.Direction.DESC) final Pageable pageable) {
         return SuccessResponse.of(BoardSuccess.SEARCH_BOARD_WITH_CATEGORY_SUCCESS,
                 boardReadService.searchBoardPageWithKeywordAndCategory(searchKeyword, category, pageable));
     }

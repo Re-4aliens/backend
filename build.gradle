@@ -72,6 +72,9 @@ dependencies {
     implementation 'ch.qos.logback.contrib:logback-jackson:0.1.5'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'net.logstash.logback:logstash-logback-encoder:7.3'
+
+    // AOP
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 def querydslDir = "build/generated/querydsl"

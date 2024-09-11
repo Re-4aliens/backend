@@ -46,4 +46,10 @@ public class ChatRoom {
     public void block() {
         this.status = ChatRoomStatus.BLOCKED;
     }
+
+    public static ChatRoom createOpenChatroom(MemberPair pair) {
+        ChatRoom c = createChatRoom(pair);
+        c.status = ChatRoomStatus.OPENED;
+        return c;
+    }
 }

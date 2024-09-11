@@ -41,7 +41,7 @@ public class CustomMessageRepositoryImpl implements CustomMessageRepository {
     public List<Message> findMessages(Long chatRoomID, String lastMessageId) {
         Query query = new Query(
                 Criteria.where("roomId").is(chatRoomID)
-        ).with(Sort.by(Sort.Direction.DESC, "_id")).limit(100); // "_id"를 사용하여 정렬
+        ).with(Sort.by(Sort.Direction.DESC, "_id")).limit(100);
 
         if (lastMessageId != null) {
             query.addCriteria(Criteria.where("_id").lt(new ObjectId(lastMessageId)));
@@ -51,15 +51,29 @@ public class CustomMessageRepositoryImpl implements CustomMessageRepository {
     }
 
     @Override
-    public List<ChatMessageSummary> aggregateMessageSummaries(List<Long> chatRoomIds, Long memberId) {
-        AggregationOperation match = Aggregation.match(Criteria.where("roomId").in(chatRoomIds));
+    public List<ChatMessageSummary> aggregateMessageSummaries(List<Long> roomIds, Long memberId) {
+        Criteria matchCriteria = Criteria.where("roomId").in(roomIds);
+        AggregationOperation match = Aggregation.match(matchCriteria);
+
+        AggregationOperation sort = Aggregation.sort(Sort.Direction.DESC, "sendTime");
+
         AggregationOperation group = Aggregation.group("roomId")
-                .last("roomId").as("roomId")
-                .last("content").as("lastMessageContent")
-                .last("sendTime").as("lastMessageTime")
-                .sum(ConditionalOperators.when(Criteria.where("receiverId").is(memberId).and("isRead").is(false)).then(1).otherwise(0)).as("numberOfUnreadMessages");
-        Aggregation aggregation = Aggregation.newAggregation(match, group);
-        AggregationResults<ChatMessageSummary> results = mongoTemplate.aggregate(aggregation, "message", ChatMessageSummary.class);
+                .first("roomId").as("roomId")
+                .first("content").as("lastMessageContent")
+                .first("sendTime").as("lastMessageTime")
+                .sum(ConditionalOperators
+                        .when(new Criteria().andOperator(
+                                Criteria.where("receiverId").is(memberId),
+                                Criteria.where("isRead").is(false)
+                        ))
+                        .then(1)
+                        .otherwise(0))
+                .as("numberOfUnreadMessages");
+
+        Aggregation aggregation = Aggregation.newAggregation(match, sort, group);
+
+        AggregationResults<ChatMessageSummary> results = mongoTemplate.aggregate(
+                aggregation, "message", ChatMessageSummary.class);
         return new ArrayList<>(results.getMappedResults());
     }
 }

@@ -1,6 +1,6 @@
 package com.aliens.backend.mathcing.service.model;
 
-import com.aliens.backend.chat.service.model.MemberPair;
+import com.aliens.backend.chat.domain.model.MemberPair;
 import com.aliens.backend.mathcing.business.model.Participant;
 import com.aliens.backend.mathcing.domain.MatchingResult;
 

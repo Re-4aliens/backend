@@ -1,7 +1,7 @@
 package com.aliens.backend.chat.domain.repository;
 
 import com.aliens.backend.chat.domain.Message;
-import com.aliens.backend.chat.service.model.ChatMessageSummary;
+import com.aliens.backend.chat.domain.model.ChatMessageSummary;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

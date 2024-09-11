@@ -1,7 +1,7 @@
 package com.aliens.backend.chat.domain.repository;
 
 import com.aliens.backend.chat.domain.Message;
-import com.aliens.backend.chat.service.model.ChatMessageSummary;
+import com.aliens.backend.chat.domain.model.ChatMessageSummary;
 
 import java.util.List;
 

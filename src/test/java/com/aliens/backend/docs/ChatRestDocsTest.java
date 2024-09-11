@@ -6,7 +6,7 @@ import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.ChatRoomStatus;
 import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.domain.MessageType;
-import com.aliens.backend.chat.service.model.ChatMessageSummary;
+import com.aliens.backend.chat.domain.model.ChatMessageSummary;
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.ChatSuccess;
 import org.junit.jupiter.api.DisplayName;
@@ -36,8 +36,8 @@ class ChatRestDocsTest extends BaseRestDocsTest {
         MessageSendRequest request1 = new MessageSendRequest(MessageType.NORMAL, "first message", chatRoomId, 101L, 102L);
         MessageSendRequest request2 = new MessageSendRequest(MessageType.NORMAL, "Second message", chatRoomId, 101L, 102L);
 
-        Message message1 = Message.of(request1);
-        Message message2 = Message.of(request2);
+        Message message1 = Message.from(request1);
+        Message message2 = Message.from(request2);
 
         List<Message> result = Arrays.asList(message1, message2);
 

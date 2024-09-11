@@ -4,7 +4,8 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomBlockEvent;
 import com.aliens.backend.chat.controller.dto.event.ChatRoomCreationEvent;
 import com.aliens.backend.chat.domain.ChatRoom;
-import com.aliens.backend.chat.service.model.MemberPair;
+import com.aliens.backend.chat.service.model.ChatEventListener;
+import com.aliens.backend.chat.domain.model.MemberPair;
 import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.notification.service.FcmSender;
@@ -26,6 +27,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class EventPublisherTest extends BaseIntegrationTest {
 
+    @Autowired ChatEventListener chatEventListener;
     @Autowired ApplicationEventPublisher publisher;
     @Autowired FcmSender fcmSender;
     @Autowired DummyGenerator dummyGenerator;
@@ -74,7 +76,7 @@ class EventPublisherTest extends BaseIntegrationTest {
         publisher.publishEvent(event);
 
         // Then
-        verify(chatService, times(1)).handleChatRoomCreationEvent(event);
+        verify(chatEventListener, times(1)).handleChatRoomCreationEvent(event);
     }
 
     @Test
@@ -89,7 +91,7 @@ class EventPublisherTest extends BaseIntegrationTest {
         publisher.publishEvent(event);
 
         // Then
-        verify(chatService, times(1)).handleChatRoomBlockEvent(event);
+        verify(chatEventListener, times(1)).handleChatRoomBlockEvent(event);
     }
 
     private Set<MemberPair> generateMultiMemberPair(Integer memberCount) {

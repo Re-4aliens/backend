@@ -3,8 +3,9 @@ package com.aliens.backend.global;
 import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.domain.repository.ChatRoomRepository;
 import com.aliens.backend.chat.domain.repository.MessageRepository;
-import com.aliens.backend.chat.service.ChatAuthValidator;
+import com.aliens.backend.chat.service.model.ChatAuthValidator;
 import com.aliens.backend.chat.service.ChatService;
+import com.aliens.backend.chat.service.model.ChatEventListener;
 import com.aliens.backend.notification.service.FcmSender;
 import com.aliens.backend.global.config.interceptor.ChatChannelInterceptor;
 import com.aliens.backend.uploader.AwsS3Uploader;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.doReturn;
 @ActiveProfiles("test")
 public abstract class BaseIntegrationTest {
 
+    @SpyBean protected ChatEventListener chatEventListener;
     @SpyBean protected AwsS3Uploader awsS3Uploader;
     @SpyBean protected JavaMailSender javaMailSender;
     @SpyBean protected FcmSender fcmSender;

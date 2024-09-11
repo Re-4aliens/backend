@@ -8,7 +8,7 @@ import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.domain.MessageType;
 import com.aliens.backend.chat.domain.Message;
 import com.aliens.backend.chat.service.ChatService;
-import com.aliens.backend.chat.service.model.ChatMessageSummary;
+import com.aliens.backend.chat.domain.model.ChatMessageSummary;
 import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.response.success.ChatSuccess;
@@ -36,7 +36,7 @@ class ChatServiceTest extends BaseIntegrationTest {
     void setUp() {
         receiver = dummyGenerator.generateSingleMember();;
 
-        Message message = Message.of(makeMessageSendRequest());
+        Message message = Message.from(makeMessageSendRequest());
         Date now = new Date();
         doReturn(message).when(messageRepository).save(any());
         doNothing().when(messageRepository).markMessagesAsRead(any(),any());

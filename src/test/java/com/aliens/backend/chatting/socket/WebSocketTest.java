@@ -64,7 +64,7 @@ class WebSocketTest extends BaseIntegrationTest {
     void WebSocketMessageSendingAndReceiving() throws Exception {
         // Given
         MessageSendRequest messageSendRequest = createMessageSendRequest(authorizedRoomId);
-        Message expectedMessage = Message.of(messageSendRequest);
+        Message expectedMessage = Message.from(messageSendRequest);
         setPrivateField(expectedMessage, "id", "507f1f77bcf86cd799439011");
         doReturn(expectedMessage).when(messageRepository).save(any());
 

@@ -3,7 +3,7 @@ package com.aliens.backend.global.config.interceptor;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.domain.ChatRoom;
-import com.aliens.backend.chat.service.ChatAuthValidator;
+import com.aliens.backend.chat.service.model.ChatAuthValidator;
 import com.aliens.backend.global.property.WebSocketProperties;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;

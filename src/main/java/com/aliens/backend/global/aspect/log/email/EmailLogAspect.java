@@ -23,32 +23,28 @@ public class EmailLogAspect {
     @AfterReturning(value = "com.aliens.backend.global.aspect.log.email.pointcut.EmailPointcut.duplicateCheck() " +
             "&& args(email)")
     public void logDuplicateCheck(String email) throws JsonProcessingException {
-        InfoLogResponse response =
-                InfoLogResponse.from(EmailSuccess.DUPLICATE_CHECK_SUCCESS, email);
+        InfoLogResponse response = InfoLogResponse.from(EmailSuccess.DUPLICATE_CHECK_SUCCESS, email);
         log.info(objectMapper.writeValueAsString(response));
     }
 
     @AfterReturning(value = "com.aliens.backend.global.aspect.log.email.pointcut.EmailPointcut.sendAuthenticationEmail() " +
             "&& args(email)")
     public void logSendAuthenticationEmail(String email) throws JsonProcessingException {
-        InfoLogResponse response =
-                InfoLogResponse.from(EmailSuccess.SEND_EMAIL_SUCCESS, email);
+        InfoLogResponse response = InfoLogResponse.from(EmailSuccess.SEND_EMAIL_SUCCESS, email);
         log.info(objectMapper.writeValueAsString(response));
     }
 
     @AfterReturning(value = "com.aliens.backend.global.aspect.log.email.pointcut.EmailPointcut.authenticateEmail() " +
             "&& args(token)")
     public void logAuthenticateEmail(String token) throws JsonProcessingException {
-        InfoLogResponse response =
-                InfoLogResponse.from(EmailSuccess.DUPLICATE_CHECK_SUCCESS, token);
+        InfoLogResponse response = InfoLogResponse.from(EmailSuccess.DUPLICATE_CHECK_SUCCESS, token);
         log.info(objectMapper.writeValueAsString(response));
     }
 
     @AfterReturning(value = "com.aliens.backend.global.aspect.log.email.pointcut.EmailPointcut.checkEmailAuthenticated() " +
             "&& args(email)")
     public void logCheckEmailAuthenticated(String email) throws JsonProcessingException {
-        InfoLogResponse response =
-                InfoLogResponse.from(EmailSuccess.EMAIL_AUTHENTICATE_SUCCESS, email);
+        InfoLogResponse response = InfoLogResponse.from(EmailSuccess.EMAIL_AUTHENTICATE_SUCCESS, email);
         log.info(objectMapper.writeValueAsString(response));
     }
 

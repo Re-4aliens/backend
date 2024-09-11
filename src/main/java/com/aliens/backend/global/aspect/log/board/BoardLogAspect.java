@@ -26,12 +26,9 @@ public class BoardLogAspect {
     }
 
     @AfterReturning(value = "com.aliens.backend.global.aspect.log.board.pointcut.BoardPointcut.createBoard() " +
-            "&& args(loginMember, request, ..)", argNames = "loginMember,request")
-    public void logCreateBoard(LoginMember loginMember, BoardCreateRequest request) throws JsonProcessingException {
-        Map<String, Object> data = new LinkedHashMap<>();
-        data.put("loginMember", loginMember);
-        data.put("boardTitle", request.title());
-        InfoLogResponse response = InfoLogResponse.from(BoardSuccess.POST_BOARD_SUCCESS, data);
+            "&& args(loginMember, ..)")
+    public void logCreateBoard(LoginMember loginMember) throws JsonProcessingException {
+        InfoLogResponse response = InfoLogResponse.from(BoardSuccess.POST_BOARD_SUCCESS, loginMember);
         log.info(objectMapper.writeValueAsString(response));
     }
 

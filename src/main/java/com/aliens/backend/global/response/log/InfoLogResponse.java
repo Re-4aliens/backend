@@ -22,6 +22,14 @@ public record InfoLogResponse(
                 data);
     }
 
+    public static InfoLogResponse from(SuccessCode code) {
+        return new InfoLogResponse(
+                UUID.randomUUID().toString().substring(0, 8),
+                code.getHttpStatus().toString(),
+                code.getMessage(),
+                code.getCode());
+    }
+
     public static InfoLogResponse from(ErrorCode code, Object data) {
         return new InfoLogResponse(
                 UUID.randomUUID().toString().substring(0, 8),

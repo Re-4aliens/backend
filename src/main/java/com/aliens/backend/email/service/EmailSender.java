@@ -43,7 +43,7 @@ public class EmailSender {
         try {
             javaMailSender.send(mailMessage);
 
-            InfoLogResponse response = InfoLogResponse.from(EmailSuccess.SEND_EMAIL_SUCCESS, email);
+            InfoLogResponse response = InfoLogResponse.from(EmailSuccess.FINALLY_SEND_EMAIL_SUCCESS, email);
             log.info(objectMapper.writeValueAsString(response));
         } catch (Exception exception) {
             Map<String, String> data = new LinkedHashMap<>();

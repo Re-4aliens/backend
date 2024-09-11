@@ -22,21 +22,21 @@ public class AuthLogAspect {
         this.objectMapper = objectMapper;
     }
 
-    @AfterReturning(value = "com.aliens.backend.global.aspect.log.auth.pointcut.AuthPointCut.login() " +
+    @AfterReturning(value = "com.aliens.backend.global.aspect.log.auth.pointcut.AuthPointcut.login() " +
             "&& args(loginRequest)")
     public void logLogin(LoginRequest loginRequest) throws JsonProcessingException {
         InfoLogResponse response = InfoLogResponse.from(AuthSuccess.GENERATE_TOKEN_SUCCESS, loginRequest.email());
         log.info(objectMapper.writeValueAsString(response));
     }
 
-    @AfterReturning(value = "com.aliens.backend.global.aspect.log.auth.pointcut.AuthPointCut.reissue() " +
+    @AfterReturning(value = "com.aliens.backend.global.aspect.log.auth.pointcut.AuthPointcut.reissue() " +
             "&& args(authToken)")
     public void logReissue(AuthToken authToken) throws JsonProcessingException {
         InfoLogResponse response = InfoLogResponse.from(AuthSuccess.REISSUE_TOKEN_SUCCESS, authToken);
         log.info(objectMapper.writeValueAsString(response));
     }
 
-    @AfterReturning(value = "com.aliens.backend.global.aspect.log.auth.pointcut.AuthPointCut.logout() " +
+    @AfterReturning(value = "com.aliens.backend.global.aspect.log.auth.pointcut.AuthPointcut.logout() " +
             "&& args(authToken)")
     public void logLogout(AuthToken authToken) throws JsonProcessingException {
         InfoLogResponse response = InfoLogResponse.from(AuthSuccess.LOGOUT_SUCCESS, authToken);

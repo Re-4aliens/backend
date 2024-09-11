@@ -28,6 +28,14 @@ public record InfoLogResponse(
                 code.getHttpStatus().toString(),
                 code.getMessage(),
                 data);
+
+    }
+    public static InfoLogResponse from(ErrorCode code) {
+        return new InfoLogResponse(
+                UUID.randomUUID().toString().substring(0, 8),
+                code.getHttpStatus().toString(),
+                code.getMessage(),
+                code.getDevelopCode());
     }
 
     public static InfoLogResponse from(Throwable exception, Object data) {

@@ -1,4 +1,4 @@
-package com.aliens.backend.chatting.service;
+package com.aliens.backend.chat.service;
 
 import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.auth.domain.Member;

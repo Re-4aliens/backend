@@ -25,7 +25,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private final ChatChannelInterceptor chatChannelInterceptor;
     private final ChatHandshakeInterceptor chatHandshakeInterceptor;
 
-    public WebSocketConfig(WebSocketProperties properties, ChatChannelInterceptor chatChannelInterceptor, ChatHandshakeInterceptor chatHandshakeInterceptor) {
+    public WebSocketConfig(WebSocketProperties properties,
+                           ChatChannelInterceptor chatChannelInterceptor,
+                           ChatHandshakeInterceptor chatHandshakeInterceptor) {
         this.properties = properties;
         this.chatChannelInterceptor = chatChannelInterceptor;
         this.chatHandshakeInterceptor = chatHandshakeInterceptor;

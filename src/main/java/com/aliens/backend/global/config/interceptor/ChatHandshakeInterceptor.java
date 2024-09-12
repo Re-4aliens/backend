@@ -21,7 +21,8 @@ public class ChatHandshakeInterceptor implements HandshakeInterceptor {
     private final TokenProvider tokenProvider;
     private final ChatService chatService;
 
-    public ChatHandshakeInterceptor(TokenProvider tokenProvider, @Lazy ChatService chatService) {
+    public ChatHandshakeInterceptor(TokenProvider tokenProvider,
+                                    @Lazy ChatService chatService) {
         this.tokenProvider = tokenProvider;
         this.chatService = chatService;
     }
@@ -29,19 +30,16 @@ public class ChatHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                    WebSocketHandler wsHandler, Map<String, Object> attributes) {
-
         if (request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
+
             String accessToken = servletRequest.getServletRequest().getHeader("Authorization");
             LoginMember loginMember = tokenProvider.getLoginMemberFromToken(accessToken);
 
-            if (loginMember != null) {
-                List<ChatRoom> chatRooms = chatService.getChatRooms(loginMember.memberId());
-                attributes.put("loginMember", loginMember);
-                attributes.put("chatRooms", chatRooms);
-
-                return true;
-            }
+            List<ChatRoom> chatRooms = chatService.getChatRooms(loginMember.memberId());
+            attributes.put("loginMember", loginMember);
+            attributes.put("chatRooms", chatRooms);
+            return true;
         }
         return false;
     }

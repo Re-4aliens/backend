@@ -36,11 +36,13 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
         if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
             chatAuthValidator.validateRoomFromTopic(accessor.getDestination(), chatRooms);
         }
+
         if(StompCommand.SEND.equals(accessor.getCommand())){
             if(accessor.getDestination().equals(properties.getAppDestinationPrefix() +"/send")){
                 MessageSendRequest messageSendRequest = (MessageSendRequest) messageConverter.fromMessage(message, MessageSendRequest.class);
                 chatAuthValidator.validateRoom(messageSendRequest.roomId(), chatRooms);
             }
+
             if(accessor.getDestination().equals(properties.getAppDestinationPrefix() +"/read")){
                 ReadRequest readRequest = (ReadRequest) messageConverter.fromMessage(message, ReadRequest.class);
                 chatAuthValidator.validateRoom(readRequest.roomId(), chatRooms);

@@ -35,7 +35,6 @@ public abstract class BaseIntegrationTest {
     @SpyBean protected JavaMailSender javaMailSender;
     @SpyBean protected FcmSender fcmSender;
     @SpyBean protected MessageRepository messageRepository;
-    @SpyBean protected ChatRoomRepository chatRoomRepository;
     @SpyBean protected ChatService chatService;
     @SpyBean protected ChatController chatController;
     @SpyBean protected ChatChannelInterceptor chatChannelInterceptor;
@@ -49,14 +48,16 @@ public abstract class BaseIntegrationTest {
         doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
 
         //FCM
-        doNothing().when(fcmSender).listenMultiMessageRequest(any(MulticastMessage.class));
-        doNothing().when(fcmSender).listenSingleMessageRequest(any(Message.class));
+        doNothing().when(fcmSender).sendChatMessage(any());
+        doNothing().when(fcmSender).sentMatchingNotification(any());
+        doNothing().when(fcmSender).sendBoardNotification(any(),any());
 
         //AWS
         S3File tmpFile = new S3File(DummyGenerator.GIVEN_FILE_NAME, DummyGenerator.GIVEN_FILE_URL);
         doReturn(tmpFile).when(awsS3Uploader).singleUpload(any(MultipartFile.class));
         doReturn(true).when(awsS3Uploader).delete(any());
         doReturn(List.of(tmpFile)).when(awsS3Uploader).multiUpload(any());
+
     }
 
     @AfterEach

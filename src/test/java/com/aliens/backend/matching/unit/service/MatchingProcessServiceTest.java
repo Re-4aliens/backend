@@ -41,7 +41,6 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 class MatchingProcessServiceTest extends BaseIntegrationTest {
     @Autowired MatchingProcessService matchingProcessService;
     @Autowired MatchingRoundRepository matchingRoundRepository;
-    @Autowired MatchingTimeProperties matchingTimeProperties;
     @Autowired MatchingResultRepository matchingResultRepository;
     @Autowired BlockRepository blockRepository;
     @Autowired MemberRepository memberRepository;

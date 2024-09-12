@@ -33,7 +33,7 @@ import com.aliens.backend.member.domain.repository.MemberInfoRepository;
 import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.domain.FcmToken;
-import com.aliens.backend.notification.domain.FcmTokenRepository;
+import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.aliens.backend.notification.domain.Notification;
 import com.aliens.backend.notification.domain.repository.NotificationRepository;
 import com.aliens.backend.uploader.dto.S3File;
@@ -140,10 +140,10 @@ public class DummyGenerator {
     }
 
     private void saveAsMemberInfo(final Member member) {
-        EncodedMember encodedRequest = new EncodedMember(encoder.encrypt(GIVEN_GENDER),
-                encoder.encrypt(GIVEN_MBTI),
-                encoder.encrypt(GIVEN_BIRTHDAY),
-                encoder.encrypt(GIVEN_ABOUT_ME));
+        EncodedMember encodedRequest = new EncodedMember(SymmetricKeyEncoder.encrypt(GIVEN_GENDER),
+                SymmetricKeyEncoder.encrypt(GIVEN_MBTI),
+                SymmetricKeyEncoder.encrypt(GIVEN_BIRTHDAY),
+                SymmetricKeyEncoder.encrypt(GIVEN_ABOUT_ME));
 
         MemberInfo memberInfo = MemberInfo.of(encodedRequest, member);
         memberInfoRepository.save(memberInfo);

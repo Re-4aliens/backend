@@ -9,7 +9,6 @@ import com.aliens.backend.global.response.error.MatchingError;
 import com.aliens.backend.matching.util.time.MockClock;
 import com.aliens.backend.matching.util.time.MockTime;
 import com.aliens.backend.mathcing.domain.MatchingRound;
-import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingRoundService;
 import org.junit.jupiter.api.DisplayName;
@@ -18,9 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Clock;
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +28,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 class MatchingRoundServiceTest extends BaseIntegrationTest {
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
-    @Autowired MatchingResultRepository matchingResultRepository;
+//    @Autowired MatchingResultRepository matchingResultRepository;
     @Autowired MatchingRoundService matchingRoundService;
     @Autowired DummyGenerator dummyGenerator;
     @Autowired MockClock mockClock;
@@ -86,6 +83,6 @@ class MatchingRoundServiceTest extends BaseIntegrationTest {
         matchingRoundService.saveMatchRound();
 
         // then
-        verify(fcmSender, times(1)).listenMultiMessageRequest(any());
+        verify(fcmSender, times(1)).sentMatchingNotification(any());
     }
 }

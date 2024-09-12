@@ -12,10 +12,8 @@ import com.aliens.backend.notification.domain.repository.NotificationRepository;
 import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.controller.dto.NotificationResponse;
 import com.aliens.backend.notification.domain.FcmToken;
-import com.aliens.backend.notification.domain.FcmTokenRepository;
+import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.aliens.backend.notification.domain.Notification;
-import com.google.firebase.messaging.MulticastMessage;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,17 +27,16 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final FcmTokenRepository fcmTokenRepository;
     private final MemberRepository memberRepository;
-    private final ApplicationEventPublisher eventPublisher;
+    private final FcmSender fcmSender;
 
 
     public NotificationService(final NotificationRepository notificationRepository,
                                final FcmTokenRepository fcmTokenRepository,
-                               final MemberRepository memberRepository,
-                               final ApplicationEventPublisher eventPublisher) {
+                               final MemberRepository memberRepository, FcmSender fcmSender) {
         this.notificationRepository = notificationRepository;
         this.fcmTokenRepository = fcmTokenRepository;
         this.memberRepository = memberRepository;
-        this.eventPublisher = eventPublisher;
+        this.fcmSender = fcmSender;
     }
 
     @Transactional
@@ -99,31 +96,21 @@ public class NotificationService {
             }
         }
 
-        MulticastMessage multiMessage = makeMessage(request, tokens);
-        eventPublisher.publishEvent(multiMessage);
+        fcmSender.sendBoardNotification(request,tokens);
     }
 
     private FcmToken getFcmTokenByMember(final Member member) {
         return fcmTokenRepository.findByMember(member).orElseThrow(() -> new RestApiException(CommonError.FCM_MESSAGING_ERROR));
     }
 
-    private MulticastMessage makeMessage(NotificationRequest request,
-                                         List<String> tokens) {
-
-        return MulticastMessage.builder()
-                .putData("type", NotificationType.PERSONAL.toString())
-                .putData("content", request.content())
-                .addAllTokens(tokens)
-                .build();
-    }
-
+    @Transactional(readOnly = true)
     public Boolean getStatus(final LoginMember loginMember) {
         Member member = getMember(loginMember.memberId());
         FcmToken token = getFcmTokenByMember(member);
         return token.isAccepted();
     }
 
-
+    @Transactional
     public void changeAcceptation(final LoginMember loginMember, final Boolean decision) {
         Member member = getMember(loginMember.memberId());
         FcmToken token = getFcmTokenByMember(member);

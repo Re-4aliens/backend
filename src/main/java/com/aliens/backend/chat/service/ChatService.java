@@ -11,7 +11,7 @@ import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.domain.model.ChatMessageSummary;
 import com.aliens.backend.chat.service.model.MessageSender;
 import com.aliens.backend.global.response.success.ChatSuccess;
-import com.aliens.backend.notification.service.NotificationSender;
+import com.aliens.backend.notification.service.FcmSender;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +20,16 @@ import java.util.List;
 @Service
 public class ChatService {
     private final MessageSender messageSender;
-    private final NotificationSender notificationSender;
+    private final FcmSender fcmSender;
     private final MessageRepository messageRepository;
     private final ChatRoomRepository chatRoomRepository;
 
     public ChatService(final MessageSender messageSender,
-                       final NotificationSender notificationSender,
+                       final FcmSender fcmSender,
                        final MessageRepository messageRepository,
                        final ChatRoomRepository chatRoomRepository) {
         this.messageSender = messageSender;
-        this.notificationSender = notificationSender;
+        this.fcmSender = fcmSender;
         this.messageRepository = messageRepository;
         this.chatRoomRepository = chatRoomRepository;
     }
@@ -38,7 +38,7 @@ public class ChatService {
     public String sendMessage(MessageSendRequest request) {
         Message savedMessage = saveMessage(request);
         messageSender.send(savedMessage);
-        notificationSender.send(savedMessage);
+        fcmSender.sendChatMessage(savedMessage);
         return ChatSuccess.SEND_MESSAGE_SUCCESS.getMessage();
     }
 

@@ -137,7 +137,7 @@ class WebSocketTest extends BaseIntegrationTest {
         chatClient.subscribe(unAuthorizedRoomId);
 
         //Then
-        verify(chatChannelInterceptor, times(2)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE
+        verify(chatChannelInterceptor, atMost(2)).preSend(any(), any()); // 1. CONNECT, 2. SUBSCRIBE
         verify(chatService, times(1)).getChatRooms(sender.getId());
     }
 

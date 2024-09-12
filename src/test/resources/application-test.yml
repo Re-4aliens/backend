@@ -19,4 +19,4 @@ spring:
       path: /h2-console
   data:
     mongodb:
-      uri: mongodb://localhost:27017/database?serverSelectionTimeoutMS=1000
+      uri: mongodb://localhost:27017/database?serverSelectionTimeoutMS=10000

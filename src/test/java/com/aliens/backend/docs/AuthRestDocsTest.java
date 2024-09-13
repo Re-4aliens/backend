@@ -2,7 +2,9 @@ package com.aliens.backend.docs;
 
 import com.aliens.backend.auth.controller.dto.AuthToken;
 import com.aliens.backend.auth.controller.dto.LoginRequest;
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.service.AuthService;
+import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.AuthSuccess;
 import org.junit.jupiter.api.DisplayName;
@@ -21,10 +23,10 @@ class AuthRestDocsTest extends BaseRestDocsTest {
     @Test
     @DisplayName("API - 로그인")
     void login() throws Exception {
-        final LoginRequest request = new LoginRequest("email","password");
+        final LoginRequest request = new LoginRequest(DummyGenerator.GIVEN_EMAIL, DummyGenerator.GIVEN_PASSWORD);
         final AuthToken authToken = new AuthToken("accessToken", "refreshToken");
         SuccessResponse<AuthToken> response = SuccessResponse.of(AuthSuccess.GENERATE_TOKEN_SUCCESS,authToken);
-        doReturn(response).when(authController).login(any());
+        doReturn(response).when(authController).login(request);
 
         this.mockMvc.perform(post("/authentication")
                         .content(objectMapper.writeValueAsString(request))

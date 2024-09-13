@@ -43,7 +43,6 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
                 "10000",
                 ProductQuality.BRAND_NEW);
         SuccessResponse<?> response = SuccessResponse.of(MarketBoardSuccess.CREATE_MARKET_BOARD_SUCCESS);
-        doReturn(response).when(marketBoardController).createMarketBoard(any(), any(), any());
 
         MockMultipartFile multipartFile = createMultipartFile();
         final MockMultipartFile requestMultipartFile = new MockMultipartFile("request",
@@ -52,8 +51,8 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
 
         // When & Then
         mockMvc.perform(multipart("/boards/market")
-                        .file("marketBoardImages", multipartFile.getBytes())
-                        .file("marketBoardImages", multipartFile.getBytes())
+                        .file(multipartFile)
+                        .file(multipartFile)
                         .file(requestMultipartFile)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
 
@@ -84,7 +83,7 @@ class MarketBoardRestDocsTest extends BaseRestDocsTest  {
     }
 
     private MockMultipartFile createMultipartFile() {
-        return new MockMultipartFile("boardImages",
+        return new MockMultipartFile("marketBoardImages",
                 "test-image.png",
                 "image/png",
                 "test data".getBytes());

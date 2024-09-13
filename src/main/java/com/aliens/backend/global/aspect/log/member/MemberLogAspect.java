@@ -29,7 +29,7 @@ public class MemberLogAspect {
 
     @AfterReturning(value = "com.aliens.backend.global.aspect.log.member.pointcut.MemberPointcut.signUp() " +
             "&& args(request, ..)")
-    public void logDuplicateCheck(SignUpRequest request) throws JsonProcessingException {
+    public void logSignUp(SignUpRequest request) throws JsonProcessingException {
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("email", request.email());
         data.put("name", request.name());

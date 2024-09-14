@@ -9,23 +9,19 @@
 
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <!-- MDC 포함 -->
-                <mdc/>
-
                 <!-- 로그 레벨 포함 -->
                 <logLevel>
                     <fieldName>level</fieldName>
                 </logLevel>
 
+                <!-- MDC 포함 -->
+                <mdc>
+                </mdc>
+
                 <!-- 타임스탬프 포함 -->
                 <timestamp>
                     <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSSSS</pattern>
                 </timestamp>
-
-                <!-- 쓰레드 정보 포함 -->
-                <threadName>
-                    <fieldName>thread</fieldName>
-                </threadName>
 
                 <!-- 로거 이름 포함 -->
                 <loggerName>

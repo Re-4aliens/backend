@@ -5,6 +5,7 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
+import com.aliens.backend.chat.service.model.ChatEventListener;
 import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.exception.RestApiException;
@@ -40,13 +41,12 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 class MatchingProcessServiceTest extends BaseIntegrationTest {
     @Autowired MatchingProcessService matchingProcessService;
     @Autowired MatchingRoundRepository matchingRoundRepository;
-    @Autowired MatchingTimeProperties matchingTimeProperties;
     @Autowired MatchingResultRepository matchingResultRepository;
     @Autowired BlockRepository blockRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired MockClock mockClock;
     @Autowired DummyGenerator dummyGenerator;
-
+    @Autowired ChatEventListener chatEventListener;
     List<Member> members;
 
     @BeforeEach
@@ -94,7 +94,7 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
         dummyGenerator.operateMatching();
 
         // then
-        verify(chatService, times(1)).handleChatRoomCreationEvent(any());
+        verify(chatEventListener, times(1)).handleChatRoomCreationEvent(any());
     }
 
     @Test
@@ -142,16 +142,25 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     void isBlockedMemberTest() {
         // given
         Member blockingMember = members.get(0);
-        makeThisMemberBlockAllPartner(blockingMember);
+        Member targetMember = members.get(1);
+        makeThisMemberBlockPartner(blockingMember, targetMember);
 
         // when
         dummyGenerator.operateMatching();
 
         // then
-        List<MatchingResult> matchingResults = getMatchingResultByMatchingRound(getCurrentRound());
-        List<MatchingResult> matchingResultsOfBlockingMember = matchingResults.stream()
-                .filter(matchingResult -> matchingResult.getMatchingMemberId().equals(blockingMember.getId())).toList();
-        assertThat(matchingResultsOfBlockingMember).isEmpty();
+        List<MatchingResult> myMatchingResult = getMyMatchingResult(blockingMember);
+        assertThat(myMatchingResult.stream()
+                .anyMatch(matchingResult -> matchingResult.getMatchedMember().equals(targetMember))).isFalse();
+    }
+
+    private void makeThisMemberBlockPartner(Member blockingMember, Member targetMember) {
+        Block blockRequest = Block.of(targetMember, blockingMember);
+        blockRepository.save(blockRequest);
+    }
+
+    private List<MatchingResult> getMyMatchingResult(Member member) {
+        return matchingResultRepository.findAllByMatchingRoundAndMemberId(getCurrentRound().getRound(), member.getId());
     }
 
     @Test
@@ -189,14 +198,6 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     private List<MatchingResult> getMatchingResultByMatchingRound(MatchingRound matchingRound) {
         Long round = matchingRound.getRound();
         return matchingResultRepository.findAllByRound(round);
-    }
-
-    private void makeThisMemberBlockAllPartner(Member blockingMember) {
-        for (int i = 1; i < members.size(); i++) {
-            Member blockedMember = members.get(i);
-            Block blockRequest = Block.of(blockedMember, blockingMember);
-            blockRepository.save(blockRequest);
-        }
     }
 
     private Member getMemberById(Long memberId) {

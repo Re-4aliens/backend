@@ -1,4 +1,4 @@
-package com.aliens.backend.chatting.socket;
+package com.aliens.backend.chat.socket;
 
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;

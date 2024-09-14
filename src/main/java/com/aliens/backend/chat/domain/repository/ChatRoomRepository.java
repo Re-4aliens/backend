@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
-    @Query("SELECT c FROM ChatRoom c JOIN c.participants p WHERE p.member.id = :memberId")
+    @Query("SELECT c FROM ChatRoom c JOIN c.participants p WHERE p.member.id = :memberId AND c.status = com.aliens.backend.chat.domain.ChatRoomStatus.OPENED")
     List<ChatRoom> findByMemberId(Long memberId);
 
     @Modifying

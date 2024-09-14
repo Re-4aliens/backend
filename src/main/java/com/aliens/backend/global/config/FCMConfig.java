@@ -9,8 +9,8 @@ import com.google.firebase.FirebaseOptions;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-
 import java.io.IOException;
+import java.io.InputStream;
 
 @Configuration
 public class FCMConfig{
@@ -23,16 +23,15 @@ public class FCMConfig{
 
     @PostConstruct
     public void init() {
-        try {FirebaseOptions options = FirebaseOptions.builder()
-                            .setCredentials(GoogleCredentials.
-                                    fromStream(
-                                            new ClassPathResource(fcmProperties.getLocationOfFcmJson()).getInputStream()
-                                    )
-                            )
+        try {
+            InputStream serviceAccount = new ClassPathResource(fcmProperties.getLocationOfFcmJson()).getInputStream();
+
+            FirebaseOptions options = FirebaseOptions.builder().
+                    setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
+
             if (FirebaseApp.getApps().isEmpty()) FirebaseApp.initializeApp(options);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RestApiException(CommonError.FCM_CONFIGURATION_ERROR);
         }
     }

@@ -14,6 +14,8 @@ import com.aliens.backend.board.domain.enums.BoardCategory;
 import com.aliens.backend.board.domain.enums.ProductQuality;
 import com.aliens.backend.board.domain.enums.SaleStatus;
 import com.aliens.backend.board.domain.repository.BoardRepository;
+import com.aliens.backend.email.domain.EmailAuthentication;
+import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.global.response.error.MatchingError;
@@ -33,7 +35,7 @@ import com.aliens.backend.member.domain.repository.MemberInfoRepository;
 import com.aliens.backend.member.sevice.SymmetricKeyEncoder;
 import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.domain.FcmToken;
-import com.aliens.backend.notification.domain.FcmTokenRepository;
+import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.aliens.backend.notification.domain.Notification;
 import com.aliens.backend.notification.domain.repository.NotificationRepository;
 import com.aliens.backend.uploader.dto.S3File;
@@ -62,6 +64,7 @@ public class DummyGenerator {
     @Autowired NotificationRepository notificationRepository;
     @Autowired FcmTokenRepository fcmTokenRepository;
     @Autowired TokenRepository tokenRepository;
+    @Autowired EmailAuthenticationRepository emailAuthenticationRepository;
 
     public static final String GIVEN_EMAIL = "tmp@example.com";
     public static final String GIVEN_PASSWORD = "tmpPassword";
@@ -140,10 +143,10 @@ public class DummyGenerator {
     }
 
     private void saveAsMemberInfo(final Member member) {
-        EncodedMember encodedRequest = new EncodedMember(encoder.encrypt(GIVEN_GENDER),
-                encoder.encrypt(GIVEN_MBTI),
-                encoder.encrypt(GIVEN_BIRTHDAY),
-                encoder.encrypt(GIVEN_ABOUT_ME));
+        EncodedMember encodedRequest = new EncodedMember(SymmetricKeyEncoder.encrypt(GIVEN_GENDER),
+                SymmetricKeyEncoder.encrypt(GIVEN_MBTI),
+                SymmetricKeyEncoder.encrypt(GIVEN_BIRTHDAY),
+                SymmetricKeyEncoder.encrypt(GIVEN_ABOUT_ME));
 
         MemberInfo memberInfo = MemberInfo.of(encodedRequest, member);
         memberInfoRepository.save(memberInfo);
@@ -298,5 +301,11 @@ public class DummyGenerator {
         NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, GIVEN_COMMENT_CONTENT,List.of(1L));
         Notification notification = Notification.of(request,member);
         return notificationRepository.save(notification);
+    }
+
+    public void authenticateEmail(String email) {
+        EmailAuthentication emailEntity = new EmailAuthentication(email);
+        emailEntity.authenticate();
+        emailAuthenticationRepository.save(emailEntity);
     }
 }

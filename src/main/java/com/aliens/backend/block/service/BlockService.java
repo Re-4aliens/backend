@@ -34,7 +34,7 @@ public class BlockService {
     }
 
     private void blockMember(final LoginMember loginMember, final BlockRequest blockRequest) {
-        Member blockingMember = getMember(loginMember);
+        Member blockingMember = findMemberById(loginMember.memberId());
         Member blockedMember = findMemberById(blockRequest.partnerId());
 
         Block block = Block.of(blockingMember, blockedMember);
@@ -48,9 +48,5 @@ public class BlockService {
 
     private Member findMemberById(final Long partnerId) {
         return memberRepository.findById(partnerId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
-    }
-
-    private Member getMember(final LoginMember loginMember) {
-        return memberRepository.findById(loginMember.memberId()).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 }

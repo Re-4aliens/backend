@@ -1,4 +1,4 @@
-package com.aliens.backend.chatting.socket;
+package com.aliens.backend.chat.socket;
 
 import com.aliens.backend.global.property.WebSocketProperties;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;

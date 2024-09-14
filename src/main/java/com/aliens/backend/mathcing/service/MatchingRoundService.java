@@ -10,6 +10,7 @@ import com.aliens.backend.mathcing.domain.MatchingRound;
 import com.aliens.backend.mathcing.domain.repository.MatchingResultRepository;
 import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.event.MatchingEventPublisher;
+import com.aliens.backend.notification.service.FcmSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,17 +26,19 @@ public class MatchingRoundService {
     private final MatchingResultRepository matchingResultRepository;
     private final MatchingTimeProperties matchingTimeProperties;
     private final MatchingEventPublisher eventPublisher;
+    private final FcmSender fcmSender;
     private final Clock clock;
 
     public MatchingRoundService(final MatchingRoundRepository matchingRoundRepository,
                                 final MatchingResultRepository matchingResultRepository,
                                 final MatchingTimeProperties matchingTimeProperties,
-                                final MatchingEventPublisher eventPublisher,
+                                final MatchingEventPublisher eventPublisher, FcmSender fcmSender,
                                 final Clock clock) {
         this.matchingRoundRepository = matchingRoundRepository;
         this.matchingResultRepository = matchingResultRepository;
         this.matchingTimeProperties = matchingTimeProperties;
         this.eventPublisher = eventPublisher;
+        this.fcmSender = fcmSender;
         this.clock = clock;
     }
 
@@ -53,7 +56,7 @@ public class MatchingRoundService {
         MatchingResultGroup matchingResultGroup = MatchingResultGroup.of(previousMatchingResults);
         Set<Member> matchedMemberSet = matchingResultGroup.getMatchedMemberSet();
         if (!matchedMemberSet.isEmpty()) {
-            eventPublisher.sendMatchedNotification(matchedMemberSet);
+            fcmSender.sentMatchingNotification(matchedMemberSet);
         }
     }
 

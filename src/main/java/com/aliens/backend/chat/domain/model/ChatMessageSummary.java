@@ -1,4 +1,4 @@
-package com.aliens.backend.chat.service.model;
+package com.aliens.backend.chat.domain.model;
 
 import java.util.Date;
 

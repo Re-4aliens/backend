@@ -1,4 +1,4 @@
-package com.aliens.backend.chat.service;
+package com.aliens.backend.chat.service.model;
 
 import com.aliens.backend.chat.domain.ChatRoom;
 import com.aliens.backend.chat.domain.ChatRoomStatus;

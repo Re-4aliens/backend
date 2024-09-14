@@ -44,7 +44,7 @@ public class BoardController {
 
     @GetMapping("/normal")
     public SuccessResponse<BoardResponse> getSingleBoard(@RequestParam("boardId") final Long id) {
-        return SuccessResponse.of(BoardSuccess.GET_ALL_BOARDS_SUCCESS,
+        return SuccessResponse.of(BoardSuccess.GET_SINGLE_BOARD_SUCCESS,
                 boardReadService.getSingleBoard(id));
     }
 

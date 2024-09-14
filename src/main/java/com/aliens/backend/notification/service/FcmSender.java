@@ -8,6 +8,15 @@ import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.google.firebase.messaging.*;
+import com.aliens.backend.global.response.log.InfoLogResponse;
+import com.aliens.backend.global.response.success.NotificationSuccess;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.MulticastMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,11 +28,16 @@ public class FcmSender {
     private final static String MATCHING_SUCCESS_MESSAGE_BODY = "파트너를 확인해보세요!";
     private final MemberRepository memberRepository;
     private final FcmTokenRepository fcmTokenRepository;
+    private final ObjectMapper objectMapper;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 
     public FcmSender(MemberRepository memberRepository,
-                     FcmTokenRepository fcmTokenRepository) {
+                     FcmTokenRepository fcmTokenRepository,
+                    ObjectMapper objectMapper) {
         this.memberRepository = memberRepository;
         this.fcmTokenRepository = fcmTokenRepository;
+        this.objectMapper = objectMapper;
     }
 
     public void sendBoardNotification(NotificationRequest request, List<String> tokens) {
@@ -42,12 +56,21 @@ public class FcmSender {
                 .setNotification(notification)
                 .addAllTokens(tokens)
                 .build();
+
     }
 
     private void sendMultiFcm(MulticastMessage message) {
         try {
-            FirebaseMessaging.getInstance().sendEachForMulticast(message);
+            FirebaseMessaging.getInstance().sendMulticastAsync(message);
+            InfoLogResponse response = InfoLogResponse.from(NotificationSuccess.SEND_MULTI_NOTIFICATION_SUCCESS);
+            log.info(objectMapper.writeValueAsString(response));
         } catch (Exception e) {
+            InfoLogResponse response = InfoLogResponse.from(CommonError.FCM_MESSAGING_ERROR);
+            try {
+                log.error(objectMapper.writeValueAsString(response));
+            } catch (JsonProcessingException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RestApiException(CommonError.FCM_MESSAGING_ERROR);
         }
     }
@@ -81,6 +104,8 @@ public class FcmSender {
     private void sendSingleFcm(Message message) {
         try {
             FirebaseMessaging.getInstance().send(message);
+            InfoLogResponse response = InfoLogResponse.from(NotificationSuccess.SEND_SINGLE_NOTIFICATION_SUCCESS);
+            log.info(objectMapper.writeValueAsString(response));
         } catch (Exception e) {
             throw new RestApiException(CommonError.FCM_MESSAGING_ERROR);
         }

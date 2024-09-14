@@ -14,6 +14,8 @@ import com.aliens.backend.board.domain.enums.BoardCategory;
 import com.aliens.backend.board.domain.enums.ProductQuality;
 import com.aliens.backend.board.domain.enums.SaleStatus;
 import com.aliens.backend.board.domain.repository.BoardRepository;
+import com.aliens.backend.email.domain.EmailAuthentication;
+import com.aliens.backend.email.domain.repository.EmailAuthenticationRepository;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.property.MatchingTimeProperties;
 import com.aliens.backend.global.response.error.MatchingError;
@@ -62,6 +64,7 @@ public class DummyGenerator {
     @Autowired NotificationRepository notificationRepository;
     @Autowired FcmTokenRepository fcmTokenRepository;
     @Autowired TokenRepository tokenRepository;
+    @Autowired EmailAuthenticationRepository emailAuthenticationRepository;
 
     public static final String GIVEN_EMAIL = "tmp@example.com";
     public static final String GIVEN_PASSWORD = "tmpPassword";
@@ -298,5 +301,11 @@ public class DummyGenerator {
         NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, GIVEN_COMMENT_CONTENT,List.of(1L));
         Notification notification = Notification.of(request,member);
         return notificationRepository.save(notification);
+    }
+
+    public void authenticateEmail(String email) {
+        EmailAuthentication emailEntity = new EmailAuthentication(email);
+        emailEntity.authenticate();
+        emailAuthenticationRepository.save(emailEntity);
     }
 }

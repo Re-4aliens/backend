@@ -5,7 +5,10 @@ import org.springframework.http.HttpStatus;
 public enum EmailSuccess implements SuccessCode {
     DUPLICATE_CHECK_SUCCESS(HttpStatus.OK, "E001", "이메일 중복검사가 성공했습니다."),
     SEND_EMAIL_SUCCESS(HttpStatus.OK, "E002", "인증 이메일이 전송되었습니다."),
-    EMAIL_AUTHENTICATE_SUCCESS(HttpStatus.OK, "E003", "이메일 인증에 성공했습니다.");
+    EMAIL_AUTHENTICATE_SUCCESS(HttpStatus.OK, "E003", "이메일 인증에 성공했습니다."),
+    FINALLY_SEND_EMAIL_SUCCESS(HttpStatus.OK, "E004", "이메일이 최종적으로 전송에 성공했습니다."),
+    ;
+
 
     private final HttpStatus httpStatus;
     private final String code;

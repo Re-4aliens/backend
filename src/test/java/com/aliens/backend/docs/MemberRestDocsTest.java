@@ -38,13 +38,14 @@ class MemberRestDocsTest extends BaseRestDocsTest {
         SuccessResponse<String> response = SuccessResponse.of(MemberSuccess.SIGN_UP_SUCCESS, message);
         MockMultipartFile multipartFile = createMultipartFile();
 
-        doReturn(response).when(memberController).signUp(any(), any());
         final MockMultipartFile requestMultipartFile = new MockMultipartFile("request",
                 null, "application/json", objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
 
+        dummyGenerator.authenticateEmail(request.email());
+
         // When and Then
         mockMvc.perform(multipart("/members")
-                        .file("profileImage", multipartFile.getBytes())
+                        .file(multipartFile)
                         .file(requestMultipartFile)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                 )
@@ -296,8 +297,8 @@ class MemberRestDocsTest extends BaseRestDocsTest {
     }
 
     private MockMultipartFile createMultipartFile() {
-        return new MockMultipartFile("profile-data",
-                "profile-data",
+        return new MockMultipartFile("profileImage",
+                "profile-data.png",
                 "image/png",
                 "test data".getBytes());
     }

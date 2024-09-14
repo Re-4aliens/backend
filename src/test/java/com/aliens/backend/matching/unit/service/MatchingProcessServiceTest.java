@@ -142,16 +142,25 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     void isBlockedMemberTest() {
         // given
         Member blockingMember = members.get(0);
-        makeThisMemberBlockAllPartner(blockingMember);
+        Member targetMember = members.get(1);
+        makeThisMemberBlockPartner(blockingMember, targetMember);
 
         // when
         dummyGenerator.operateMatching();
 
         // then
-        List<MatchingResult> matchingResults = getMatchingResultByMatchingRound(getCurrentRound());
-        List<MatchingResult> matchingResultsOfBlockingMember = matchingResults.stream()
-                .filter(matchingResult -> matchingResult.getMatchingMemberId().equals(blockingMember.getId())).toList();
-        assertThat(matchingResultsOfBlockingMember).isEmpty();
+        List<MatchingResult> myMatchingResult = getMyMatchingResult(blockingMember);
+        assertThat(myMatchingResult.stream()
+                .anyMatch(matchingResult -> matchingResult.getMatchedMember().equals(targetMember))).isFalse();
+    }
+
+    private void makeThisMemberBlockPartner(Member blockingMember, Member targetMember) {
+        Block blockRequest = Block.of(targetMember, blockingMember);
+        blockRepository.save(blockRequest);
+    }
+
+    private List<MatchingResult> getMyMatchingResult(Member member) {
+        return matchingResultRepository.findAllByMatchingRoundAndMemberId(getCurrentRound().getRound(), member.getId());
     }
 
     @Test
@@ -189,14 +198,6 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
     private List<MatchingResult> getMatchingResultByMatchingRound(MatchingRound matchingRound) {
         Long round = matchingRound.getRound();
         return matchingResultRepository.findAllByRound(round);
-    }
-
-    private void makeThisMemberBlockAllPartner(Member blockingMember) {
-        for (int i = 1; i < members.size(); i++) {
-            Member blockedMember = members.get(i);
-            Block blockRequest = Block.of(blockedMember, blockingMember);
-            blockRepository.save(blockRequest);
-        }
     }
 
     private Member getMemberById(Long memberId) {

@@ -21,7 +21,7 @@ class MessageTest {
         );
 
         // when
-        Message message = Message.of(messageSendRequest);
+        Message message = Message.from(messageSendRequest);
 
         // then
         assertNotNull(message);
@@ -38,7 +38,7 @@ class MessageTest {
                 1L,
                 2L
         );
-        Message message = Message.of(messageSendRequest);
+        Message message = Message.from(messageSendRequest);
 
         // when
         String result = message.toString();

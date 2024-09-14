@@ -5,6 +5,7 @@ import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
 import com.aliens.backend.block.domain.Block;
 import com.aliens.backend.block.domain.repository.BlockRepository;
+import com.aliens.backend.chat.service.model.ChatEventListener;
 import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.global.exception.RestApiException;
@@ -40,13 +41,12 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 class MatchingProcessServiceTest extends BaseIntegrationTest {
     @Autowired MatchingProcessService matchingProcessService;
     @Autowired MatchingRoundRepository matchingRoundRepository;
-    @Autowired MatchingTimeProperties matchingTimeProperties;
     @Autowired MatchingResultRepository matchingResultRepository;
     @Autowired BlockRepository blockRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired MockClock mockClock;
     @Autowired DummyGenerator dummyGenerator;
-
+    @Autowired ChatEventListener chatEventListener;
     List<Member> members;
 
     @BeforeEach
@@ -94,7 +94,7 @@ class MatchingProcessServiceTest extends BaseIntegrationTest {
         dummyGenerator.operateMatching();
 
         // then
-        verify(chatService, times(1)).handleChatRoomCreationEvent(any());
+        verify(chatEventListener, times(1)).handleChatRoomCreationEvent(any());
     }
 
     @Test

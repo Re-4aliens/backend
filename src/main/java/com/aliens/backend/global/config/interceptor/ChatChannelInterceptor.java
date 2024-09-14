@@ -3,7 +3,7 @@ package com.aliens.backend.global.config.interceptor;
 import com.aliens.backend.chat.controller.dto.request.MessageSendRequest;
 import com.aliens.backend.chat.controller.dto.request.ReadRequest;
 import com.aliens.backend.chat.domain.ChatRoom;
-import com.aliens.backend.chat.service.ChatAuthValidator;
+import com.aliens.backend.chat.service.model.ChatAuthValidator;
 import com.aliens.backend.global.property.WebSocketProperties;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -36,11 +36,13 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
         if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
             chatAuthValidator.validateRoomFromTopic(accessor.getDestination(), chatRooms);
         }
+
         if(StompCommand.SEND.equals(accessor.getCommand())){
             if(accessor.getDestination().equals(properties.getAppDestinationPrefix() +"/send")){
                 MessageSendRequest messageSendRequest = (MessageSendRequest) messageConverter.fromMessage(message, MessageSendRequest.class);
                 chatAuthValidator.validateRoom(messageSendRequest.roomId(), chatRooms);
             }
+
             if(accessor.getDestination().equals(properties.getAppDestinationPrefix() +"/read")){
                 ReadRequest readRequest = (ReadRequest) messageConverter.fromMessage(message, ReadRequest.class);
                 chatAuthValidator.validateRoom(readRequest.roomId(), chatRooms);

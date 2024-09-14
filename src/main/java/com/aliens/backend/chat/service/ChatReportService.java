@@ -10,6 +10,7 @@ import com.aliens.backend.chat.domain.repository.ChatReportRepository;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.response.success.ChatSuccess;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,23 +19,17 @@ public class ChatReportService {
     private final ChatReportRepository chatReportRepository;
     private final MemberRepository memberRepository;
 
-    public ChatReportService(ChatReportRepository chatReportRepository, final MemberRepository memberRepository) {
+    public ChatReportService(ChatReportRepository chatReportRepository
+            , final MemberRepository memberRepository) {
         this.chatReportRepository = chatReportRepository;
         this.memberRepository = memberRepository;
     }
 
-    public String reportPartner(LoginMember loginMember, ChatReportRequest chatReportRequest) {
-        Member member = getMember(loginMember);
-        Member partner = findMemberById(chatReportRequest.partnerId());
-
-        ChatReport chatReport = ChatReport.of(
-                member,
-                partner,
-                ChatReportCategory.fromString(chatReportRequest.category()),
-                chatReportRequest.content());
-
-        chatReportRepository.save(chatReport);
-
+    @Transactional
+    public String reportPartner(LoginMember loginMember, ChatReportRequest request) {
+        Member member = findMemberById(loginMember.memberId());
+        Member partner = findMemberById(request.partnerId());
+        saveReport(request, member, partner);
         return ChatSuccess.REPORT_SUCCESS.getMessage();
     }
 
@@ -42,7 +37,12 @@ public class ChatReportService {
         return memberRepository.findById(partnerId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
-    private Member getMember(final LoginMember loginMember) {
-        return memberRepository.findById(loginMember.memberId()).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+    private void saveReport(ChatReportRequest request, Member member, Member partner) {
+        ChatReport chatReport = ChatReport.of(
+                member,
+                partner,
+                ChatReportCategory.fromString(request.category()),
+                request.content());
+        chatReportRepository.save(chatReport);
     }
 }

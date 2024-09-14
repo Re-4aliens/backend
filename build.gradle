@@ -55,7 +55,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     //FCM
-    implementation 'com.google.firebase:firebase-admin:9.1.1'
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
 
     //QUERY_DSL
     implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"

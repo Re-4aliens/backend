@@ -1,6 +1,7 @@
 package com.aliens.backend.chat.service.model;
 
 import com.aliens.backend.auth.domain.Member;
+import com.aliens.backend.chat.domain.model.MemberPair;
 import com.aliens.backend.global.BaseIntegrationTest;
 import com.aliens.backend.global.DummyGenerator;
 import org.junit.jupiter.api.DisplayName;

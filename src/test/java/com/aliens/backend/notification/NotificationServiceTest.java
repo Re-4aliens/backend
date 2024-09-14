@@ -8,7 +8,7 @@ import com.aliens.backend.global.DummyGenerator;
 import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.controller.dto.NotificationResponse;
 import com.aliens.backend.notification.domain.FcmToken;
-import com.aliens.backend.notification.domain.FcmTokenRepository;
+import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.aliens.backend.notification.domain.Notification;
 import com.aliens.backend.notification.domain.repository.NotificationRepository;
 import com.aliens.backend.notification.service.NotificationService;
@@ -24,13 +24,10 @@ import java.util.List;
 
 class NotificationServiceTest extends BaseIntegrationTest {
 
-    @Autowired
-    NotificationService notificationService;
+    @Autowired NotificationService notificationService;
     @Autowired DummyGenerator dummyGenerator;
-    @Autowired
-    NotificationRepository notificationRepository;
-    @Autowired
-    FcmTokenRepository fcmTokenRepository;
+    @Autowired NotificationRepository notificationRepository;
+    @Autowired FcmTokenRepository fcmTokenRepository;
 
     LoginMember loginMember;
     Member member;
@@ -44,11 +41,14 @@ class NotificationServiceTest extends BaseIntegrationTest {
     @Test
     @DisplayName("fcm토큰 저장")
     void registerFcmTokenTest() {
+        //Given
         String givenToken = "fcmTokenExample";
+
+        //When
         notificationService.registerFcmToken(loginMember, givenToken);
 
+        //Then
         FcmToken result = fcmTokenRepository.findAll().get(0);
-
         Assertions.assertEquals(result.getToken(), givenToken);
     }
 

@@ -22,7 +22,7 @@ public class Message {
     protected Message() {
     }
 
-    public static Message of(MessageSendRequest messageSendRequest){
+    public static Message from(MessageSendRequest messageSendRequest){
         Message message = new Message();
         message.type = messageSendRequest.type();
         message.content = messageSendRequest.content();

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+    <include resource="log/config/error-config.xml" />
+    <include resource="log/config/info-config.xml" />
+
+    <root level="${logging.level.root:-INFO}">
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="ERROR"/>
+    </root>
+</configuration>

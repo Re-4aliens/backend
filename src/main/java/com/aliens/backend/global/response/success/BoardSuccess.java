@@ -11,6 +11,7 @@ public enum BoardSuccess implements SuccessCode {
     GET_MY_BOARD_PAGE_SUCCESS(HttpStatus.OK, "B006", "본인이 작성한 게시글 조회에 성공했습니다."),
     SEARCH_BOARD_WITH_CATEGORY_SUCCESS(HttpStatus.OK, "B007", "특정 카테고리의 게시글 검색에 성공했습니다."),
     DELETE_BOARD_SUCCESS(HttpStatus.OK, "B008", "게시글 삭제에 성공했습니다."),
+    GET_SINGLE_BOARD_SUCCESS(HttpStatus.OK, "B009", "단일 게시글 조회에 성공했습니다."),
     ;
 
     private final HttpStatus httpStatus;

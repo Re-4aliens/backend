@@ -16,8 +16,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      test-mongo:
+        image: mongo:latest
+        ports:
+          - 27018:27017 # 다른 포트를 사용하여 충돌을 방지
+        options: --name test-mongo --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'" --health-interval=10s --health-timeout=5s --health-retries=5
+
     steps:
       - uses: actions/checkout@v3
+
       - name: JDK 17 설치
         uses: actions/setup-java@v3
         with:
@@ -60,6 +68,12 @@ jobs:
       - name: Gradle 빌드
         run: ./gradlew build -x test
 
+      - name: 테스트 실행
+        run: ./gradlew test
+        env:
+          MONGO_HOST: localhost
+          MONGO_PORT: 27018  # 테스트용 MongoDB의 포트로 설정
+
       - name: Docker 이미지 파일 PUSH
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -93,3 +107,8 @@ jobs:
             
             # 이전 버전의 friendship 이미지 삭제
             sudo docker images ${{ secrets.DOCKER_USERNAME }}/${{ env.APP_NAME }} -q | awk 'NR>1' | xargs -r sudo docker rmi -f
+
+      - name: 테스트용 MongoDB 컨테이너 종료 및 삭제
+        run: |
+          sudo docker stop test-mongo || true
+          sudo docker rm test-mongo || true

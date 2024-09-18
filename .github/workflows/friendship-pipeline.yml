@@ -20,7 +20,7 @@ jobs:
       test-mongo:
         image: mongo:latest
         ports:
-          - 27018:27017 # 다른 포트를 사용하여 충돌을 방지
+          - 27018:27018
         options: --name test-mongo --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'" --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:

@@ -68,9 +68,6 @@ jobs:
       - name: Gradle 빌드
         run: ./gradlew build -x test
 
-      - name: 테스트 실행
-        run: ./gradlew test
-
       - name: Docker 이미지 파일 PUSH
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}

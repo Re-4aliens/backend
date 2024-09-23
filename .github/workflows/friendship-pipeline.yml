@@ -20,7 +20,7 @@ jobs:
       test-mongo:
         image: mongo:latest
         ports:
-          - 27018:27018
+          - 27017:27017
         options: --name test-mongo --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'" --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
@@ -70,9 +70,6 @@ jobs:
 
       - name: 테스트 실행
         run: ./gradlew test
-        env:
-          MONGO_HOST: localhost
-          MONGO_PORT: 27018  # 테스트용 MongoDB의 포트로 설정
 
       - name: Docker 이미지 파일 PUSH
         run: |

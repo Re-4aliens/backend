@@ -2,6 +2,7 @@ package com.aliens.backend.docs;
 
 import com.aliens.backend.global.response.SuccessResponse;
 import com.aliens.backend.global.response.success.MemberSuccess;
+import com.aliens.backend.member.controller.dto.response.MemberStatus;
 import com.aliens.backend.member.controller.dto.request.SignUpRequest;
 import com.aliens.backend.member.controller.dto.request.TemporaryPasswordRequest;
 import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
@@ -172,8 +173,8 @@ class MemberRestDocsTest extends BaseRestDocsTest {
     @Test
     @DisplayName("API - 상태 요청")
     void getStatus() throws Exception {
-        String message = MatchingStatus.NOT_APPLIED_NOT_MATCHED.getMessage();
-        SuccessResponse<String> response = SuccessResponse.of(MemberSuccess.GET_MEMBER_MATCHING_STATUS_SUCCESS, message);
+        MemberStatus memberStatus = new MemberStatus(MatchingStatus.NOT_APPLIED_NOT_MATCHED.getMessage(), 1L);
+        SuccessResponse<MemberStatus> response = SuccessResponse.of(MemberSuccess.GET_MEMBER_MATCHING_STATUS_SUCCESS, memberStatus);
         doReturn(response).when(memberController).getStatus(any());
 
         // When and Then
@@ -184,7 +185,9 @@ class MemberRestDocsTest extends BaseRestDocsTest {
                 .andDo(document("member-get-status",
                         responseFields(
                                 fieldWithPath("code").description("성공 코드"),
-                                fieldWithPath("result").description("상태 요청 결과")
+                                fieldWithPath("result").description("상태 요청 결과"),
+                                fieldWithPath("result.status").description("매칭 상태"),
+                                fieldWithPath("result.memberId").description("회원 식별번호")
                         )
                 ));
     }

@@ -19,6 +19,7 @@ import com.aliens.backend.member.controller.dto.request.TemporaryPasswordRequest
 import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
 import com.aliens.backend.member.controller.dto.response.MemberResponse;
 import com.aliens.backend.member.controller.dto.request.SignUpRequest;
+import com.aliens.backend.member.controller.dto.response.MemberStatus;
 import com.aliens.backend.member.domain.*;
 import com.aliens.backend.member.domain.repository.MemberInfoRepository;
 import com.aliens.backend.uploader.AwsS3Uploader;
@@ -186,9 +187,9 @@ public class MemberInfoService {
     }
 
     @Transactional(readOnly = true)
-    public String getStatus(final LoginMember loginMember) {
+    public MemberStatus getStatus(final LoginMember loginMember) {
         Member member = getMember(loginMember);
-        return member.getStatus();
+        return new MemberStatus(member.getStatus(), loginMember.memberId());
     }
 
     @Transactional(readOnly = true)

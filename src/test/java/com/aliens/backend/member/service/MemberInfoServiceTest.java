@@ -10,6 +10,7 @@ import com.aliens.backend.member.controller.dto.request.SignUpRequest;
 import com.aliens.backend.member.controller.dto.request.TemporaryPasswordRequest;
 import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
 import com.aliens.backend.member.controller.dto.response.MemberResponse;
+import com.aliens.backend.member.controller.dto.response.MemberStatus;
 import com.aliens.backend.member.domain.MatchingStatus;
 import com.aliens.backend.member.sevice.MemberInfoService;
 import org.junit.jupiter.api.*;
@@ -138,13 +139,13 @@ class MemberInfoServiceTest extends BaseIntegrationTest {
     @DisplayName("상태 요청")
     void getStatus() {
         //Given
-        String expectedMessage = MatchingStatus.NOT_APPLIED_NOT_MATCHED.getMessage();
+        String expectedStatus = MatchingStatus.NOT_APPLIED_NOT_MATCHED.getMessage();
 
         //When
-        String result = memberInfoService.getStatus(loginMember);
+        MemberStatus result = memberInfoService.getStatus(loginMember);
 
         //Then
-        Assertions.assertEquals(expectedMessage, result);
+        Assertions.assertEquals(expectedStatus, result.status());
     }
 
     @Test

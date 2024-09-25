@@ -4,6 +4,7 @@ import com.aliens.backend.auth.controller.dto.LoginMember;
 import com.aliens.backend.global.config.resolver.Login;
 import com.aliens.backend.global.response.success.MemberSuccess;
 import com.aliens.backend.global.response.SuccessResponse;
+import com.aliens.backend.member.controller.dto.response.MemberStatus;
 import com.aliens.backend.member.controller.dto.request.SignUpRequest;
 import com.aliens.backend.member.controller.dto.request.TemporaryPasswordRequest;
 import com.aliens.backend.member.controller.dto.response.MemberPageResponse;
@@ -90,7 +91,7 @@ public class MemberController {
     }
 
     @GetMapping("/status")
-    public SuccessResponse<String> getStatus(@Login LoginMember loginMember) {
+    public SuccessResponse<MemberStatus> getStatus(@Login LoginMember loginMember) {
 
         return SuccessResponse.of(
                 MemberSuccess.GET_MEMBER_MATCHING_STATUS_SUCCESS,

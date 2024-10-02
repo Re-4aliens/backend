@@ -218,7 +218,7 @@ class BoardServiceReadTest extends BaseIntegrationTest {
         LoginMember loginMember = newMember.getLoginMember();
 
         String givenContent = "개인적으로쓴 글";
-        dummyGenerator.generateSingleMarketBoard(newMember,givenContent);
+        dummyGenerator.generateSingleNormalBoard(newMember,BoardCategory.FASHION,givenContent);
         dummyGenerator.generateSingleMarketBoard(newMember,givenContent);
 
         //When

@@ -124,7 +124,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
     public List<BoardResponse> getMyBoardPage(Long memberId, Pageable pageable) {
 
         JPAQuery<Tuple> query = queryFactory
-                .select(qBoard, qBoard.marketInfo, qMember, qMember.memberImage)
+                .select(qBoard, qMember, qMember.memberImage)
                 .from(qBoard)
 
                 .leftJoin(qBoard.boardImages).fetchJoin()
@@ -141,7 +141,7 @@ public class BoardCustomRepositoryImpl implements BoardCustomRepository {
                                                                      BoardCategory category,
                                                                      Pageable pageable) {
         JPAQuery<Tuple> query = queryFactory
-                .select(qBoard, qBoard.marketInfo, qMember, qMember.memberImage)
+                .select(qBoard, qMember, qMember.memberImage)
                 .from(qBoard)
 
                 .leftJoin(qBoard.boardImages).fetchJoin()

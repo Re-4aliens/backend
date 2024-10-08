@@ -69,10 +69,9 @@ class EmailServiceTest extends BaseIntegrationTest {
     void authenticateEmailTest() throws Exception {
         //Given
         emailAuthenticationRepository.save(emailEntity);
-        String token = symmetricKeyEncoder.encrypt(givenEmail);
 
         //When
-        String result = emailService.authenticateEmail(token);
+        String result = emailService.authenticateEmail(givenEmail);
 
         //Then
         Assertions.assertEquals(EmailResponse.EMAIL_AUTHENTICATION_SUCCESS.getMessage(), result);

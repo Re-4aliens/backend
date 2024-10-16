@@ -49,7 +49,7 @@ class NotificationServiceTest extends BaseIntegrationTest {
 
         //Then
         FcmToken result = fcmTokenRepository.findAll().get(0);
-        Assertions.assertEquals(expectedToken, givenToken);
+        Assertions.assertEquals(expectedToken, result.getToken());
     }
 
     @ParameterizedTest

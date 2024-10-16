@@ -15,6 +15,7 @@ import com.aliens.backend.board.domain.repository.custom.CommentCustomRepository
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.BoardError;
 import com.aliens.backend.global.response.error.MemberError;
+import com.aliens.backend.notification.service.FcmSender;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,19 +29,19 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final CommentCustomRepository commentCustomRepository;
-    private final CommentEventPublisher eventPublisher;
+    private final FcmSender fcmSender;
 
 
     public CommentService(final CommentRepository commentRepository,
                           final MemberRepository memberRepository,
                           final BoardRepository boardRepository,
                           final CommentCustomRepository commentCustomRepository,
-                          final CommentEventPublisher eventPublisher) {
+                          FcmSender fcmSender) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.boardRepository = boardRepository;
         this.commentCustomRepository = commentCustomRepository;
-        this.eventPublisher = eventPublisher;
+        this.fcmSender = fcmSender;
     }
 
     @Transactional
@@ -55,7 +56,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         if(!comment.isWriter(board.getWriterId())) {
-            eventPublisher.sendParentCommentNotification(board, request);
+            fcmSender.sendParentCommentNotification(board,request);
         }
     }
 
@@ -80,7 +81,7 @@ public class CommentService {
         commentRepository.save(childComment);
 
         if(!parentComment.isWriter(member.getId())) {
-            eventPublisher.sendChildCommentNotification(board, request, parentComment.getWriterId());
+            fcmSender.sendChildCommentNotification(board, request, parentComment.getWriterId());
         }
     }
 

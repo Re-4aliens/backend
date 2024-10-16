@@ -60,8 +60,7 @@ public class NotificationService {
     }
 
     private String parseFcmToken(final String fcmToken) {
-        String[] parsed = fcmToken.split(":");
-        return parsed[1].substring( 1, parsed[1].length() - 1);
+        return fcmToken.substring(15, fcmToken.length()-2);
     }
 
     @Transactional(readOnly = true)

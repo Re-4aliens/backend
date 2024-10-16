@@ -43,13 +43,13 @@ class NotificationServiceTest extends BaseIntegrationTest {
     void registerFcmTokenTest() {
         //Given
         String givenToken = "{fcmToken : fcmTokenExample}";
-
+        String expectedToken = "fcmTokenExample";
         //When
         notificationService.registerFcmToken(loginMember, givenToken);
 
         //Then
         FcmToken result = fcmTokenRepository.findAll().get(0);
-        Assertions.assertEquals(result.getToken(), givenToken);
+        Assertions.assertEquals(expectedToken, givenToken);
     }
 
     @ParameterizedTest

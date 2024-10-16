@@ -7,6 +7,7 @@ import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.CommonError;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.response.error.NotificationError;
+import com.aliens.backend.global.response.error.TokenError;
 import com.aliens.backend.notification.domain.NotificationType;
 import com.aliens.backend.notification.domain.repository.NotificationRepository;
 import com.aliens.backend.notification.controller.dto.NotificationRequest;
@@ -14,6 +15,9 @@ import com.aliens.backend.notification.controller.dto.NotificationResponse;
 import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.aliens.backend.notification.domain.Notification;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,16 +46,27 @@ public class NotificationService {
     @Transactional
     public void registerFcmToken(final LoginMember loginMember, final String fcmToken) {
         Member member = getMember(loginMember.memberId());
+        String parsedFcmToken = parseFcmToken(fcmToken);
         Optional<FcmToken> optionalFcmToken = fcmTokenRepository.findByMember(member);
 
         if (optionalFcmToken.isPresent()) {
             FcmToken fcmTokenEntity = optionalFcmToken.get();
-            fcmTokenEntity.changeToken(fcmToken);
+            fcmTokenEntity.changeToken(parsedFcmToken);
             return;
         }
 
-        FcmToken fcmTokenEntity = FcmToken.of(member, fcmToken);
+        FcmToken fcmTokenEntity = FcmToken.of(member, parsedFcmToken);
         fcmTokenRepository.save(fcmTokenEntity);
+    }
+
+    private String parseFcmToken(final String fcmToken) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(fcmToken);
+            return jsonNode.get("fcmToken").asText();
+        } catch (JsonProcessingException e) {
+            throw new RestApiException(TokenError.INVALID_TOKEN);
+        }
     }
 
     @Transactional(readOnly = true)

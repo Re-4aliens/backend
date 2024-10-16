@@ -54,10 +54,10 @@ public class CommentService {
         board.addComment(comment);
 
         commentRepository.save(comment);
-
-        if(!comment.isWriter(board.getWriterId())) {
-            fcmSender.sendParentCommentNotification(board,request);
-        }
+//
+//        if(!comment.isWriter(board.getWriterId())) {
+//            fcmSender.sendParentCommentNotification(board,request);
+//        }
     }
 
     private Board findBoard(final Long boardId) {
@@ -80,9 +80,9 @@ public class CommentService {
 
         commentRepository.save(childComment);
 
-        if(!parentComment.isWriter(member.getId())) {
-            fcmSender.sendChildCommentNotification(board, request, parentComment.getWriterId());
-        }
+//        if(!parentComment.isWriter(member.getId())) {
+//            fcmSender.sendChildCommentNotification(board, request, parentComment.getWriterId());
+//        }
     }
 
     private Comment findComment(ChildCommentCreateRequest request) {

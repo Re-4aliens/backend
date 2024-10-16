@@ -62,7 +62,8 @@ public class MemberInfoService {
 
     @Transactional
     public String signUp(final SignUpRequest request, final MultipartFile profileImage) {
-        checkEmail(request.email());
+        String result = checkEmail(request.email());
+        if(result.equals(MemberResponse.ALREADY_SIGN_UP.getMessage())) return MemberResponse.SIGN_UP_SUCCESS.getMessage();
 
         MemberImage memberImage = saveImageToS3(profileImage);
 
@@ -77,7 +78,7 @@ public class MemberInfoService {
         return MemberResponse.SIGN_UP_SUCCESS.getMessage();
     }
 
-    private void checkEmail(final String email) {
+    private String checkEmail(final String email) {
         Optional<EmailAuthentication> emailEntity = emailAuthenticationRepository.findByEmail(email);
         if (emailEntity.isEmpty()) {
             throw new RestApiException(EmailError.NULL_EMAIL);
@@ -85,6 +86,12 @@ public class MemberInfoService {
         if (!emailEntity.get().isAuthenticated()) {
             throw new RestApiException(EmailError.NOT_AUTHENTICATED_EMAIL);
         }
+
+        if(memberRepository.findByEmail(email).isPresent()) {
+            return MemberResponse.ALREADY_SIGN_UP.getMessage();
+        }
+
+        return MemberResponse.SIGN_UP_SUCCESS.getMessage();
     }
 
     private MemberImage saveImageToS3(final MultipartFile profileImage) {

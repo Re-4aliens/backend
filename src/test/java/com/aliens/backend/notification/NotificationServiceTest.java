@@ -42,7 +42,7 @@ class NotificationServiceTest extends BaseIntegrationTest {
     @DisplayName("fcm토큰 저장")
     void registerFcmTokenTest() {
         //Given
-        String givenToken = "fcmTokenExample";
+        String givenToken = "{fcmToken : fcmTokenExample}";
 
         //When
         notificationService.registerFcmToken(loginMember, givenToken);

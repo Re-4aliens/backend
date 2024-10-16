@@ -60,13 +60,8 @@ public class NotificationService {
     }
 
     private String parseFcmToken(final String fcmToken) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode jsonNode = objectMapper.readTree(fcmToken);
-            return jsonNode.get("fcmToken").asText();
-        } catch (JsonProcessingException e) {
-            throw new RestApiException(TokenError.INVALID_TOKEN);
-        }
+        String[] parsed = fcmToken.split(":");
+        return parsed[1].substring( 1, parsed[1].length() - 1);
     }
 
     @Transactional(readOnly = true)

@@ -33,7 +33,7 @@ class MemberRestDocsTest extends BaseRestDocsTest {
     @Test
     @DisplayName("API - 회원가입")
     void signUp() throws Exception {
-        final SignUpRequest request = createSignUpRequest();
+        final SignUpRequest request = createSampleSignUpRequest();
 
         final String message = MemberResponse.SIGN_UP_SUCCESS.getMessage();
         SuccessResponse<String> response = SuccessResponse.of(MemberSuccess.SIGN_UP_SUCCESS, message);
@@ -272,6 +272,19 @@ class MemberRestDocsTest extends BaseRestDocsTest {
 
     private SignUpRequest createSignUpRequest() {
         SignUpRequest signUpRequest = new SignUpRequest("tmp@example.com",
+                "password",
+                "tmpName",
+                "INTJ",
+                "MALE",
+                "KOREA",
+                "1998-11-25",
+                "반갑습니다"
+        );
+        return signUpRequest;
+    }
+
+    private SignUpRequest createSampleSignUpRequest() {
+        SignUpRequest signUpRequest = new SignUpRequest("tmp1@example.com",
                 "password",
                 "tmpName",
                 "INTJ",

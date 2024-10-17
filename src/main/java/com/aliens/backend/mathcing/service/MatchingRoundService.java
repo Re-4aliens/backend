@@ -56,7 +56,7 @@ public class MatchingRoundService {
         MatchingResultGroup matchingResultGroup = MatchingResultGroup.of(previousMatchingResults);
         Set<Member> matchedMemberSet = matchingResultGroup.getMatchedMemberSet();
         if (!matchedMemberSet.isEmpty()) {
-            fcmSender.sentMatchingNotification(matchedMemberSet);
+            fcmSender.sendMatchedNotification(matchedMemberSet);
         }
     }
 

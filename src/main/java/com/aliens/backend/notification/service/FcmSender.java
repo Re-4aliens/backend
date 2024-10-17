@@ -34,7 +34,7 @@ public class FcmSender {
 
     public FcmSender(MemberRepository memberRepository,
                      FcmTokenRepository fcmTokenRepository,
-                    ObjectMapper objectMapper) {
+                     ObjectMapper objectMapper) {
         this.memberRepository = memberRepository;
         this.fcmTokenRepository = fcmTokenRepository;
         this.objectMapper = objectMapper;
@@ -111,18 +111,19 @@ public class FcmSender {
         }
     }
 
-    public void sentMatchingNotification(Set<Member> members) {
+    public void sendMatchedNotification(Set<Member> members) {
         List<String> tokens = members.stream().map(this::findFcmTokenByMember).toList();
         Notification notification = Notification.builder()
                 .setTitle(MATCHING_SUCCESS_MESSAGE_TITLE)
                 .setBody(MATCHING_SUCCESS_MESSAGE_BODY)
                 .build();
 
-        MulticastMessage multicastMessage = MulticastMessage.builder()
-                .addAllTokens(tokens)
-                .setNotification(notification)
-                .build();
-
-        sendMultiFcm(multicastMessage);
+        tokens.forEach(token -> {
+            Message message = Message.builder()
+                    .setToken(token)
+                    .setNotification(notification)
+                    .build();
+            sendSingleFcm(message);
+        });
     }
 }

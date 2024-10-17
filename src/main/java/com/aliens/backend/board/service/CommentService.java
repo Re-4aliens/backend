@@ -15,13 +15,16 @@ import com.aliens.backend.board.domain.repository.custom.CommentCustomRepository
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.BoardError;
 import com.aliens.backend.global.response.error.MemberError;
+import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.service.FcmSender;
+import com.aliens.backend.notification.service.NotificationService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CommentService {
@@ -30,48 +33,62 @@ public class CommentService {
     private final BoardRepository boardRepository;
     private final CommentCustomRepository commentCustomRepository;
     private final FcmSender fcmSender;
+    private final NotificationService notificationService;
 
 
     public CommentService(final CommentRepository commentRepository,
                           final MemberRepository memberRepository,
                           final BoardRepository boardRepository,
                           final CommentCustomRepository commentCustomRepository,
-                          FcmSender fcmSender) {
+                          final FcmSender fcmSender, NotificationService notificationService) {
         this.commentRepository = commentRepository;
         this.memberRepository = memberRepository;
         this.boardRepository = boardRepository;
         this.commentCustomRepository = commentCustomRepository;
         this.fcmSender = fcmSender;
+        this.notificationService = notificationService;
     }
 
     @Transactional
     public void postParentComment(final ParentCommentCreateRequest request,
                                   final LoginMember loginMember) {
-        Member member = getMember(loginMember);
+        Member member = getMember(loginMember.memberId());
         Board board = findBoard(request.boardId());
 
         Comment comment = Comment.parentOf(request.content(), board, member);
         board.addComment(comment);
 
         commentRepository.save(comment);
-//
-//        if(!comment.isWriter(board.getWriterId())) {
-//            fcmSender.sendParentCommentNotification(board,request);
-//        }
+        sendNotification(comment, board);
+    }
+
+    private void sendNotification(Comment comment, Board board) {
+        if(comment.isWriter(board.getWriterId())) return;
+
+        Member writer = getMember(board.getWriterId());
+
+        NotificationRequest request = makeNotificationRequest(board, comment, List.of(writer));
+        notificationService.saveNotification(request);
+
+        fcmSender.sendBoardNotification(comment, writer);
+    }
+
+    private NotificationRequest makeNotificationRequest(Board board, Comment comment, List<Member> members) {
+        return new NotificationRequest(board.getCategory(),board.getId(),comment.getContent(), members);
     }
 
     private Board findBoard(final Long boardId) {
         return boardRepository.findById(boardId).orElseThrow(() -> new RestApiException(BoardError.INVALID_BOARD_ID));
     }
 
-    private Member getMember(final LoginMember loginMember) {
-        return memberRepository.findById(loginMember.memberId()).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
+    private Member getMember(final Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
     @Transactional
     public void postChildComment(final ChildCommentCreateRequest request,
                                  final LoginMember loginMember) {
-        Member member = getMember(loginMember);
+        Member member = getMember(loginMember.memberId());
         Board board = findBoard(request.boardId());
         Comment parentComment = findComment(request);
 
@@ -80,9 +97,21 @@ public class CommentService {
 
         commentRepository.save(childComment);
 
-//        if(!parentComment.isWriter(member.getId())) {
-//            fcmSender.sendChildCommentNotification(board, request, parentComment.getWriterId());
-//        }
+        sendNotification(childComment, board, parentComment);
+    }
+
+    private void sendNotification(Comment child, Board board, Comment parent) {
+        if(child.isWriter(board.getWriterId())) return;
+        if(Objects.equals(parent.getWriterId(), child.getWriterId())) return;
+
+        Member boardWriter = getMember(board.getWriterId());
+        Member parentWriter = getMember(parent.getWriterId());
+        List<Member> writers = List.of(boardWriter, parentWriter);
+
+        NotificationRequest request = makeNotificationRequest(board, child, writers);
+        notificationService.saveNotification(request);
+
+        fcmSender.sendBoardNotification(child, writers);
     }
 
     private Comment findComment(ChildCommentCreateRequest request) {

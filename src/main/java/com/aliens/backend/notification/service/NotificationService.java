@@ -7,22 +7,15 @@ import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.CommonError;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.response.error.NotificationError;
-import com.aliens.backend.global.response.error.TokenError;
-import com.aliens.backend.notification.domain.NotificationType;
 import com.aliens.backend.notification.domain.repository.NotificationRepository;
 import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.controller.dto.NotificationResponse;
 import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.aliens.backend.notification.domain.Notification;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,16 +24,14 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final FcmTokenRepository fcmTokenRepository;
     private final MemberRepository memberRepository;
-    private final FcmSender fcmSender;
 
 
     public NotificationService(final NotificationRepository notificationRepository,
                                final FcmTokenRepository fcmTokenRepository,
-                               final MemberRepository memberRepository, FcmSender fcmSender) {
+                               final MemberRepository memberRepository) {
         this.notificationRepository = notificationRepository;
         this.fcmTokenRepository = fcmTokenRepository;
         this.memberRepository = memberRepository;
-        this.fcmSender = fcmSender;
     }
 
     @Transactional
@@ -60,7 +51,7 @@ public class NotificationService {
     }
 
     private String parseFcmToken(final String fcmToken) {
-        return fcmToken.substring(15, fcmToken.length()-2);
+        return fcmToken.substring(13, fcmToken.length()-2);
     }
 
     @Transactional(readOnly = true)
@@ -88,24 +79,12 @@ public class NotificationService {
         return memberRepository.findById(memberId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
-    @EventListener
+    @Transactional
     public void saveNotification(NotificationRequest request) {
-        List<String> tokens = new ArrayList<>();
-
-        for(Long memberId : request.memberIds()) {
-            Member member = getMember(memberId);
+        for(Member member : request.members()) {
             Notification notification = Notification.of(request, member);
-
             notificationRepository.save(notification);
-
-            FcmToken fcmToken = getFcmTokenByMember(member);
-
-            if(fcmToken.isAccepted()) {
-                tokens.add(fcmToken.getToken());
-            }
         }
-
-        fcmSender.sendBoardNotification(request,tokens);
     }
 
     private FcmToken getFcmTokenByMember(final Member member) {

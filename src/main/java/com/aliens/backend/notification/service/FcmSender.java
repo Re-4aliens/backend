@@ -2,25 +2,19 @@ package com.aliens.backend.notification.service;
 
 import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.auth.domain.repository.MemberRepository;
-import com.aliens.backend.board.controller.dto.request.ChildCommentCreateRequest;
-import com.aliens.backend.board.controller.dto.request.ParentCommentCreateRequest;
-import com.aliens.backend.board.domain.Board;
+import com.aliens.backend.board.domain.Comment;
 import com.aliens.backend.global.response.error.CommonError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.MemberError;
-import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.google.firebase.messaging.*;
 import com.aliens.backend.global.response.log.InfoLogResponse;
 import com.aliens.backend.global.response.success.NotificationSuccess;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.MulticastMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,9 +22,9 @@ import java.util.Set;
 
 @Component
 public class FcmSender {
-    private final static String MATCHING_SUCCESS_MESSAGE_TITLE = "매칭이 완료되었습니다!";
-    private final static String MATCHING_SUCCESS_MESSAGE_BODY = "파트너를 확인해보세요!";
-    private final static String PARENT_COMMENT_MESSAGE = "댓글이 달렸어요!";
+    private final static String COMMENT_BODY = "새로운 댓글이 달렸어요 : ";
+    private final static String FRIENDSHIP_TITLE = "Friendship";
+    private final static String MATCHING_SUCCESS_MESSAGE_BODY = "Friendship 매칭이 완료되었습니다. 파트너를 확인해보세요!";
     private final MemberRepository memberRepository;
     private final FcmTokenRepository fcmTokenRepository;
     private final ObjectMapper objectMapper;
@@ -45,38 +39,33 @@ public class FcmSender {
         this.objectMapper = objectMapper;
     }
 
-    public void sendBoardNotification(NotificationRequest request, List<String> tokens) {
-        MulticastMessage message = makeMessage(request, tokens);
-        sendMultiFcm(message);
-    }
-
-    private MulticastMessage makeMessage(NotificationRequest request,
-                                         List<String> tokens) {
-        var notification = com.google.firebase.messaging.Notification.builder()
-                .setTitle(String.valueOf(request.boardCategory()))
-                .setBody(request.content()).
-                build();
-
-        return MulticastMessage.builder()
-                .setNotification(notification)
-                .addAllTokens(tokens)
+    public void sendBoardNotification(Comment comment, Member writer) {
+        Notification notification = Notification.builder()
+                .setTitle(FRIENDSHIP_TITLE)
+                .setBody(COMMENT_BODY + comment.getContent())
                 .build();
 
+        String token = findFcmTokenByMember(writer);
+        Message message = Message.builder()
+                .setToken(token)
+                .setNotification(notification)
+                .build();
+        sendSingleFcm(message);
     }
 
-    private void sendMultiFcm(MulticastMessage message) {
-        try {
-            FirebaseMessaging.getInstance().sendMulticastAsync(message);
-            InfoLogResponse response = InfoLogResponse.from(NotificationSuccess.SEND_MULTI_NOTIFICATION_SUCCESS);
-            log.info(objectMapper.writeValueAsString(response));
-        } catch (Exception e) {
-            InfoLogResponse response = InfoLogResponse.from(CommonError.FCM_MESSAGING_ERROR);
-            try {
-                log.error(objectMapper.writeValueAsString(response));
-            } catch (JsonProcessingException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RestApiException(CommonError.FCM_MESSAGING_ERROR);
+    public void sendBoardNotification(Comment comment, List<Member> writers) {
+        Notification notification = Notification.builder()
+                .setTitle(FRIENDSHIP_TITLE)
+                .setBody(COMMENT_BODY + comment.getContent())
+                .build();
+
+        for(Member writer : writers) {
+            String token = findFcmTokenByMember(writer);
+            Message message = Message.builder()
+                    .setToken(token)
+                    .setNotification(notification)
+                    .build();
+            sendSingleFcm(message);
         }
     }
 
@@ -119,7 +108,7 @@ public class FcmSender {
     public void sendMatchedNotification(Set<Member> members) {
         List<String> tokens = members.stream().map(this::findFcmTokenByMember).toList();
         Notification notification = Notification.builder()
-                .setTitle(MATCHING_SUCCESS_MESSAGE_TITLE)
+                .setTitle(FRIENDSHIP_TITLE)
                 .setBody(MATCHING_SUCCESS_MESSAGE_BODY)
                 .build();
 
@@ -130,27 +119,5 @@ public class FcmSender {
                     .build();
             sendSingleFcm(message);
         });
-    }
-
-    public void sendChildCommentNotification(Board board, ChildCommentCreateRequest request, Long writerId) {
-        Message message = createParentCommentMessage(board,request.content());
-        sendSingleFcm(message);
-    }
-
-    public void sendParentCommentNotification(Board board, ParentCommentCreateRequest request) {
-        Message message = createParentCommentMessage(board,request.content());
-        sendSingleFcm(message);
-    }
-
-    private Message createParentCommentMessage(Board board, String content) {
-        Member boardWriter = getMember(board.getWriterId());
-
-        return com.google.firebase.messaging.Message.builder()
-                .setNotification(com.google.firebase.messaging.Notification.builder()
-                        .setTitle(PARENT_COMMENT_MESSAGE)
-                        .setBody(content)
-                        .build())
-                .setToken(findFcmTokenByMember(boardWriter))
-                .build();
     }
 }

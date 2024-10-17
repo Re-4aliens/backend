@@ -35,11 +35,8 @@ class MemberRestDocsTest extends BaseRestDocsTest {
     void signUp() throws Exception {
         final SignUpRequest request = createSampleSignUpRequest();
 
-        final String message = MemberResponse.SIGN_UP_SUCCESS.getMessage();
-        SuccessResponse<String> response = SuccessResponse.of(MemberSuccess.SIGN_UP_SUCCESS, message);
         MockMultipartFile multipartFile = createMultipartFile();
-
-        final MockMultipartFile requestMultipartFile = new MockMultipartFile("request",
+        MockMultipartFile requestMultipartFile = new MockMultipartFile("request",
                 null, "application/json", objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8));
 
         dummyGenerator.authenticateEmail(request.email());

@@ -48,7 +48,7 @@ public abstract class BaseIntegrationTest {
 
         //FCM
         doNothing().when(fcmSender).sendChatMessage(any());
-        doNothing().when(fcmSender).sentMatchingNotification(any());
+        doNothing().when(fcmSender).sendMatchedNotification(any());
         doNothing().when(fcmSender).sendBoardNotification(any(),any());
 
         //AWS

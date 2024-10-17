@@ -50,7 +50,7 @@ public class FcmSender {
                 .setToken(token)
                 .setNotification(notification)
                 .build();
-        sendSingleFcm(message);
+//        sendSingleFcm(message);
     }
 
     public void sendBoardNotification(Comment comment, List<Member> writers) {
@@ -65,13 +65,13 @@ public class FcmSender {
                     .setToken(token)
                     .setNotification(notification)
                     .build();
-            sendSingleFcm(message);
+//            sendSingleFcm(message);
         }
     }
 
     public void sendChatMessage(com.aliens.backend.chat.domain.Message message) {
         var fcmMessage = createFcmMessage(message);
-        sendSingleFcm(fcmMessage);
+//        sendSingleFcm(fcmMessage);
     }
 
     private com.google.firebase.messaging.Message createFcmMessage(com.aliens.backend.chat.domain.Message request) {

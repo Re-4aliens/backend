@@ -13,8 +13,6 @@ import com.aliens.backend.mathcing.domain.repository.MatchingRoundRepository;
 import com.aliens.backend.mathcing.service.MatchingRoundService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.DayOfWeek;
@@ -28,7 +26,6 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 class MatchingRoundServiceTest extends BaseIntegrationTest {
     @Autowired MatchingRoundRepository matchingRoundRepository;
     @Autowired MatchingTimeProperties matchingTimeProperties;
-//    @Autowired MatchingResultRepository matchingResultRepository;
     @Autowired MatchingRoundService matchingRoundService;
     @Autowired DummyGenerator dummyGenerator;
     @Autowired MockClock mockClock;
@@ -71,7 +68,6 @@ class MatchingRoundServiceTest extends BaseIntegrationTest {
     @Test
     @DisplayName("매칭 회차가 업데이트 된 00시에 매칭된 회원들에게 알림이 발송됨")
     void sendMatchedNotification() {
-        Logger log = LoggerFactory.getLogger("테스트 로그");
         // given
         List<Member> members = dummyGenerator.generateMultiMember(5);
         dummyGenerator.generateMatchingRound(MockTime.VALID_RECEPTION_TIME_ON_TUESDAY);
@@ -83,6 +79,6 @@ class MatchingRoundServiceTest extends BaseIntegrationTest {
         matchingRoundService.saveMatchRound();
 
         // then
-        verify(fcmSender, times(1)).sentMatchingNotification(any());
+        verify(fcmSender, times(1)).sendMatchedNotification(any());
     }
 }

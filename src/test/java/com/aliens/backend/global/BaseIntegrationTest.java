@@ -1,5 +1,6 @@
 package com.aliens.backend.global;
 
+import com.aliens.backend.auth.domain.Member;
 import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.domain.repository.MessageRepository;
 import com.aliens.backend.chat.service.model.ChatAuthValidator;
@@ -49,7 +50,7 @@ public abstract class BaseIntegrationTest {
         //FCM
         doNothing().when(fcmSender).sendChatMessage(any());
         doNothing().when(fcmSender).sendMatchedNotification(any());
-        doNothing().when(fcmSender).sendBoardNotification(any(),any());
+        doNothing().when(fcmSender).sendBoardNotification(any(), (Member)any());
 
         //AWS
         S3File tmpFile = new S3File(DummyGenerator.GIVEN_FILE_NAME, DummyGenerator.GIVEN_FILE_URL);

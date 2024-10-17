@@ -42,16 +42,21 @@ public class NotificationService {
     @Transactional
     public void registerFcmToken(final LoginMember loginMember, final String fcmToken) {
         Member member = getMember(loginMember.memberId());
+        String parsedFcmToken = parseFcmToken(fcmToken);
         Optional<FcmToken> optionalFcmToken = fcmTokenRepository.findByMember(member);
 
         if (optionalFcmToken.isPresent()) {
             FcmToken fcmTokenEntity = optionalFcmToken.get();
-            fcmTokenEntity.changeToken(fcmToken);
+            fcmTokenEntity.changeToken(parsedFcmToken);
             return;
         }
 
-        FcmToken fcmTokenEntity = FcmToken.of(member, fcmToken);
+        FcmToken fcmTokenEntity = FcmToken.of(member, parsedFcmToken);
         fcmTokenRepository.save(fcmTokenEntity);
+    }
+
+    private String parseFcmToken(final String fcmToken) {
+        return fcmToken.substring(13, fcmToken.length()-2);
     }
 
     @Transactional(readOnly = true)
@@ -79,24 +84,12 @@ public class NotificationService {
         return memberRepository.findById(memberId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
-    @EventListener
+    @Transactional
     public void saveNotification(NotificationRequest request) {
-        List<String> tokens = new ArrayList<>();
-
-        for(Long memberId : request.memberIds()) {
-            Member member = getMember(memberId);
+        for(Member member : request.members()) {
             Notification notification = Notification.of(request, member);
-
             notificationRepository.save(notification);
-
-            FcmToken fcmToken = getFcmTokenByMember(member);
-
-            if(fcmToken.isAccepted()) {
-                tokens.add(fcmToken.getToken());
-            }
         }
-
-        fcmSender.sendBoardNotification(request,tokens);
     }
 
     private FcmToken getFcmTokenByMember(final Member member) {

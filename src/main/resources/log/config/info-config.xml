@@ -40,7 +40,7 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 로그 파일이 생성될 경로 및 파일 이름 패턴 -->
-            <fileNamePattern>src/main/resources/log/history/%d{yyyy-MM-dd}/info-%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <fileNamePattern>home/ec2-user/log/history/%d{yyyy-MM-dd}/info-%d{yyyy-MM-dd}.log.zip</fileNamePattern>
 
             <!-- 로그 파일을 최대 30일간 보관 -->
             <maxHistory>30</maxHistory>

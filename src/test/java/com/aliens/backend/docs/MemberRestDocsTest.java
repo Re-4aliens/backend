@@ -280,6 +280,19 @@ class MemberRestDocsTest extends BaseRestDocsTest {
         return signUpRequest;
     }
 
+    private SignUpRequest createSampleSignUpRequest() {
+        SignUpRequest signUpRequest = new SignUpRequest("tmp1@example.com",
+                "password",
+                "tmpName",
+                "INTJ",
+                "MALE",
+                "KOREA",
+                "1998-11-25",
+                "반갑습니다"
+        );
+        return signUpRequest;
+    }
+
     private MockMultipartFile getSignUpRequestFile(final SignUpRequest request) throws JsonProcessingException {
         String signupRequestJson = objectMapper.writeValueAsString(request);
         MockMultipartFile signUpRequestFile = new MockMultipartFile(

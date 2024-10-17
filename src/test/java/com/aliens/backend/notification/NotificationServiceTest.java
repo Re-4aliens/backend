@@ -42,14 +42,14 @@ class NotificationServiceTest extends BaseIntegrationTest {
     @DisplayName("fcm토큰 저장")
     void registerFcmTokenTest() {
         //Given
-        String givenToken = "fcmTokenExample";
-
+        String givenToken = "{\"fcmToken\":\"fcmTokenExample\"}";
+        String expectedToken = "fcmTokenExample";
         //When
         notificationService.registerFcmToken(loginMember, givenToken);
 
         //Then
         FcmToken result = fcmTokenRepository.findAll().get(0);
-        Assertions.assertEquals(result.getToken(), givenToken);
+        Assertions.assertEquals(expectedToken, result.getToken());
     }
 
     @ParameterizedTest
@@ -84,7 +84,7 @@ class NotificationServiceTest extends BaseIntegrationTest {
     @DisplayName("알림 저장")
     void saveNotificationTest() {
         //Given
-        NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, DummyGenerator.GIVEN_COMMENT_CONTENT, List.of(1L));
+        NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, DummyGenerator.GIVEN_COMMENT_CONTENT, List.of(dummyGenerator.generateSingleMember()));
 
         //When
         notificationService.saveNotification(request);

@@ -7,18 +7,15 @@ import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.CommonError;
 import com.aliens.backend.global.response.error.MemberError;
 import com.aliens.backend.global.response.error.NotificationError;
-import com.aliens.backend.notification.domain.NotificationType;
 import com.aliens.backend.notification.domain.repository.NotificationRepository;
 import com.aliens.backend.notification.controller.dto.NotificationRequest;
 import com.aliens.backend.notification.controller.dto.NotificationResponse;
 import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.aliens.backend.notification.domain.Notification;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,16 +24,14 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final FcmTokenRepository fcmTokenRepository;
     private final MemberRepository memberRepository;
-    private final FcmSender fcmSender;
 
 
     public NotificationService(final NotificationRepository notificationRepository,
                                final FcmTokenRepository fcmTokenRepository,
-                               final MemberRepository memberRepository, FcmSender fcmSender) {
+                               final MemberRepository memberRepository) {
         this.notificationRepository = notificationRepository;
         this.fcmTokenRepository = fcmTokenRepository;
         this.memberRepository = memberRepository;
-        this.fcmSender = fcmSender;
     }
 
     @Transactional

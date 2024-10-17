@@ -315,17 +315,4 @@ class MemberRestDocsTest extends BaseRestDocsTest {
                 "image/png",
                 "test data".getBytes());
     }
-
-    private SignUpRequest createSampleSignUpRequest() {
-        SignUpRequest signUpRequest = new SignUpRequest("tmp1@example.com",
-                "password",
-                "tmpName",
-                "INTJ",
-                "MALE",
-                "KOREA",
-                "1998-11-25",
-                "반갑습니다"
-        );
-        return signUpRequest;
-    }
 }

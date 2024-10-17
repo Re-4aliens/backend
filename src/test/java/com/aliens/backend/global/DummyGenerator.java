@@ -291,14 +291,15 @@ public class DummyGenerator {
 
     public void generateNotificationWithCount(final Member member, final int count) {
         for(int i = 0; i < count; i++) {
-            NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, GIVEN_COMMENT_CONTENT,List.of(1L));
+            NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, GIVEN_COMMENT_CONTENT,List.of(generateSingleMember()));
             Notification notification = Notification.of(request,member);
             notificationRepository.save(notification);
         }
     }
 
-    public Notification generateSingleNotification(final Member member) {
-        NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, GIVEN_COMMENT_CONTENT,List.of(1L));
+    public Notification generateSingleNotification(Member member) {
+        Member opposite = generateSingleMember();
+        NotificationRequest request = new NotificationRequest(BoardCategory.ALL, 1L, GIVEN_COMMENT_CONTENT,List.of(opposite));
         Notification notification = Notification.of(request,member);
         return notificationRepository.save(notification);
     }

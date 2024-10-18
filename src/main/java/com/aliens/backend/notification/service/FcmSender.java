@@ -15,6 +15,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class FcmSender {
         this.objectMapper = objectMapper;
     }
 
+    @Async
     public void sendBoardNotification(Comment comment, Member writer) {
         Notification notification = Notification.builder()
                 .setTitle(FRIENDSHIP_TITLE)
@@ -53,6 +55,7 @@ public class FcmSender {
 //        sendSingleFcm(message);
     }
 
+    @Async
     public void sendBoardNotification(Comment comment, List<Member> writers) {
         Notification notification = Notification.builder()
                 .setTitle(FRIENDSHIP_TITLE)
@@ -69,6 +72,7 @@ public class FcmSender {
         }
     }
 
+    @Async
     public void sendChatMessage(com.aliens.backend.chat.domain.Message message) {
         var fcmMessage = createFcmMessage(message);
 //        sendSingleFcm(fcmMessage);
@@ -105,6 +109,7 @@ public class FcmSender {
         }
     }
 
+    @Async
     public void sendMatchedNotification(Set<Member> members) {
         List<String> tokens = members.stream().map(this::findFcmTokenByMember).toList();
         Notification notification = Notification.builder()

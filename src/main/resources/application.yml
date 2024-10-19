@@ -6,9 +6,12 @@ spring:
 logging:
   level:
     org.springframework.web.socket.config.WebSocketMessageBrokerStats: ERROR
+    root: info
+  config: classpath:logback-spring.xml
 
 websocket:
   port: 8080
   endpoint: /ws
   topic: /room
   request: /chat
+

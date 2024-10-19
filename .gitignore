@@ -40,4 +40,4 @@ out/
 .vscode/
 
 ### LOG ###
-/src/main/resources/log/history/**
+/logs

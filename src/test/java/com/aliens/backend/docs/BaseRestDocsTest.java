@@ -11,6 +11,7 @@ import com.aliens.backend.chat.controller.ChatController;
 import com.aliens.backend.chat.controller.ChatReportController;
 import com.aliens.backend.email.controller.EmailController;
 import com.aliens.backend.global.DummyGenerator;
+import com.aliens.backend.inquire.InquiryController;
 import com.aliens.backend.member.controller.MemberController;
 import com.aliens.backend.notification.controller.NotificationController;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,6 +52,8 @@ public abstract class BaseRestDocsTest {
     protected MarketController marketBoardController;
     @SpyBean
     protected NotificationController notificationController;
+    @SpyBean
+    protected InquiryController inquiryController;
 
 
     @Autowired

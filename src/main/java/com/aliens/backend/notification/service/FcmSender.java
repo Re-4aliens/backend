@@ -6,15 +6,11 @@ import com.aliens.backend.board.domain.Comment;
 import com.aliens.backend.global.response.error.CommonError;
 import com.aliens.backend.global.exception.RestApiException;
 import com.aliens.backend.global.response.error.MemberError;
+import com.aliens.backend.notification.domain.FcmToken;
 import com.aliens.backend.notification.domain.repository.FcmTokenRepository;
 import com.google.firebase.messaging.*;
-import com.aliens.backend.global.response.log.InfoLogResponse;
-import com.aliens.backend.global.response.success.NotificationSuccess;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -28,16 +24,12 @@ public class FcmSender {
     private final static String MATCHING_SUCCESS_MESSAGE_BODY = "Friendship 매칭이 완료되었습니다. 파트너를 확인해보세요!";
     private final MemberRepository memberRepository;
     private final FcmTokenRepository fcmTokenRepository;
-    private final ObjectMapper objectMapper;
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     public FcmSender(MemberRepository memberRepository,
-                     FcmTokenRepository fcmTokenRepository,
-                     ObjectMapper objectMapper) {
+                     FcmTokenRepository fcmTokenRepository) {
         this.memberRepository = memberRepository;
         this.fcmTokenRepository = fcmTokenRepository;
-        this.objectMapper = objectMapper;
     }
 
     @Async
@@ -47,12 +39,14 @@ public class FcmSender {
                 .setBody(COMMENT_BODY + comment.getContent())
                 .build();
 
-        String token = findFcmTokenByMember(writer);
+        if(!isAcceptedFCM(writer)) return;
+        FcmToken fcmToken = findFcmToken(writer);
+
         Message message = Message.builder()
-                .setToken(token)
+                .setToken(fcmToken.getToken())
                 .setNotification(notification)
                 .build();
-//        sendSingleFcm(message);
+        sendSingleFcm(message);
     }
 
     @Async
@@ -63,19 +57,29 @@ public class FcmSender {
                 .build();
 
         for(Member writer : writers) {
-            String token = findFcmTokenByMember(writer);
+            if(!isAcceptedFCM(writer)) continue;
+            FcmToken fcmToken = findFcmToken(writer);
+
             Message message = Message.builder()
-                    .setToken(token)
+                    .setToken(fcmToken.getToken())
                     .setNotification(notification)
                     .build();
-//            sendSingleFcm(message);
+            sendSingleFcm(message);
         }
     }
 
     @Async
     public void sendChatMessage(com.aliens.backend.chat.domain.Message message) {
+        Member receiver = getMember(message.getReceiverId());
+        if(!isAcceptedFCM(receiver)) return;
+
         var fcmMessage = createFcmMessage(message);
-//        sendSingleFcm(fcmMessage);
+        sendSingleFcm(fcmMessage);
+    }
+
+    private boolean isAcceptedFCM(Member receiver) {
+        FcmToken fcmToken = findFcmToken(receiver);
+        return fcmToken.isAccepted();
     }
 
     private com.google.firebase.messaging.Message createFcmMessage(com.aliens.backend.chat.domain.Message request) {
@@ -87,7 +91,7 @@ public class FcmSender {
                         .setTitle(sender.getMemberPage().name())
                         .setBody(request.getContent())
                         .build())
-                .setToken(findFcmTokenByMember(receiver))
+                .setToken(findFcmToken(receiver).getToken())
                 .build();
     }
 
@@ -95,15 +99,13 @@ public class FcmSender {
         return memberRepository.findById(memberId).orElseThrow(() -> new RestApiException(MemberError.NULL_MEMBER));
     }
 
-    private String findFcmTokenByMember(Member member) {
-        return fcmTokenRepository.findByMember(member).get().getToken();
+    private FcmToken findFcmToken(Member member) {
+        return fcmTokenRepository.findByMember(member).get();
     }
 
     private void sendSingleFcm(Message message) {
         try {
             FirebaseMessaging.getInstance().send(message);
-            InfoLogResponse response = InfoLogResponse.from(NotificationSuccess.SEND_SINGLE_NOTIFICATION_SUCCESS);
-            log.info(objectMapper.writeValueAsString(response));
         } catch (Exception e) {
             throw new RestApiException(CommonError.FCM_MESSAGING_ERROR);
         }
@@ -111,7 +113,12 @@ public class FcmSender {
 
     @Async
     public void sendMatchedNotification(Set<Member> members) {
-        List<String> tokens = members.stream().map(this::findFcmTokenByMember).toList();
+        List<String> tokens = members.stream()
+                .map(this::findFcmToken)
+                .filter(FcmToken::isAccepted)
+                .map(FcmToken::getToken)
+                .toList();
+
         Notification notification = Notification.builder()
                 .setTitle(FRIENDSHIP_TITLE)
                 .setBody(MATCHING_SUCCESS_MESSAGE_BODY)

@@ -38,7 +38,7 @@ public class ChatService {
     public String sendMessage(MessageSendRequest request) {
         Message savedMessage = saveMessage(request);
         messageSender.send(savedMessage);
-        // fcmSender.sendChatMessage(savedMessage);
+        fcmSender.sendChatMessage(savedMessage);
         return ChatSuccess.SEND_MESSAGE_SUCCESS.getMessage();
     }
 

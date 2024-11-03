@@ -27,7 +27,7 @@ public class AwsS3Uploader {
     private static final String JPEG_FILE_EXTENSION = "jpeg";
     private static final String GIF_FILE_EXTENSION = "gif";
     private static final String JPG_FILE_EXTENSION = "jpg";
-    private static final int MAX_UPLOADS = 2;
+    private static final int MAX_UPLOADS = 3;
     private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 

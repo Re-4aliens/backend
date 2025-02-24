@@ -15,10 +15,19 @@
   <img src="https://github.com/Re-4aliens/backend/assets/86913355/13863e52-671b-4b3d-95c6-ab620a3326db" height="350px" width="160px">  
 </p>
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8e509add-58fd-401a-a3eb-9f43074b0133" height="350px" width="160px">
+  <img src="https://github.com/user-attachments/assets/9ab23fc4-eec0-44cb-bd7e-7b2317fa1b65" height="350px" width="160px">
+  <img src="https://github.com/user-attachments/assets/a5646302-d72a-43f2-bd2d-51680abf9445" height="350px" width="160px">
+  <img src="https://github.com/user-attachments/assets/d95fa457-c19d-4c0d-8fed-a68769314792" height="350px" width="160px">  
+</p>
+
+
+
+
 FriendShip은 외국인과 한국인간의 소통을 위한 창구를 제공하기 위한 서비스입니다.
 
 일주일에 두 번의 매칭을 통한 3일간의 채팅, 게시판 기능을  제공합니다.
-
 
 -  GooglePlay URL : https://play.google.com/store/apps/details?id=com.aliens.friendship
 
